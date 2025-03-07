@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Detection Rules with Sample Logs</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 30px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid #666;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #666;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #f9f9f9;
+        }
+
+        .view-logs-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .view-logs-btn:hover {
+            background-color: #2980b9;
+        }
+
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        /* Azure Log Analytics Style */
+        .log-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .log-table th {
+            background-color: #f0f0f0;
+            border: 1px solid #e0e0e0;
+            padding: 8px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        .log-table td {
+            border: 1px solid #e0e0e0;
+            padding: 8px;
+            vertical-align: top;
+            white-space: nowrap;
+        }
+
+        .log-table tr:nth-child(even) {
+            background-color: #f8f8f8;
+        }
+
+        .log-table tr:hover {
+            background-color: #eef5fd;
+        }
+
+        .highlight-cell {
+            background-color: #fffde7;
+            font-weight: 600;
+        }
+
+        .log-timestamp {
+            color: #666;
+        }
+
+        .action-type {
+            font-weight: 600;
+        }
+
+        .log-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .log-title {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .query-info {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .results-info {
+            font-size: 12px;
+            color: #0078d4;
+        }
+
+        .mitre-tactic {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .mitre-technique {
+            margin-left: 20px;
+            display: block;
+        }
+
+        .query-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 50px;
+        }
+
+        .query-code {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: Consolas, Monaco, 'Andale Mono', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+
+        .kql-comment {
+            color: #008000;
+        }
+
+        .kql-operator {
+            color: #0000ff;
+        }
+
+        .kql-function {
+            color: #795e26;
+        }
+
+        .kql-string {
+            color: #a31515;
+        }
+
+        .azure-tab {
+            background-color: #f0f6ff;
+            border-bottom: 3px solid #0078d4;
+            padding: 8px 16px;
+            display: inline-block;
+            margin-right: 2px;
+            border-radius: 4px 4px 0 0;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <h1>AWS Detection Rules with MITRE ATT&CK Mapping</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Detection Name</th>
+                <th>Description</th>
+                <th>MITRE Tactics & Techniques</th>
+                <th>Data Source</th>
+                <th>Query Link</th>
+                <th>Attack Path Reference</th>
+                <th>Sample Logs</th>
+            </tr>
+        </thead>
+        <tbody>
+<!-- EC2 - Instance Created with IMDSv1 -->
+<tr>
+    <td rowspan="3" style="font-weight: bold;">EC2 - Instance Created with IMDSv1</td>
+    <td rowspan="3">Detects when EC2 instances are created with IMDSv1 enabled, potentially exposing metadata to credential theft</td>
+    <td><strong>Initial Access (TA0001)</strong><br>T1078.004 - Cloud Accounts</td>
+    <td rowspan="3">AWS CloudTrail</td>
+    <td rowspan="3"><a href="#ec2-imdsv1-created-query">View Query</a></td>
+    <td rowspan="3"><a href="https://attack.mitre.org/techniques/T1552/005/" target="_blank">MITRE T1552.005</a></td>
+    <td rowspan="3">
+        <button class="view-logs-btn" onclick="openModal('ec2-imdsv1-created-logs')">View Sample Logs</button>
+    </td>
+</tr>
+<tr>
+    <td><strong>Credential Access (TA0006)</strong><br>T1552.005 - Cloud Instance Metadata API</td>
+</tr>
+<tr>
+    <td><strong>Defense Evasion (TA0005)</strong><br>T1078.004 - Cloud Accounts</td>
+</tr>
+
+<!-- EC2 - Password Data Retrieved -->
+<tr>
+    <td rowspan="2" style="font-weight: bold;">EC2 - Password Data Retrieved</td>
+    <td rowspan="2">Identifies attempts to retrieve encrypted EC2 instance password data, which could indicate credential theft</td>
+    <td><strong>Credential Access (TA0006)</strong><br>T1552 - Unsecured Credentials</td>
+    <td rowspan="2">AWS CloudTrail</td>
+    <td rowspan="2"><a href="#ec2-password-retrieved-query">View Query</a></td>
+    <td rowspan="2"><a href="https://attack.mitre.org/techniques/T1552/" target="_blank">MITRE T1552</a></td>
+    <td rowspan="2">
+        <button class="view-logs-btn" onclick="openModal('ec2-password-logs')">View Sample Logs</button>
+    </td>
+</tr>
+<tr>
+    <td><strong>Collection (TA0009)</strong><br>T1005 - Data from Local System</td>
+</tr>
+
+<!-- EC2 - Snapshot Exfiltration Detected -->
+<tr>
+    <td rowspan="3" style="font-weight: bold;">EC2 - Snapshot Exfiltration Detected</td>
+    <td rowspan="3">Identifies attempts to copy or share EBS snapshots with external accounts for data exfiltration</td>
+    <td><strong>Exfiltration (TA0010)</strong><br>T1537 - Transfer Data to Cloud Account</td>
+    <td rowspan="3">AWS CloudTrail</td>
+    <td rowspan="3"><a href="#ec2-snapshot-exfil-query">View Query</a></td>
+    <td rowspan="3"><a href="https://attack.mitre.org/techniques/T1537/" target="_blank">MITRE T1537</a></td>
+    <td rowspan="3">
+        <button class="view-logs-btn" onclick="openModal('ec2-snapshot-exfil-logs')">View Sample Logs</button>
+    </td>
+</tr>
+<tr>
+    <td><strong>Collection (TA0009)</strong><br>T1530 - Data from Cloud Storage</td>
+</tr>
+<tr>
+    <td><strong>Defense Evasion (TA0005)</strong><br>T1562 - Impair Defenses</td>
+</tr>
+
+<!-- EC2 - Suspicious Deployment Detected -->
+<tr>
+    <td rowspan="2" style="font-weight: bold;">EC2 - Suspicious Deployment Detected</td>
+    <td rowspan="2">Detects suspicious EC2 instance deployments based on unusual patterns or known malicious configurations</td>
+    <td><strong>Execution (TA0002)</strong><br>T1204 - User Execution</td>
+    <td rowspan="2">AWS CloudTrail</td>
+    <td rowspan="2"><a href="#ec2-suspicious-deployment-query">View Query</a></td>
+    <td rowspan="2"><a href="https://attack.mitre.org/techniques/T1204/" target="_blank">MITRE T1204</a></td>
+    <td rowspan="2">
+        <button class="view-logs-btn" onclick="openModal('ec2-suspicious-deployment-logs')">View Sample Logs</button>
+    </td>
+</tr>
+<tr>
+    <td><strong>Defense Evasion (TA0005)</strong><br>T1562 - Impair Defenses</td>
+</tr>
+
+<!-- IAM - Access keys created and deleted within short time frame -->
+<tr>
+    <td rowspan="3" style="font-weight: bold;">IAM - Access keys created and deleted within short time frame</td>
+    <td rowspan="3">Detects when IAM access keys are created and quickly deleted, suggesting possible credential theft or attacker covering tracks</td>
+    <td><strong>Defense Evasion (TA0005)</strong><br>T1070 - Indicator Removal</td>
+    <td rowspan="3">AWS CloudTrail</td>
+    <td rowspan="3"><a href="#iam-key-deletion-query">View Query</a></td>
+    <td rowspan="3"><a href="https://attack.mitre.org/techniques/T1070/" target="_blank">MITRE T1070</a></td>
+    <td rowspan="3">
+        <button class="view-logs-btn" onclick="openModal('iam-key-deletion-logs')">View Sample Logs</button>
+    </td>
+</tr>
+<tr>
+    <td><strong>Credential Access (TA0006)</strong><br>T1552 - Unsecured Credentials</td>
+</tr>
+<tr>
+    <td><strong>Initial Access (TA0001)</strong><br>T1078 - Valid Accounts</td>
+</tr>
+
+<!-- IAM - Cloud User Account Creation -->
+<tr>
+    <td rowspan="2" style="font-weight: bold;">IAM - Cloud User Account Creation</td>
+    <td rowspan="2">Detects the creation of new IAM users, which could indicate persistence establishment in the environment</td>
+    <td><strong>Persistence (TA0003)</strong><br>T1136.003 - Cloud Account</td>
+    <td rowspan="2">AWS CloudTrail</td>
+    <td rowspan="2"><a href="#iam-user-creation-query">View Query</a></td>
+    <td rowspan="2"><a href="https://attack.mitre.org/techniques/T1136/003/" target="_blank">MITRE T1136.003</a></td>
+    <td rowspan="2">
+        <button class="view-logs-btn" onclick="openModal('iam-user-creation-logs')">View Sample Logs</button>
+    </td>
+</tr>
+<tr>
+    <td><strong>Privilege Escalation (TA0004)</strong><br>T1078 - Valid Accounts</td>
+</tr>
+
+<!-- IAM - Cloud User Account Password Changed -->
+<tr>
+    <td rowspan="2" style="font-weight: bold;">IAM - Cloud User Account Password Changed</td>
+    <td rowspan="2">Identifies when IAM user passwords are changed, which could indicate account takeover</td>
+    <td><strong>Credential Access (TA0006)</strong><br>T1555 - Credentials from Password Stores</td>
+    <td rowspan="2">AWS CloudTrail</td>
+    <td rowspan="2"><a href="#iam-password-change-query">View Query</a></td>
+    <td rowspan="2"><a href="https://attack.mitre.org/techniques/T1555/" target="_blank">MITRE T1555</a></td>
+    <td rowspan="2">
+        <button class="view-logs-btn" onclick="openModal('iam-password-change-logs')">View Sample Logs</button>
+    </td>
+</tr>
+<tr>
+    <td><strong>Persistence (TA0003)</strong><br>T1098 - Account Manipulation</td>
+</tr>
+
+<!-- IAM - Management Console successful login with no MFA -->
+<tr>
+    <td rowspan="2" style="font-weight: bold;">IAM - Management Console successful login with no MFA</td>
+    <td rowspan="2">Detects when users log in to the AWS Management Console without multi-factor authentication</td>
+    <td><strong>Initial Access (TA0001)</strong><br>T1078.004 - Cloud Accounts</td>
+    <td rowspan="2">AWS CloudTrail</td>
+    <td rowspan="2"><a href="#iam-no-mfa-login-query">View Query</a></td>
+    <td rowspan="2"><a href="https://attack.mitre.org/techniques/T1078/004/" target="_blank">MITRE T1078.004</a></td>
+    <td rowspan="2">
+        <button class="view-logs-btn" onclick="openModal('iam-no-mfa-login-logs')">View Sample Logs</button>
+    </td>
+</tr>
+<tr>
+    <td><strong>Defense Evasion (TA0005)</strong><br>T1550 - Use Alternate Authentication Material</td>
+</tr>
+
+<!-- KMS - Failed GetSecretValue over short time frame -->
+<tr>
+    <td rowspan="2" style="font-weight: bold;">KMS - Failed GetSecretValue over short time frame</td>
+    <td rowspan="2">Identifies multiple failed attempts to access secrets within AWS Secrets Manager in a short period</td>
+    <td><strong>Credential Access (TA0006)</strong><br>T1552 - Unsecured Credentials</td>
+    <td rowspan="2">AWS CloudTrail</td>
+    <td rowspan="2"><a href="#kms-failed-access-query">View Query</a></td>
+    <td rowspan="2"><a href="https://attack.mitre.org/techniques/T1552/" target="_blank">MITRE T1552</a></td>
+    <td rowspan="2">
+        <button class="view-logs-btn" onclick="openModal('kms-failed-access-logs')">View Sample Logs</button>
+    </td>
+</tr>
+<tr>
+    <td><strong>Discovery (TA0007)</strong><br>T1082 - System Information Discovery</td>
+</tr>
+
+<!-- Lambda - Suspicious changes to a Lambda Function -->
+<tr>
+    <td rowspan="3" style="font-weight: bold;">Lambda - Suspicious changes to a Lambda Function</td>
+    <td rowspan="3">Detects potentially malicious modifications to Lambda function code or configuration</td>
+    <td><strong>Persistence (TA0003)</strong><br>T1136.003 - Cloud Account</td>
+    <td rowspan="3">AWS CloudTrail</td>
+    <td rowspan="3"><a href="#lambda-suspicious-changes-query">View Query</a></td>
+    <td rowspan="3"><a href="https://attack.mitre.org/techniques/T1136/003/" target="_blank">MITRE T1136.003</a></td>
+    <td rowspan="3">
+        <button class="view-logs-btn" onclick="openModal('lambda-suspicious-changes-logs')">View Sample Logs</button>
+    </td>
+</tr>
+<tr>
+    <td><strong>Defense Evasion (TA0005)</strong><br>T1562 - Impair Defenses</td>
+</tr>
+<tr>
+    <td><strong>Execution (TA0002)</strong><br>T1059 - Command and Scripting Interpreter</td>
+</tr>
+
+<!-- Network - Connection to malicious IPs and Domains -->
+<tr>
+    <td rowspan="2" style="font-weight: bold;">Network - Connection to malicious IPs and Domains</td>
+    <td rowspan="2">Identifies AWS resources communicating with known malicious IP addresses or domains</td>
+    <td><strong>Command and Control (TA0011)</strong><br>T1071 - Application Layer Protocol</td>
+    <td rowspan="2">VPC Flow Logs</td>
+    <td rowspan="2"><a href="#network-malicious-communication-query">View Query</a></td>
+    <td rowspan="2"><a href="https://attack.mitre.org/techniques/T1071/" target="_blank">MITRE T1071</a></td>
+    <td rowspan="2">
+        <button class="view-logs-btn" onclick="openModal('network-malicious-communication-logs')">View Sample Logs</button>
+    </td>
+</tr>
+<tr>
+    <td><strong>Exfiltration (TA0010)</strong><br>T1041 - Exfiltration Over C2 Channel</td>
+</tr>
+
+<!-- Network - Suspicious Changes to AWS Network Resources -->
+<tr>
+    <td rowspan="2" style="font-weight: bold;">Network - Suspicious Changes to AWS Network Resources</td>
+    <td rowspan="2">Detects unexpected modifications to VPC, security groups, or network ACLs that could indicate network-based attacks</td>
+    <td><strong>Defense Evasion (TA0005)</strong><br>T1562 - Impair Defenses</td>
+    <td rowspan="2">AWS CloudTrail</td>
+    <td rowspan="2"><a href="#network-suspicious-changes-query">View Query</a></td>
+    <td rowspan="2"><a href="https://attack.mitre.org/techniques/T1562/" target="_blank">MITRE T1562</a></td>
+    <td rowspan="2">
+        <button class="view-logs-btn" onclick="openModal('network-suspicious-changes-logs')">View Sample Logs</button>
+    </td>
+</tr>
+<tr>
+    <td><strong>Lateral Movement (TA0008)</strong><br>T1021 - Remote Services</td>
+</tr>
+
+<!-- Operations - Changes to AWS Configurations -->
+<tr>
+    <td rowspan="2" style="font-weight: bold;">Operations - Changes to AWS Configurations</td>
+    <td rowspan="2">Identifies potentially high-risk changes to AWS account configurations and security settings</td>
+    <td><strong>Defense Evasion (TA0005)</strong><br>T1562 - Impair Defenses</td>
+    <td rowspan="2">AWS CloudTrail</td>
+    <td rowspan="2"><a href="#operations-config-changes-query">View Query</a></td>
+    <td rowspan="2"><a href="https://attack.mitre.org/techniques/T1562/" target="_blank">MITRE T1562</a></td>
+    <td rowspan="2">
+        <button class="view-logs-btn" onclick="openModal('operations-config-changes-logs')">View Sample Logs</button>
+    </td>
+</tr>
+<tr>
+    <td><strong>Impact (TA0040)</strong><br>T1489 - Service Stop</td>
+</tr>
+
+<!-- S3 - Bucket modification detected -->
+<tr>
+    <td rowspan="2" style="font-weight: bold;">S3 - Bucket modification detected</td>
+    <td rowspan="2">Detects modifications to S3 bucket policies, ACLs, or configurations that could expose data</td>
+    <td><strong>Defense Evasion (TA0005)</strong><br>T1578 - Modify Cloud Compute Infrastructure</td>
+    <td rowspan="2">AWS CloudTrail</td>
+    <td rowspan="2"><a href="#s3-bucket-modification-query">View Query</a></td>
+    <td rowspan="2"><a href="https://attack.mitre.org/techniques/T1578/" target="_blank">MITRE T1578</a></td>
+    <td rowspan="2">
+        <button class="view-logs-btn" onclick="openModal('s3-bucket-modification-logs')">View Sample Logs</button>
+    </td>
+</tr>
+<tr>
+    <td><strong>Collection (TA0009)</strong><br>T1530 - Data from Cloud Storage</td>
+</tr>
+
+<!-- S3 - Buckets accessed from untrusted network -->
+<tr>
+    <td rowspan="2" style="font-weight: bold;">S3 - Buckets accessed from untrusted network</td>
+    <td rowspan="2">Identifies access to S3 buckets from suspicious or previously unseen IP addresses</td>
+    <td><strong>Initial Access (TA0001)</strong><br>T1190 - Exploit Public-Facing Application</td>
+    <td rowspan="2">S3 Access Logs</td>
+    <td rowspan="2"><a href="#s3-untrusted-access-query">View Query</a></td>
+    <td rowspan="2"><a href="https://attack.mitre.org/techniques/T1190/" target="_blank">MITRE T1190</a></td>
+    <td rowspan="2">
+        <button class="view-logs-btn" onclick="openModal('s3-untrusted-access-logs')">View Sample Logs</button>
+    </td>
+</tr>
+<tr>
+    <td><strong>Exfiltration (TA0010)</strong><br>T1537 - Transfer Data to Cloud Account</td>
+</tr>
+
+<!-- Security - CloudTrail tamper detection -->
+<tr>
+    <td rowspan="2" style="font-weight: bold;">Security - CloudTrail tamper detection</td>
+    <td rowspan="2">Detects attempts to disable, delete, or modify CloudTrail logs to evade detection</td>
+    <td><strong>Defense Evasion (TA0005)</strong><br>T1562.008 - Disable Cloud Logs</td>
+    <td rowspan="2">AWS CloudTrail</td>
+    <td rowspan="2"><a href="#security-cloudtrail-tamper-query">View Query</a></td>
+    <td rowspan="2"><a href="https://attack.mitre.org/techniques/T1562/008/" target="_blank">MITRE T1562.008</a></td>
+    <td rowspan="2">
+        <button class="view-logs-btn" onclick="openModal('security-cloudtrail-tamper-logs')">View Sample Logs</button>
+    </td>
+</tr>
+<tr>
+    <td><strong>Impact (TA0040)</strong><br>T1485 - Data Destruction</td>
+</tr>
+
+<!-- Security - Enhanced GuardDuty -->
+<tr>
+    <td rowspan="3" style="font-weight: bold;">Security - Enhanced GuardDuty</td>
+    <td rowspan="3">Augments Amazon GuardDuty findings with additional context and severity adjustments</td>
+    <td><strong>Initial Access (TA0001)</strong><br>T1190 - Exploit Public-Facing Application</td>
+    <td rowspan="3">GuardDuty</td>
+    <td rowspan="3"><a href="#security-enhanced-guardduty-query">View Query</a></td>
+    <td rowspan="3"><a href="https://attack.mitre.org/tactics/TA0001/" target="_blank">MITRE TA0001</a></td>
+    <td rowspan="3">
+        <button class="view-logs-btn" onclick="openModal('security-enhanced-guardduty-logs')">View Sample Logs</button>
+    </td>
+</tr>
+<tr>
+    <td><strong>Credential Access (TA0006)</strong><br>T1110 - Brute Force</td>
+</tr>
+<tr>
+    <td><strong>Command and Control (TA0011)</strong><br>T1071 - Application Layer Protocol</td>
+</tr>
+
+<!-- Security - Unauthorized API Calls -->
+<tr>
+    <td rowspan="2" style="font-weight: bold;">Security - Unauthorized API Calls</td>
+    <td rowspan="2">Detects unauthorized or suspicious API calls that could indicate compromised credentials or insider threats</td>
+    <td><strong>Discovery (TA0007)</strong><br>T1082 - System Information Discovery</td>
+    <td rowspan="2">AWS CloudTrail</td>
+    <td rowspan="2"><a href="#security-unauthorized-api-query">View Query</a></td>
+    <td rowspan="2"><a href="https://attack.mitre.org/techniques/T1082/" target="_blank">MITRE T1082</a></td>
+    <td rowspan="2">
+        <button class="view-logs-btn" onclick="openModal('security-unauthorized-api-logs')">View Sample Logs</button>
+    </td>
+</tr>
+<tr>
+    <td><strong>Credential Access (TA0006)</strong><br>T1528 - Steal Application Access Token</td>
+</tr>
+        </tbody>
+    </table>
+
+    <!-- Query Sections -->
+    <div class="query-container" id="aws-imdsv1-query">
+        <div class="azure-tab">Query 1</div>
+        <h2>AWS IMDSv1 Vulnerability Detection Query</h2>
+        <pre class="query-code"><span class="kql-comment">// Define base variables and functions</span>
+<span class="kql-function">let</span> Filter_for_non_trusted = AWS_filterCloudTrailCIDR();
+
+<span class="kql-comment">// Main query for recent IMDS events</span>
+<span class="kql-comment">// Analyzes last 1 hour of RunInstances events</span>
+AWSCloudTrail
+    <span class="kql-comment">// Filter events within the last 1 day</span>
+    <span class="kql-operator">|</span> <span class="kql-function">where</span> TimeGenerated >= <span class="kql-function">ago</span>(1d)
+    <span class="kql-comment">// Filter for "RunInstances" events</span>
+    <span class="kql-operator">|</span> <span class="kql-function">where</span> EventName == <span class="kql-string">"RunInstances"</span>
+    <span class="kql-comment">// Filters only to show non-admin accounts</span>
+    <span class="kql-operator">|</span> <span class="kql-function">where</span> UserIdentityArn !<span class="kql-function">endswith</span> <span class="kql-string">'@privusr.vuln.org'</span>
+    <span class="kql-comment">// Exclude specific source IP addresses</span>
+    <span class="kql-operator">|</span> <span class="kql-function">where</span> SourceIpAddress !<span class="kql-function">in</span> (<span class="kql-string">"imagebuilder.amazonaws.com"</span>, <span class="kql-string">"autoscaling.amazonaws.com"</span>, <span class="kql-string">"cloudformation.amazonaws.com"</span>)
+    <span class="kql-comment">// Exclude events from databricks users</span>
+    <span class="kql-operator">|</span> <span class="kql-function">where</span> UserIdentityArn !<span class="kql-function">has</span> <span class="kql-string">"databricks"</span>
+    <span class="kql-comment">// Filter for "AssumedRole" user identity type</span>
+    <span class="kql-operator">|</span> <span class="kql-function">where</span> UserIdentityType == <span class="kql-string">"AssumedRole"</span>
+    <span class="kql-comment">// Ensure ResponseElements are not empty</span>
+    <span class="kql-operator">|</span> <span class="kql-function">where</span> <span class="kql-function">isnotempty</span>(ResponseElements)
+    <span class="kql-comment">// Parse and expand instance data</span>
+    <span class="kql-operator">|</span> <span class="kql-function">extend</span> 
+        responseElements = <span class="kql-function">tostring</span>(<span class="kql-function">parse_json</span>(ResponseElements)),
+        IMDSV1 = <span class="kql-function">tostring</span>(<span class="kql-function">parse_json</span>(ResponseElements).instancesSet.items[0].metadataOptions.httpTokens),
+        InstanceType = <span class="kql-function">tostring</span>(<span class="kql-function">parse_json</span>(ResponseElements).instancesSet.items[0].instanceType),
+        InstanceId = <span class="kql-function">tostring</span>(<span class="kql-function">parse_json</span>(ResponseElements).instancesSet.items[0].instanceId),
+        PrivateIP = <span class="kql-function">parse_json</span>(<span class="kql-function">tostring</span>(<span class="kql-function">parse_json</span>(<span class="kql-function">tostring</span>(<span class="kql-function">parse_json</span>(ResponseElements).instancesSet)).items))[0].privateIpAddress
+    <span class="kql-comment">// Filter for optional IMDSV1 only</span>
+    <span class="kql-operator">|</span> <span class="kql-function">where</span> IMDSV1 == <span class="kql-string">"optional"</span>
+    <span class="kql-comment">// Select final output fields</span>
+    <span class="kql-operator">|</span> <span class="kql-function">project</span> 
+        TimeGenerated,
+        EventName,
+        InstanceType,
+        InstanceId,
+        <span class="kql-function">tostring</span>(PrivateIP),
+        IMDSV1,
+        UserIdentityArn,
+        SourceIpAddress,
+        UserIdentityType,
+        UserIdentityAccountId,
+        AWSRegion
+    <span class="kql-comment">// Sort by most recent events first</span>
+    <span class="kql-operator">|</span> <span class="kql-function">sort by</span> TimeGenerated <span class="kql-function">desc</span></pre>
+    </div>
+
+    <!-- Modals for Sample Logs -->
+    <div id="imdsv1-logs" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('imdsv1-logs')">&times;</span>
+            <h2>AWS IMDSv1 Vulnerability Detection</h2>
+            
+            <div class="log-header">
+                <div>
+                    <div class="log-title">Query Results</div>
+                    <div class="query-info">Time range: Last 24 hours | Region: All regions</div>
+                </div>
+                <div class="results-info">3 results</div>
+            </div>
+
+            <div class="log-container">
+                <table class="log-table">
+                    <thead>
+                        <tr>
+                            <th>TimeGenerated</th>
+                            <th>EventName</th>
+                            <th>InstanceType</th>
+                            <th>InstanceId</th>
+                            <th>PrivateIP</th>
+                            <th>IMDSV1</th>
+                            <th>UserIdentityArn</th>
+                            <th>SourceIpAddress</th>
+                            <th>UserIdentityType</th>
+                            <th>UserIdentityAccountId</th>
+                            <th>AWSRegion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="log-timestamp">2025-03-05T14:23:45.123Z</td>
+                            <td>RunInstances</td>
+                            <td>t3.medium</td>
+                            <td>i-0abc12345def67890</td>
+                            <td>10.0.12.34</td>
+                            <td class="highlight-cell">optional</td>
+                            <td>arn:aws:iam::123456789012:role/DevOpsEngineer</td>
+                            <td>203.0.113.42</td>
+                            <td>AssumedRole</td>
+                            <td>123456789012</td>
+                            <td>us-east-1</td>
+                        </tr>
+                        <tr>
+                            <td class="log-timestamp">2025-03-05T13:12:33.452Z</td>
+                            <td>RunInstances</td>
+                            <td>m5.large</td>
+                            <td>i-0def98765abc43210</td>
+                            <td>10.0.45.67</td>
+                            <td class="highlight-cell">optional</td>
+                            <td>arn:aws:iam::123456789012:role/DataScientist</td>
+                            <td>198.51.100.23</td>
+                            <td>AssumedRole</td>
+                            <td>123456789012</td>
+                            <td>us-west-2</td>
+                        </tr>
+                        <tr>
+                            <td class="log-timestamp">2025-03-04T22:05:18.789Z</td>
+                            <td>RunInstances</td>
+                            <td>t3.xlarge</td>
+                            <td>i-0567890abcdef1234</td>
+                            <td>10.0.78.90</td>
+                            <td class="highlight-cell">optional</td>
+                            <td>arn:aws:iam::123456789012:role/DeveloperAccess</td>
+                            <td>198.51.100.78</td>
+                            <td>AssumedRole</td>
+                            <td>123456789012</td>
+                            <td>eu-west-1</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Detection Logic Explanation</h3>
+            <p>This detection identifies EC2 instances where the IMDSv1 service is configured as "optional" rather than "required". When IMDSv1 is set to "optional", the EC2 instance allows access to the metadata service without requiring more secure token-based authentication, creating a security risk.</p>
+            
+            <p>Key indicator in the logs:</p>
+            <ul>
+                <li>The <code>IMDSV1</code> field shows "<strong>optional</strong>" instead of "required"</li>
+                <li>The query filters specifically for the EC2 <code>RunInstances</code> event</li>
+                <li>Only non-service accounts are included by filtering out known service principals</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="snapshot-logs" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('snapshot-logs')">&times;</span>
+            <h2>AWS Snapshot Exfiltration Detection</h2>
+            
+            <div class="log-header">
+                <div>
+                    <div class="log-title">Query Results</div>
+                    <div class="query-info">Time range: Last 24 hours | Region: All regions</div>
+                </div>
+                <div class="results-info">2 results</div>
+            </div>
+
+            <div class="log-container">
+                <table class="log-table">
+                    <thead>
+                        <tr>
+                            <th>TimeGenerated</th>
+                            <th>EventName</th>
+                            <th>SourceAccountId</th>
+                            <th>UserIdentityType</th>
+                            <th>ModifiedSnapshotAttributeType</th>
+                            <th>ModifiedSnapShot_to_SuspiciousAccount</th>
+                            <th>ModifiedSnapShot_remove_SuspiciousAccount</th>
+                            <th>CreatedVolumeSnapshotId</th>
+                            <th>ActionType</th>
+                            <th>UserIdentityArn</th>
+                            <th>Summary</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="log-timestamp">2025-03-04T09:15:27.331Z</td>
+                            <td>ModifySnapshotAttribute</td>
+                            <td>123456789012</td>
+                            <td>AssumedRole</td>
+                            <td>createVolumePermission</td>
+                            <td class="highlight-cell">987654321098</td>
+                            <td></td>
+                            <td>snap-0abcdef123456789</td>
+                            <td class="action-type">Add</td>
+                            <td>arn:aws:iam::123456789012:role/SystemAdministrator</td>
+                            <td>User modified snapshot permissions to add external account access</td>
+                        </tr>
+                        <tr>
+                            <td class="log-timestamp">2025-03-04T09:17:12.553Z</td>
+                            <td>ModifySnapshotAttribute</td>
+                            <td>123456789012</td>
+                            <td>AssumedRole</td>
+                            <td>createVolumePermission</td>
+                            <td></td>
+                            <td class="highlight-cell">987654321098</td>
+                            <td>snap-0abcdef123456789</td>
+                            <td class="action-type">Remove</td>
+                            <td>arn:aws:iam::123456789012:role/SystemAdministrator</td>
+                            <td>User modified snapshot permissions to remove external account access</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Detection Logic Explanation</h3>
+            <p>This detection identifies when EBS snapshots are shared with unauthorized AWS accounts, potentially indicating data exfiltration attempts.</p>
+            
+            <p>Key patterns in the logs:</p>
+            <ul>
+                <li>The <code>ModifySnapshotAttribute</code> API call is used to modify snapshot permissions</li>
+                <li>External account numbers appear in <code>ModifiedSnapShot_to_SuspiciousAccount</code> field</li>
+                <li>The "Add and Remove" pattern (seen across both logs) may indicate attempts to temporarily share data and cover tracks</li>
+                <li>The short time between the add and remove operations (less than 2 minutes) is suspicious</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="cloudtrail-logs" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('cloudtrail-logs')">&times;</span>
+            <h2>AWS CloudTrail Manipulation</h2>
+            
+            <div class="log-header">
+                <div>
+                    <div class="log-title">Query Results</div>
+                    <div class="query-info">Time range: Last 24 hours | Region: All regions</div>
+                </div>
+                <div class="results-info">2 results</div>
+            </div>
+
+            <div class="log-container">
+                <table class="log-table">
+                    <thead>
+                        <tr>
+                            <th>TimeGenerated</th>
+                            <th>EventName</th>
+                            <th>SourceAccountId</th>
+                            <th>UserIdentityType</th>
+                            <th>UserIdentityArn</th>
+                            <th>TrailARN</th>
+                            <th>SourceIpAddress</th>
+                            <th>UserAgent</th>
+                            <th>AWSRegion</th>
+                            <th>Summary</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="log-timestamp">2025-03-03T18:45:12.762Z</td>
+                            <td class="highlight-cell">StopLogging</td>
+                            <td>123456789012</td>
+                            <td>AssumedRole</td>
+                            <td>arn:aws:iam::123456789012:role/NetworkAdministrator</td>
+                            <td>arn:aws:cloudtrail:us-east-1:123456789012:trail/management-events</td>
+                            <td>203.0.113.100</td>
+                            <td>console.amazonaws.com</td>
+                            <td>us-east-1</td>
+                            <td>User stopped CloudTrail logging for trail: management-events</td>
+                        </tr>
+                        <tr>
+                            <td class="log-timestamp">2025-03-03T18:47:33.121Z</td>
+                            <td class="highlight-cell">DeleteTrail</td>
+                            <td>123456789012</td>
+                            <td>AssumedRole</td>
+                            <td>arn:aws:iam::123456789012:role/NetworkAdministrator</td>
+                            <td>arn:aws:cloudtrail:us-east-1:123456789012:trail/management-events</td>
+                            <td>203.0.113.100</td>
+                            <td>console.amazonaws.com</td>
+                            <td>us-east-1</td>
+                            <td>User deleted CloudTrail trail: management-events</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Detection Logic Explanation</h3>
+            <p>This detection identifies attempts to disable or delete CloudTrail logs, which attackers often do to hide their activities.</p>
+            
+            <p>Key indicators in the logs:</p>
+            <ul>
+                <li>The <code>StopLogging</code> API call disables CloudTrail logging</li>
+                <li>The <code>DeleteTrail</code> API call removes the CloudTrail trail entirely</li>
+                <li>The short time between actions (about 2 minutes) suggests a coordinated attempt to disable monitoring</li>
+                <li>Both actions were performed by the same identity from the same source IP address</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let i = 0; i < modals.length; i++) {
+                if (event.target == modals[i]) {
+                    modals[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
