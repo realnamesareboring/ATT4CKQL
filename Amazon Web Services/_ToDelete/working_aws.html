@@ -29,9 +29,9 @@
             </tr>
         </thead>
         <tbody>
-            <!-- EC2 IMDSv1 Vulnerability Detection -->
+            <!-- AWS IMDSv1 Vulnerability Detection -->
             <tr>
-                <td rowspan="4" style="font-weight: bold;">EC2 Instance Created with IMDSv1</td>
+                <td rowspan="4" style="font-weight: bold;">Instance Created with IMDSv1</td>
                 <td rowspan="4">Identifies EC2 instances launched with IMDSv1 set to optional, creating a credential theft risk</td>
                 <td><strong>Initial Access (TA0001)</strong><br>T1078.004 - Cloud Accounts</td>
                 <td rowspan="4">AWS EC2</td>
@@ -50,92 +50,43 @@
             <tr>
                 <td><strong>Defense Evasion (TA0005)</strong><br>T1078.004 - Cloud Accounts</td>
             </tr>
-            <!-- EC2 Suspicious Deployment Section -->
+            <!-- EC2 Password Data Retrieved 
             <tr>
-                <td rowspan="2" style="font-weight: bold;">EC2 Suspicious Deployment Detected</td>
-                <td rowspan="2">Identifies unusual EC2 instance deployments that may indicate cryptomining or other malicious activities</td>
+                <td rowspan="4" style="font-weight: bold;">EC2 Password Data Retrieved</td>
+                <td rowspan="4">TEST</td>
+                <td><strong>Credential Access (TA0006)</strong><br>T1555.006 - Credentials from Password Stores: Cloud Secrets Management Stores</td>
+                <td rowspan="4">AWS EC2</td>
+                <td rowspan="4"><a href="#ec2-password-logs">View Query</a></td>
+                <td rowspan="4"><a href="https://github.com/RhinoSecurityLabs/pacu/wiki/Module-Details#ec2__metadata_services" target="_blank">Pacu IMDS v1 Attack</a></td>
+                <td rowspan="4">
+                    <button class="view-logs-btn" onclick="openModal('ec2-password-logs')">View Sample Logs</button>
+                </td>
+            </tr>-->
+            <tr>
+                <td rowspan="4" style="font-weight: bold;">EC2 Suspicious Deployment Detected</td>
+                <td rowspan="4">TEST</td>
                 <td><strong>Defense Evasion (TA0005)</strong><br>T1578.002 - Modify Cloud Compute Infrastructure: Create Cloud Instance</td>
-                <td rowspan="2">AWS EC2</td>
-                <td rowspan="2"><a href="#ec2-suspicious-deployment-query">View Query</a></td>
-                <td rowspan="2"><a href="https://stratus-red-team.cloud/attack-techniques/AWS/aws.execution.ec2-launch-unusual-instances/" target="_blank">stratus-red-team: Launch Unusual EC2 instances</a></td>
-                <td rowspan="2">
+                <td rowspan="4">AWS EC2</td>
+                <td rowspan="4"><a href="#ec2-password-logs">View Query</a></td>
+                <td rowspan="4"><a href="https://stratus-red-team.cloud/attack-techniques/AWS/aws.execution.ec2-launch-unusual-instances/" target="_blank">Launch Unusual EC2 instances</a></td>
+                <td rowspan="4">
                     <button class="view-logs-btn" onclick="openModal('ec2-suspicious-deployment-logs')">View Sample Logs</button>
                 </td>
             </tr>
+            <!-- EC2 Password Data Retrieved 
             <tr>
-                <td><strong>Execution (TA0002)</strong><br>T1204.003 - User Execution: Malicious Image</td>
-            </tr>
-            <!-- EC2 Password Retrieval -->
-            <tr>
-                <td style="font-weight: bold;">EC2 Password Data Retrieved</td>
-                <td>Description of this detection</td>
+                <td rowspan="4" style="font-weight: bold;">EC2 Password Data Retrieved</td>
+                <td rowspan="4">TEST</td>
                 <td><strong>Credential Access (TA0006)</strong><br>T1555.006 - Credentials from Password Stores: Cloud Secrets Management Stores</td>
-                <td>AWS EC2</td>
-                <td><a href="#ec2-password-logs">View Query</a></td>
-                <td><a href="https://stratus-red-team.cloud/attack-techniques/AWS/aws.credential-access.ec2-get-password-data/" target="_blank">stratus-red-team: Retrieve EC2 Password Data</a></td>
-                <td>
+                <td rowspan="4">AWS EC2</td>
+                <td rowspan="4"><a href="#ec2-password-logs">View Query</a></td>
+                <td rowspan="4"><a href="https://github.com/RhinoSecurityLabs/pacu/wiki/Module-Details#ec2__metadata_services" target="_blank">Pacu IMDS v1 Attack</a></td>
+                <td rowspan="4">
                     <button class="view-logs-btn" onclick="openModal('ec2-password-logs')">View Sample Logs</button>
                 </td>
             </tr>
-            <!-- AMI/EBS/RDS Snapshot Exfiltration Detected -->
-            <tr>
-                <td rowspan="4" style="font-weight: bold;">AMI/EBS/RDS Snapshot Exfiltration Detected</td>
-                <td rowspan="4">Identifies EC2 instances launched with IMDSv1 set to optional, creating a credential theft risk</td>
-                <td><strong>Exfiltration (TA0010)</strong><br>T1537.001 - Transfer Data to Cloud Account: Cloud Storage Object</td>
-                <td rowspan="4">AWS EBS</td>
-                <td rowspan="4"><a href="#snapshot-exfil-logs">View Query</a></td>
-                <td rowspan="4"><a href="https://stratus-red-team.cloud/attack-techniques/AWS/" target="_blank">stratus-red-team: Exfiltration</a></td>
-                <td rowspan="4">
-                    <button class="view-logs-btn" onclick="openModal('snapshot-exfil-logs')">View Sample Logs</button>
-                </td>
-            </tr>
-            <tr>
-                <td><strong>Collection (TA0009)</strong><br>T1530 - Data from Cloud Storage</td>
-            </tr>
-            <tr>
-                <td><strong>Defense Evasion (TA0005)</strong><br>T1578.002 - Modify Cloud Compute Infrastructure: Create Snapshot</td>
-            </tr>
-            <tr>
-                <td><strong>Initial Access/Persistence (TA0001/TA0003)</strong><br>T1078.004 - Cloud Accounts</td>
-            </tr>
-            <!-- S3 Bucket Modification Detected -->
-            <tr>
-                <td rowspan="2" style="font-weight: bold;">S3 Bucket has been created/accessed/deleted</td>
-                <td rowspan="2">Identifies unusual EC2 instance deployments that may indicate cryptomining or other malicious activities</td>
-                <td><strong>Collection (TA0009)</strong><br>T1530 - Data from Cloud Storage</td>
-                <td rowspan="2">AWS S3</td>
-                <td rowspan="2"><a href="#s3-modification-logs">View Query</a></td>
-                <td rowspan="2"><a href="https://stratus-red-team.cloud/attack-techniques/AWS/aws.execution.ec2-launch-unusual-instances/" target="_blank">stratus-red-team: Launch Unusual EC2 instances</a></td>
-                <td rowspan="2">
-                    <button class="view-logs-btn" onclick="openModal('s3-modification-logs')">View Sample Logs</button>
-                </td>
-            </tr>
-            <tr>
-                <td><strong>Execution (TA0002)</strong><br>T1537 - Transfer Data to Cloud Account</td>
-            </tr>
-            <!-- S3 Bucket accessed from an untrusted network -->
-            <tr>
-                <td rowspan="4" style="font-weight: bold;">S3 Bucket accessed from an untrusted network</td>
-                <td rowspan="4">Identifies EC2 instances launched with IMDSv1 set to optional, creating a credential theft risk</td>
-                <td><strong>Exfiltration (TA0010)</strong><br>T1619 - Cloud Storage Object Discovery </td>
-                <td rowspan="4">AWS S3</td>
-                <td rowspan="4"><a href="#snapshot-exfil-logs">View Query</a></td>
-                <td rowspan="4"><a href="https://www.intigriti.com/researchers/blog/hacking-tools/hacking-misconfigured-aws-s3-buckets-a-complete-guide" target="_blank">intigriti: Hacking misconfigured AWS S3 buckets: A complete guide</a></td>
-                <td rowspan="4">
-                    <button class="view-logs-btn" onclick="openModal('snapshot-exfil-logs')">View Sample Logs</button>
-                </td>
-            </tr>
-            <tr>
-                <td><strong>Collection (TA0009)</strong><br>T1530 - Data from Cloud Storage</td>
-            </tr>
-            <tr>
-                <td><strong>Impact (TA0040)</strong><br>T1485 - Data Destruction</td>
-            </tr>
-            <tr>
-                <td><strong>Exfiltration (TA0010)</strong><br>T1537 - Transfer Data to Cloud Account</td>
-            </tr>
         </tbody>
-        </table>
+    </table>
 
     <!-- Modal for Sample Logs -->
     <!-- 
@@ -397,188 +348,6 @@
             <li>Historical usage count is very low (1-3 occurrences in 90 days)</li>
             <li>Instance naming patterns may indicate suspicious purposes (mining nodes, GPU clusters)</li>
             <li>Multiple instances deployed simultaneously</li>
-        </ul>
-    </div>
-</div>
-
-<!-- Modal for EC2 Snapshot Exfiltration Sample Logs -->
-<div id="snapshot-exfil-logs" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('snapshot-exfil-logs')">&times;</span>
-        <h2>AMI/EBS/RDS - Snapshot Exfiltration Detected</h2>
-        
-        <div class="log-header">
-            <div>
-                <div class="log-title">Query Results</div>
-                <div class="query-info">Time range: Last 24 hours | Region: All regions</div>
-            </div>
-            <div class="results-info">2 results</div>
-        </div>
-
-        <div class="log-container">
-            <table class="log-table">
-                <thead>
-                    <tr>
-                        <th>TimeGenerated</th>
-                        <th>Summary</th>
-                        <th>EventName</th>
-                        <th>ActionType</th>
-                        <th>CreatedVolumeSnapshotId</th>
-                        <th>ModifiedDBSnapshotIdentifier</th>
-                        <th>ModifiedSnapshotAttributeType</th>
-                        <th>UserIdentityType</th>
-                        <th>UserIdentityArn</th>
-                        <th>SourceAccountId</th>
-                        <th>ModifiedSnapShot_to_SuspiciousAccount</th>
-                        <th>ModifiedSnapShot_remove_SuspiciousAccount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="log-timestamp">2025-03-05T09:15:27.331Z</td>
-                        <td>User shared EBS snapshot with external AWS account</td>
-                        <td class="highlight-cell">ModifySnapshotAttribute</td>
-                        <td>Add</td>
-                        <td>snap-0abc12345def67890</td>
-                        <td></td>
-                        <td>createVolumePermission</td>
-                        <td>AssumedRole</td>
-                        <td>arn:aws:iam::123456789012:role/DevOpsEngineer</td>
-                        <td>123456789012</td>
-                        <td class="highlight-cell">987654321098</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="log-timestamp">2025-03-05T09:17:12.553Z</td>
-                        <td>User shared EBS snapshot with external AWS account then removed access</td>
-                        <td class="highlight-cell">ModifySnapshotAttribute</td>
-                        <td class="highlight-cell">Add and Remove</td>
-                        <td>snap-0abc12345def67890</td>
-                        <td></td>
-                        <td>createVolumePermission</td>
-                        <td>AssumedRole</td>
-                        <td>arn:aws:iam::123456789012:role/DevOpsEngineer</td>
-                        <td>123456789012</td>
-                        <td class="highlight-cell">987654321098</td>
-                        <td class="highlight-cell">987654321098</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <h3>Detection Logic Explanation</h3>
-        <p>This detection identifies when EBS snapshots are shared with unauthorized or unknown AWS accounts, potentially indicating data exfiltration attempts. It establishes a 90-day baseline of known good accounts and alerts on sharing with accounts outside this baseline.</p>
-        
-        <p>Key indicators in the logs:</p>
-        <ul>
-            <li>The <code>ModifySnapshotAttribute</code> API call is used to modify snapshot permissions</li>
-            <li>External account numbers appear in the <code>ModifiedSnapShot_to_SuspiciousAccount</code> field</li>
-            <li>The "Add and Remove" pattern (in the second record) is particularly suspicious as it indicates temporarily sharing data and then attempting to cover tracks</li>
-            <li>The short time between the add and remove operations (less than 2 minutes) suggests a deliberate attempt to avoid detection</li>
-        </ul>
-    </div>
-</div>
-
-<!-- Modal for S3 Modification Sample Logs -->
-<div id="s3-modification-logs" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('s3-modification-logs')">&times;</span>
-        <h2>S3 - Bucket Modification Detected</h2>
-        
-        <div class="log-header">
-            <div>
-                <div class="log-title">Query Results</div>
-                <div class="query-info">Time range: Last 1 hour | Region: All regions</div>
-            </div>
-            <div class="results-info">3 results</div>
-        </div>
-
-        <div class="log-container">
-            <table class="log-table">
-                <thead>
-                    <tr>
-                        <th>TimeGenerated</th>
-                        <th>Summary</th>
-                        <th>EventName</th>
-                        <th>Description</th>
-                        <th>BucketName</th>
-                        <th>SourceIpAddress</th>
-                        <th>UserIdentityArn</th>
-                        <th>UserIdentityAccountId</th>
-                        <th>UserIdentityUserName</th>
-                        <th>SessionMfaAuthenticated</th>
-                        <th>AWSRegion</th>
-                        <th>UserIdentityType</th>
-                        <th>UserAgent</th>
-                        <th>EventSource</th>
-                        <th>ObjectKey</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="log-timestamp">2025-03-05T14:23:45.123Z</td>
-                        <td>User downloaded sensitive file from S3 bucket</td>
-                        <td class="highlight-cell">GetObject</td>
-                        <td>S3 object retrieved from untrusted network</td>
-                        <td>customer-data-backup-123</td>
-                        <td class="highlight-cell">203.0.113.42</td>
-                        <td>arn:aws:iam::123456789012:user/developer</td>
-                        <td>123456789012</td>
-                        <td>developer</td>
-                        <td>false</td>
-                        <td>us-east-1</td>
-                        <td>IAMUser</td>
-                        <td>aws-cli/2.9.15 Python/3.9.6</td>
-                        <td>s3.amazonaws.com</td>
-                        <td>customers/export-2025-03-04.csv</td>
-                    </tr>
-                    <tr>
-                        <td class="log-timestamp">2025-03-05T14:20:33.452Z</td>
-                        <td>User deleted S3 bucket</td>
-                        <td class="highlight-cell">DeleteBucket</td>
-                        <td>S3 bucket deleted from untrusted network</td>
-                        <td>web-logs-analysis-prod</td>
-                        <td class="highlight-cell">198.51.100.23</td>
-                        <td>arn:aws:iam::123456789012:role/admin-role</td>
-                        <td>123456789012</td>
-                        <td>admin-role</td>
-                        <td>true</td>
-                        <td>us-east-1</td>
-                        <td>AssumedRole</td>
-                        <td>console.amazonaws.com</td>
-                        <td>s3.amazonaws.com</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="log-timestamp">2025-03-05T14:15:18.789Z</td>
-                        <td>User uploaded file to S3 bucket</td>
-                        <td class="highlight-cell">PutObject</td>
-                        <td>S3 object uploaded from untrusted network</td>
-                        <td>web-content-prod</td>
-                        <td class="highlight-cell">198.51.100.23</td>
-                        <td>arn:aws:iam::123456789012:role/developer-role</td>
-                        <td>123456789012</td>
-                        <td>developer-role</td>
-                        <td>true</td>
-                        <td>us-east-1</td>
-                        <td>AssumedRole</td>
-                        <td>aws-sdk-java/1.12.261</td>
-                        <td>s3.amazonaws.com</td>
-                        <td>js/analytics.js</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <h3>Detection Logic Explanation</h3>
-        <p>This detection identifies access to S3 buckets from IP addresses outside the trusted network ranges. This could indicate unauthorized access to sensitive data, data exfiltration, or malicious actions against S3 resources.</p>
-        
-        <p>Key indicators in the logs:</p>
-        <ul>
-            <li>Operations from <code>SourceIpAddress</code> values that match untrusted IP ranges</li>
-            <li>Critical S3 operations such as <code>DeleteBucket</code>, <code>GetObject</code>, and <code>PutObject</code></li>
-            <li>Some operations conducted without MFA authentication (note the <code>SessionMfaAuthenticated</code> field)</li>
-            <li>Access to potentially sensitive data (<code>customers/export-2025-03-04.csv</code>)</li>
         </ul>
     </div>
 </div>
