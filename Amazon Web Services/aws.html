@@ -29,6 +29,28 @@
             </tr>
         </thead>
         <tbody>
+            <!-- SAMPLE TEST -->
+            <tr>
+                <td rowspan="4" style="font-weight: bold;">TEST QUERY MODAL</td>
+                <td rowspan="4">Identifies EC2 instances launched with IMDSv1 set to optional, creating a credential theft risk</td>
+                <td><strong>Initial Access (TA0001)</strong><br>T1078.004 - Cloud Accounts</td>
+                <td rowspan="4">AWS EC2</td>
+                <td rowspan="4">
+                    <button class="view-logs-btn" onclick="openModal('aws-imdsv1-test')">View Query</button>
+                <td rowspan="4"><a href="https://github.com/RhinoSecurityLabs/pacu/wiki/Module-Details#ec2__metadata_services" target="_blank">Pacu IMDS v1 Attack</a></td>
+                <td rowspan="4">
+                    <button class="view-logs-btn" onclick="openModal('imdsv1-logs')">View Sample Logs</button>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Credential Access (TA0006)</strong><br>T1552.005 - Cloud Instance Metadata API</td>
+            </tr>
+            <tr>
+                <td><strong>Privilege Escalation (TA0004)</strong><br>T1078.004 - Cloud Accounts</td>
+            </tr>
+            <tr>
+                <td><strong>Defense Evasion (TA0005)</strong><br>T1078.004 - Cloud Accounts</td>
+            </tr>
             <!-- EC2 IMDSv1 Vulnerability Detection -->
             <tr>
                 <td rowspan="4" style="font-weight: bold;">EC2 Instance Created with IMDSv1</td>
@@ -133,6 +155,137 @@
             </tr>
             <tr>
                 <td><strong>Exfiltration (TA0010)</strong><br>T1537 - Transfer Data to Cloud Account</td>
+            </tr>
+            <!-- IAM - Access keys created and deleted within short time frame -->
+            <tr>
+                <td rowspan="1" style="font-weight: bold;">IAM - Access keys created and deleted within short time frame</td>
+                <td rowspan="1">Detects when IAM access keys are created and quickly deleted, suggesting possible credential theft or attacker covering tracks</td>
+                <td><strong>Persistence, Privilege Escalation (TA0003, TA0004)</strong><br>T1098.001 - Account Manipulation: Additional Cloud Credentials</td>
+                <td rowspan="1">AWS IAM</td>
+                <td rowspan="1"><a href="#iam-keys-created-deleted-query">View Query</a></td>
+                <td rowspan="1"><a href="https://attack.mitre.org/techniques/T1098/001/" target="_blank">Account Manipulation: Additional Cloud Credentials</a></td>
+                <td rowspan="1">
+                    <button class="view-logs-btn" onclick="openModal('iam-keys-created-deleted-logs')">View Sample Logs</button>
+                </td>
+            </tr>
+
+            <!-- IAM - Cloud User Account Creation -->
+            <tr>
+                <td rowspan="2" style="font-weight: bold;">IAM - Cloud User Account Creation</td>
+                <td rowspan="2">Detects the creation of new IAM users, which could indicate persistence establishment in the environment</td>
+                <td><strong>Persistence (TA0003)</strong><br>T1136.003 - Create Account: Cloud Account</td>
+                <td rowspan="2">AWS IAM</td>
+                <td rowspan="2"><a href="#iam-user-creation-query">View Query</a></td>
+                <td rowspan="2"><a href="https://attack.mitre.org/techniques/T1136/003/" target="_blank">Create Account: Cloud Account</a></td>
+                <td rowspan="2">
+                    <button class="view-logs-btn" onclick="openModal('iam-user-creation-logs')">View Sample Logs</button>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Discovery (TA0007)</strong><br>T1069.003 - Permission Groups Discovery: Cloud Groups</td>
+            </tr>
+
+            <!-- IAM - Management Console successful login with no MFA -->
+            <tr>
+                <td rowspan="1" style="font-weight: bold;">IAM - Management Console successful login with no MFA</td>
+                <td rowspan="1">Detects when users log in to the AWS Management Console without multi-factor authentication</td>
+                <td><strong>Credential Access, Defense Evasion, Persistence (TA0006, TA0005, TA0003)</strong><br>T1556.006 - Modify Authentication Process: Multi-Factor Authentication</td>
+                <td rowspan="1">AWS IAM</td>
+                <td rowspan="1"><a href="#iam-login-no-mfa-query">View Query</a></td>
+                <td rowspan="1"><a href="https://attack.mitre.org/techniques/T1556/006/" target="_blank">Modify Authentication Process: Multi-Factor Authentication</a></td>
+                <td rowspan="1">
+                    <button class="view-logs-btn" onclick="openModal('aws-console-login-sessions')">View Sample Logs</button>
+                </td>
+            </tr>
+
+            <!-- Network - Connection to malicious IPs and Domains -->
+            <tr>
+                <td rowspan="3" style="font-weight: bold;">Network - Connection to malicious IPs and Domains</td>
+                <td rowspan="3">Identifies AWS resources communicating with known malicious IP addresses or domains</td>
+                <td><strong>Discovery (TA0007)</strong><br>T1526 - Cloud Service Discovery</td>
+                <td rowspan="3">AWS VPC Flow Logs</td>
+                <td rowspan="3"><a href="#network-malicious-ips-query">View Query</a></td>
+                <td rowspan="3"><a href="https://attack.mitre.org/techniques/T1048/" target="_blank">Exfiltration Over Alternative Protocol</a></td>
+                <td rowspan="3">
+                    <button class="view-logs-btn" onclick="openModal('aws-malicious-ip-activity')">View Sample Logs</button>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Lateral Movement (TA0008)</strong><br>T1021.007 - Remote Services: Cloud Services</td>
+            </tr>
+            <tr>
+                <td><strong>Exfiltration (TA0010)</strong><br>T1048 - Exfiltration Over Alternative Protocol</td>
+            </tr>
+
+            <!-- Network - Suspicious Changes to AWS Network Resources -->
+            <tr>
+                <td rowspan="3" style="font-weight: bold;">Network - Suspicious Changes to AWS Network Resources</td>
+                <td rowspan="3">Detects unexpected modifications to VPC, security groups, or network ACLs that could indicate network-based attacks</td>
+                <td><strong>Initial Access (TA0001)</strong><br>T1659 - Content Injection</td>
+                <td rowspan="3">AWS CloudTrail</td>
+                <td rowspan="3"><a href="#network-suspicious-changes-query">View Query</a></td>
+                <td rowspan="3"><a href="https://attack.mitre.org/techniques/T1190/" target="_blank">Exploit Public-Facing Application</a></td>
+                <td rowspan="3">
+                    <button class="view-logs-btn" onclick="openModal('aws-network-security-changes')">View Sample Logs</button>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Initial Access (TA0001)</strong><br>T1190 - Exploit Public-Facing Application</td>
+            </tr>
+            <tr>
+                <td><strong>Initial Access (TA0001)</strong><br>T1133 - External Remote Services</td>
+            </tr>
+
+            <!-- Operations - Changes to AWS Configurations -->
+            <tr>
+                <td rowspan="1" style="font-weight: bold;">Operations - Changes to AWS Configurations</td>
+                <td rowspan="1">Identifies potentially high-risk changes to AWS account configurations and security settings</td>
+                <td><strong>Defense Evasion (TA0005)</strong><br>T1578.005 - Modify Cloud Compute Infrastructure: Modify Cloud Compute Configurations</td>
+                <td rowspan="1">AWS CloudTrail</td>
+                <td rowspan="1"><a href="#operations-config-changes-query">View Query</a></td>
+                <td rowspan="1"><a href="https://attack.mitre.org/techniques/T1578/005/" target="_blank">Modify Cloud Compute Infrastructure: Modify Cloud Compute Configurations</a></td>
+                <td rowspan="1">
+                    <button class="view-logs-btn" onclick="openModal('aws-config-changes')">View Sample Logs</button>
+                </td>
+            </tr>
+
+            <!-- Security - CloudTrail tamper detection -->
+            <tr>
+                <td rowspan="1" style="font-weight: bold;">Security - CloudTrail tamper detection</td>
+                <td rowspan="1">Detects attempts to disable, delete, or modify CloudTrail logs to evade detection</td>
+                <td><strong>Defense Evasion (TA0005)</strong><br>T1562.008 - Impair Defenses: Disable or Modify Cloud Logs</td>
+                <td rowspan="1">AWS CloudTrail</td>
+                <td rowspan="1"><a href="#security-cloudtrail-tamper-query">View Query</a></td>
+                <td rowspan="1"><a href="https://attack.mitre.org/techniques/T1562/008/" target="_blank">Impair Defenses: Disable or Modify Cloud Logs</a></td>
+                <td rowspan="1">
+                    <button class="view-logs-btn" onclick="openModal('aws-cloudtrail-changes')">View Sample Logs</button>
+                </td>
+            </tr>
+
+            <!-- Security - Enhanced GuardDuty -->
+            <tr>
+                <td rowspan="1" style="font-weight: bold;">Security - Enhanced GuardDuty</td>
+                <td rowspan="1">Augments Amazon GuardDuty findings with additional context and severity adjustments</td>
+                <td><strong>Discovery (TA0007)</strong><br>T1526 - Cloud Service Discovery</td>
+                <td rowspan="1">AWS GuardDuty</td>
+                <td rowspan="1"><a href="#security-enhanced-guardduty-query">View Query</a></td>
+                <td rowspan="1"><a href="https://attack.mitre.org/techniques/T1526/" target="_blank">Cloud Service Discovery</a></td>
+                <td rowspan="1">
+                    <button class="view-logs-btn" onclick="openModal('aws-guardduty-alerts')">View Sample Logs</button>
+                </td>
+            </tr>
+
+            <!-- Security - Unauthorized API Calls -->
+            <tr>
+                <td rowspan="1" style="font-weight: bold;">Security - Unauthorized API Calls</td>
+                <td rowspan="1">Detects unauthorized or suspicious API calls that could indicate compromised credentials or insider threats</td>
+                <td><strong>Execution (TA0002)</strong><br>T1059.009 - Command and Scripting Interpreter: Cloud API</td>
+                <td rowspan="1">AWS CloudTrail</td>
+                <td rowspan="1"><a href="#security-unauthorized-api-query">View Query</a></td>
+                <td rowspan="1"><a href="https://attack.mitre.org/techniques/T1059/009/" target="_blank">Command and Scripting Interpreter: Cloud API</a></td>
+                <td rowspan="1">
+                    <button class="view-logs-btn" onclick="openModal('aws-access-denied-errors')">View Sample Logs</button>
+                </td>
             </tr>
         </tbody>
         </table>
@@ -582,6 +735,1010 @@
         </ul>
     </div>
 </div>
+
+<!-- Modal for IAM Access Keys Created and Deleted Sample Logs -->
+<div id="iam-keys-created-deleted-logs" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('iam-keys-created-deleted-logs')">&times;</span>
+        <h2>IAM - Access keys created and deleted within short time frame</h2>
+        
+        <div class="log-header">
+            <div>
+                <div class="log-title">Query Results</div>
+                <div class="query-info">Time range: Last 1 hour | Region: All regions</div>
+            </div>
+            <div class="results-info">2 results</div>
+        </div>
+
+        <div class="log-container">
+            <table class="log-table">
+                <thead>
+                    <tr>
+                        <th>FirstEventTime</th>
+                        <th>FirstEventName</th>
+                        <th>FirstEventDescription</th>
+                        <th>LastEventTime</th>
+                        <th>LastEventName</th>
+                        <th>LastEventDescription</th>
+                        <th>Summary</th>
+                        <th>Duration</th>
+                        <th>SourceIpAddress</th>
+                        <th>UserIdentityAccountId</th>
+                        <th>AWSRegion</th>
+                        <th>SuspiciousAccessKeyId</th>
+                        <th>UserIdentityArn</th>
+                        <th>UserAgent</th>
+                        <th>IsSecondaryKey</th>
+                        <th>PrimaryAccessKey</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="log-timestamp">2025-03-05T10:15:22.123Z</td>
+                        <td>CreateAccessKey</td>
+                        <td>User created a new access key</td>
+                        <td class="log-timestamp">2025-03-05T10:18:45.321Z</td>
+                        <td>DeleteAccessKey</td>
+                        <td>User deleted an access key</td>
+                        <td>Access key was created and deleted within a short time frame</td>
+                        <td class="highlight-cell">00:03:23</td>
+                        <td>203.0.113.42</td>
+                        <td>123456789012</td>
+                        <td>us-east-1</td>
+                        <td class="highlight-cell">🚨 AKIA1EXAMPLE2EXAMPLE</td>
+                        <td>arn:aws:iam::123456789012:user/developer</td>
+                        <td>aws-cli/2.9.15 Python/3.9.6</td>
+                        <td>Yes</td>
+                        <td>AKIA1EXAMPLE1EXAMPLE</td>
+                    </tr>
+                    <tr>
+                        <td class="log-timestamp">2025-03-05T09:22:11.456Z</td>
+                        <td>CreateAccessKey</td>
+                        <td>User created a new access key</td>
+                        <td class="log-timestamp">2025-03-05T09:27:33.789Z</td>
+                        <td>DeleteAccessKey</td>
+                        <td>User deleted an access key</td>
+                        <td>Access key was created and deleted within a short time frame</td>
+                        <td class="highlight-cell">00:05:22</td>
+                        <td>198.51.100.23</td>
+                        <td>123456789012</td>
+                        <td>us-west-2</td>
+                        <td class="highlight-cell">🚨 AKIA2EXAMPLE3EXAMPLE</td>
+                        <td>arn:aws:iam::123456789012:user/admin</td>
+                        <td>console.amazonaws.com</td>
+                        <td>Yes</td>
+                        <td>AKIA2EXAMPLE4EXAMPLE</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Detection Logic Explanation</h3>
+        <p>This detection identifies IAM access keys that are created and then quickly deleted within a short time frame (10 minutes or less). This pattern is often associated with attackers who create temporary access keys to perform malicious actions, then delete them to cover their tracks.</p>
+        
+        <p>Key indicators in the logs:</p>
+        <ul>
+            <li>The <code>Duration</code> between creation and deletion is very short (only a few minutes)</li>
+            <li>The <code>IsSecondaryKey</code> field indicates these are additional keys beyond the user's primary key</li>
+            <li>The <code>SuspiciousAccessKeyId</code> is flagged with a warning symbol (🚨)</li>
+            <li>The creation and deletion events originate from the same source IP address</li>
+            <li>Different user agents (CLI vs. console) may indicate different access methods</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Modal for IAM User Creation Events -->
+<div id="iam-user-creation-logs" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('iam-user-creation-logs')">&times;</span>
+        <h2>IAM - New User Creation with Immediate Policy Attachments</h2>
+        
+        <div class="log-header">
+            <div>
+                <div class="log-title">Query Results</div>
+                <div class="query-info">Time range: Last 1 hour | Region: All regions</div>
+            </div>
+            <div class="results-info">3 results</div>
+        </div>
+
+        <div class="log-container">
+            <table class="log-table">
+                <thead>
+                    <tr>
+                        <th>StartTimeUtc</th>
+                        <th>Summary</th>
+                        <th>EventName</th>
+                        <th>Description</th>
+                        <th>CreatorUserName</th>
+                        <th>NewlyCreatedUserName</th>
+                        <th>UserIdentityAccountId</th>
+                        <th>SourceIpAddress</th>
+                        <th>AWSRegion</th>
+                        <th>NewlyCreatedUserPolicy</th>
+                        <th>RoleNames</th>
+                        <th>UserAgent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T09:45:12.743Z</td>
+                        <td>User creation with privileged policy</td>
+                        <td>CreateUser</td>
+                        <td>IAM user was created with administrative permissions</td>
+                        <td>admin</td>
+                        <td class="highlight-cell">🚨 temp-admin-user</td>
+                        <td>123456789012</td>
+                        <td>203.0.113.42</td>
+                        <td>us-east-1</td>
+                        <td class="highlight-cell">arn:aws:iam::aws:policy/AdministratorAccess</td>
+                        <td>CloudAdminRole</td>
+                        <td>aws-cli/2.9.15 Python/3.9.6</td>
+                    </tr>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T09:22:35.198Z</td>
+                        <td>User creation with basic access</td>
+                        <td>CreateUser</td>
+                        <td>IAM user was created with read-only permissions</td>
+                        <td>dev-manager</td>
+                        <td>developer-john</td>
+                        <td>123456789012</td>
+                        <td>198.51.100.23</td>
+                        <td>us-west-2</td>
+                        <td>arn:aws:iam::aws:policy/ReadOnlyAccess</td>
+                        <td>DeveloperRole</td>
+                        <td>console.amazonaws.com</td>
+                    </tr>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T08:54:03.621Z</td>
+                        <td>User creation with S3 access</td>
+                        <td>CreateUser</td>
+                        <td>IAM user was created with S3 bucket access</td>
+                        <td>storage-admin</td>
+                        <td>backup-service</td>
+                        <td>123456789012</td>
+                        <td>192.168.1.100</td>
+                        <td>us-east-2</td>
+                        <td>arn:aws:iam::aws:policy/AmazonS3FullAccess</td>
+                        <td>BackupServiceRole</td>
+                        <td>Boto3/1.26.69 Python/3.10.10</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Detection Logic Explanation</h3>
+        <p>This detection identifies new IAM user creations and their associated policy attachments. It focuses on monitoring when users are created and immediately granted permissions, which could indicate privilege escalation attempts or unauthorized user provisioning.</p>
+        
+        <p>Key indicators in the logs:</p>
+        <ul>
+            <li>The <code>EventName</code> shows user creation events</li>
+            <li>The <code>NewlyCreatedUserName</code> shows the identity being created, with suspicious names flagged (🚨)</li>
+            <li>The <code>NewlyCreatedUserPolicy</code> shows what permissions were granted</li>
+            <li>High-privilege policies like "AdministratorAccess" are highlighted as potentially risky</li>
+            <li>The <code>CreatorUserName</code> and <code>UserAgent</code> help identify who performed the action and from what tool</li>
+            <li>The <code>SourceIpAddress</code> can be compared against known allowed IPs</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Modal for AWS Console Login Sessions Without MFA -->
+<div id="aws-console-login-sessions" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('aws-console-login-sessions')">&times;</span>
+        <h2>AWS - Console Login Sessions Without MFA</h2>
+        
+        <div class="log-header">
+            <div>
+                <div class="log-title">Query Results</div>
+                <div class="query-info">Time range: Last 24 hours | Region: All regions</div>
+            </div>
+            <div class="results-info">3 results</div>
+        </div>
+
+        <div class="log-container">
+            <table class="log-table">
+                <thead>
+                    <tr>
+                        <th>FirstSeenLocal</th>
+                        <th>LastSeenLocal</th>
+                        <th>SessionDurationMinutes</th>
+                        <th>EventName</th>
+                        <th>EventDescription</th>
+                        <th>EventSummary</th>
+                        <th>UserName</th>
+                        <th>UserIdentityAccountId</th>
+                        <th>SessionMfaAuthenticated</th>
+                        <th>SourceIpAddress</th>
+                        <th>AWSRegion</th>
+                        <th>UserAgent</th>
+                        <th>PrincipalSessionID</th>
+                        <th>RoleNames</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T15:32:17.652Z</td>
+                        <td class="log-timestamp">2025-03-12T16:45:22.128Z</td>
+                        <td class="highlight-cell">73</td>
+                        <td>ConsoleLogin</td>
+                        <td>User successfully logged into AWS Console without MFA</td>
+                        <td>Successful console login without MFA authentication</td>
+                        <td class="highlight-cell">🚨 admin-user</td>
+                        <td>123456789012</td>
+                        <td class="highlight-cell">No</td>
+                        <td>203.0.113.42</td>
+                        <td>us-east-1</td>
+                        <td>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36</td>
+                        <td>ASIAXAMPLE123456789</td>
+                        <td>CloudAdminRole</td>
+                    </tr>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T12:18:45.321Z</td>
+                        <td class="log-timestamp">2025-03-12T13:55:01.476Z</td>
+                        <td class="highlight-cell">96</td>
+                        <td>ConsoleLogin</td>
+                        <td>User successfully logged into AWS Console without MFA</td>
+                        <td>Successful console login without MFA authentication</td>
+                        <td>developer-john</td>
+                        <td>123456789012</td>
+                        <td class="highlight-cell">No</td>
+                        <td>198.51.100.23</td>
+                        <td>us-west-2</td>
+                        <td>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)</td>
+                        <td>ASIAXAMPLE987654321</td>
+                        <td>DeveloperRole</td>
+                    </tr>
+                    <tr>
+                        <td class="log-timestamp">2025-03-11T23:41:09.887Z</td>
+                        <td class="log-timestamp">2025-03-12T07:22:13.444Z</td>
+                        <td class="highlight-cell">461</td>
+                        <td>ConsoleLogin</td>
+                        <td>User successfully logged into AWS Console without MFA</td>
+                        <td>Successful console login without MFA authentication</td>
+                        <td class="highlight-cell">🚨 finance-admin</td>
+                        <td>123456789012</td>
+                        <td class="highlight-cell">No</td>
+                        <td>192.0.2.155</td>
+                        <td>eu-west-1</td>
+                        <td>Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36</td>
+                        <td>ASIAXAMPLE567891234</td>
+                        <td>FinanceRole
+BillingAccessRole</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Detection Logic Explanation</h3>
+        <p>This detection identifies AWS Console login sessions where Multi-Factor Authentication (MFA) was not used. It tracks both login and logout events to calculate session duration and highlights users who have successfully authenticated to the AWS Console without using MFA protection.</p>
+        
+        <p>Key indicators in the logs:</p>
+        <ul>
+            <li>The <code>SessionMfaAuthenticated</code> field shows "No" for all entries, indicating MFA was not used</li>
+            <li>The <code>SessionDurationMinutes</code> shows how long each session lasted</li>
+            <li>Administrative or privileged users (marked with 🚨) are of particular concern when accessing without MFA</li>
+            <li>Long-running sessions (over 8 hours) may indicate unattended consoles or unusual access patterns</li>
+            <li>The <code>SourceIpAddress</code> helps identify if access is coming from expected locations</li>
+            <li>The <code>RoleNames</code> field shows what privileged roles the user might be able to assume</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Modal for AWS Activity from Known Malicious IPs -->
+<div id="aws-malicious-ip-activity" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('aws-malicious-ip-activity')">&times;</span>
+        <h2>AWS - Activity from Known Malicious IP Addresses</h2>
+        
+        <div class="log-header">
+            <div>
+                <div class="log-title">Query Results</div>
+                <div class="query-info">Time range: All available data | Source: APT IP Watchlist</div>
+            </div>
+            <div class="results-info">3 results</div>
+        </div>
+
+        <div class="log-container">
+            <table class="log-table">
+                <thead>
+                    <tr>
+                        <th>TimeGenerated</th>
+                        <th>Summary</th>
+                        <th>UserIdentityAccountId</th>
+                        <th>UserIdentityArn</th>
+                        <th>Region</th>
+                        <th>SourceInstance</th>
+                        <th>SourceIpAddress</th>
+                        <th>DstAddr</th>
+                        <th>SrcPort</th>
+                        <th>DstPort</th>
+                        <th>EventName</th>
+                        <th>InterfaceId</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T14:23:17.652Z</td>
+                        <td class="highlight-cell">Unauthorized access attempt from known malicious IP</td>
+                        <td>123456789012</td>
+                        <td>arn:aws:iam::123456789012:user/admin-user</td>
+                        <td>us-east-1</td>
+                        <td>i-0abc123def456789</td>
+                        <td class="highlight-cell">185.159.82.54</td>
+                        <td>10.0.1.145</td>
+                        <td>54321</td>
+                        <td>22</td>
+                        <td>NetworkConnection</td>
+                        <td>eni-0a1b2c3d4e5f6789</td>
+                    </tr>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T13:46:05.321Z</td>
+                        <td class="highlight-cell">S3 bucket access from known malicious IP</td>
+                        <td>123456789012</td>
+                        <td>arn:aws:iam::123456789012:user/s3-user</td>
+                        <td>us-west-2</td>
+                        <td></td>
+                        <td class="highlight-cell">93.184.216.34</td>
+                        <td>10.0.2.156</td>
+                        <td>49876</td>
+                        <td>443</td>
+                        <td>GetObject</td>
+                        <td>eni-07h8i9j0k1l2m3n4</td>
+                    </tr>
+                    <tr>
+                        <td class="log-timestamp">2025-03-11T22:15:09.887Z</td>
+                        <td class="highlight-cell">IAM user creation attempt from known malicious IP</td>
+                        <td>123456789012</td>
+                        <td>arn:aws:iam::123456789012:user/admin-user</td>
+                        <td>eu-west-1</td>
+                        <td></td>
+                        <td class="highlight-cell">45.227.253.98</td>
+                        <td>10.0.3.201</td>
+                        <td>60123</td>
+                        <td>443</td>
+                        <td>CreateUser</td>
+                        <td>eni-0p9q7r5s6t4u3v2w</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Detection Logic Explanation</h3>
+        <p>This detection correlates AWS CloudTrail events with known malicious IP addresses from threat intelligence feeds. It focuses on identifying security-relevant actions performed from IP addresses associated with Advanced Persistent Threats (APTs) or other known malicious actors.</p>
+        
+        <p>Key indicators in the logs:</p>
+        <ul>
+            <li>The <code>SourceIpAddress</code> field shows IPs that match entries in the <code>badguyIPs</code> watchlist</li>
+            <li>The <code>EventName</code> indicates what action was performed from the suspicious IP</li>
+            <li>The <code>DstPort</code> can indicate targeted services (e.g., 22 for SSH, 443 for HTTPS)</li>
+            <li>The <code>Summary</code> field provides context about the detected activity</li>
+            <li>The correlation with VPC Flow logs provides network traffic context around the events</li>
+            <li>The <code>UserIdentityArn</code> shows which accounts may be compromised</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Modal for AWS Network Security Configuration Changes -->
+<div id="aws-network-security-changes" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('aws-network-security-changes')">&times;</span>
+        <h2>AWS - Network Security Configuration Changes from Untrusted Sources</h2>
+        
+        <div class="log-header">
+            <div>
+                <div class="log-title">Query Results</div>
+                <div class="query-info">Time range: All available data | Severity: Medium | Source: Untrusted IPs</div>
+            </div>
+            <div class="results-info">3 results</div>
+        </div>
+
+        <div class="log-container">
+            <table class="log-table">
+                <thead>
+                    <tr>
+                        <th>TimeGenerated</th>
+                        <th>EventName</th>
+                        <th>Severity</th>
+                        <th>DetailSummary</th>
+                        <th>UserIdentityAccountId</th>
+                        <th>UserIdentityArn</th>
+                        <th>UserIdentityPrincipalid</th>
+                        <th>UserIdentityUserName</th>
+                        <th>networknicID</th>
+                        <th>SecurityGroupId</th>
+                        <th>GroupID</th>
+                        <th>ModifiedRuleID</th>
+                        <th>SourceIpAddress</th>
+                        <th>networkAclId</th>
+                        <th>ruleAction</th>
+                        <th>cidrBlock</th>
+                        <th>ruleNumber</th>
+                        <th>PortRange</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T14:45:22.651Z</td>
+                        <td>AuthorizeSecurityGroupIngress</td>
+                        <td class="highlight-cell">Medium</td>
+                        <td class="highlight-cell">Security group modified to allow inbound traffic
+ADDITIONAL INFO: SecurityGroup: sg-0a1b2c3d4e5f6789 Open CIDR: 0.0.0.0/0 Open PortRange: {"From":22,"To":22}</td>
+                        <td>123456789012</td>
+                        <td>arn:aws:iam::123456789012:user/admin-user</td>
+                        <td>AIDA1EXAMPLE123456789</td>
+                        <td>admin-user</td>
+                        <td></td>
+                        <td>sg-0a1b2c3d4e5f6789</td>
+                        <td></td>
+                        <td></td>
+                        <td>203.0.113.42</td>
+                        <td></td>
+                        <td></td>
+                        <td>0.0.0.0/0</td>
+                        <td></td>
+                        <td>{"From":22,"To":22}</td>
+                    </tr>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T13:28:15.789Z</td>
+                        <td>ModifySecurityGroupRules</td>
+                        <td class="highlight-cell">Medium</td>
+                        <td class="highlight-cell">Security group rules modified
+ADDITIONAL INFO: Modified Group: sg-0p9o8i7u6y5t4r3e Modified Rule ID: sgr-0a1b2c3d4e5f6789 Rule Details: {"CidrIpv4":"0.0.0.0/0","Description":"HTTP access","FromPort":80,"IpProtocol":"tcp","ToPort":80}</td>
+                        <td>123456789012</td>
+                        <td>arn:aws:iam::123456789012:user/developer</td>
+                        <td>AIDA2EXAMPLE987654321</td>
+                        <td>developer</td>
+                        <td></td>
+                        <td></td>
+                        <td>sg-0p9o8i7u6y5t4r3e</td>
+                        <td>sgr-0a1b2c3d4e5f6789</td>
+                        <td>198.51.100.23</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="log-timestamp">2025-03-11T22:12:08.456Z</td>
+                        <td>CreateRoute</td>
+                        <td class="highlight-cell">Medium</td>
+                        <td class="highlight-cell">VPC route created or modified
+ADDITIONAL INFO: Open CIDR: 0.0.0.0/0</td>
+                        <td>123456789012</td>
+                        <td>arn:aws:iam::123456789012:role/NetworkAdminRole</td>
+                        <td>AROA3EXAMPLE123456789</td>
+                        <td>AssumedRole</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>192.0.2.155</td>
+                        <td></td>
+                        <td></td>
+                        <td>0.0.0.0/0</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Detection Logic Explanation</h3>
+        <p>This detection identifies network security configuration changes made from untrusted IP addresses or known malicious IPs. It focuses on modifications to security groups, network ACLs, routes, and other network components that could indicate unauthorized access attempts or potential compromise.</p>
+        
+        <p>Key indicators in the logs:</p>
+        <ul>
+            <li>The <code>EventName</code> field shows what type of network configuration change occurred</li>
+            <li>The <code>DetailSummary</code> provides a comprehensive description of the change, including security implications</li>
+            <li>Modifications that open access to <code>0.0.0.0/0</code> (all IPs) are highlighted as potentially concerning</li>
+            <li>Changes to port ranges, especially for sensitive ports like 22 (SSH) or 3389 (RDP)</li>
+            <li>The <code>SourceIpAddress</code> indicates the origin of the change request, which may be untrusted</li>
+            <li>All events have a <code>Medium</code> severity based on the query filtering</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Modal for AWS Configuration Changes -->
+<div id="aws-config-changes" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('aws-config-changes')">&times;</span>
+        <h2>AWS - Critical Configuration Changes from Untrusted Sources</h2>
+        
+        <div class="log-header">
+            <div>
+                <div class="log-title">Query Results</div>
+                <div class="query-info">Time range: Last 1 hour | Source: Untrusted IPs</div>
+            </div>
+            <div class="results-info">3 results</div>
+        </div>
+
+        <div class="log-container">
+            <table class="log-table">
+                <thead>
+                    <tr>
+                        <th>TimeGenerated</th>
+                        <th>Summary</th>
+                        <th>EventName</th>
+                        <th>Severity</th>
+                        <th>AlertDetails</th>
+                        <th>ResourceName</th>
+                        <th>AccountName</th>
+                        <th>UserIdentityType</th>
+                        <th>UserIdentityAccountId</th>
+                        <th>SourceIpAddress</th>
+                        <th>UserAgent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T15:45:22.651Z</td>
+                        <td class="highlight-cell">IAM policy attached to user</td>
+                        <td>AttachUserPolicy</td>
+                        <td class="highlight-cell">High</td>
+                        <td>Administrator policy attached to IAM user</td>
+                        <td>admin-policy</td>
+                        <td>Production</td>
+                        <td>IAMUser</td>
+                        <td>123456789012</td>
+                        <td>203.0.113.42</td>
+                        <td>aws-cli/2.9.15 Python/3.9.6</td>
+                    </tr>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T15:32:15.789Z</td>
+                        <td class="highlight-cell">AWS CloudTrail configuration modified</td>
+                        <td>PutEventSelectors</td>
+                        <td class="highlight-cell">Medium</td>
+                        <td>CloudTrail event selectors were modified</td>
+                        <td>main-trail</td>
+                        <td>Production</td>
+                        <td>IAMUser</td>
+                        <td>123456789012</td>
+                        <td>198.51.100.23</td>
+                        <td>console.amazonaws.com</td>
+                    </tr>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T15:18:08.456Z</td>
+                        <td class="highlight-cell">KMS key deletion scheduled</td>
+                        <td>ScheduleKeyDeletion</td>
+                        <td class="highlight-cell">High</td>
+                        <td>KMS encryption key scheduled for deletion</td>
+                        <td>app-encryption-key</td>
+                        <td>Production</td>
+                        <td>IAMUser</td>
+                        <td>123456789012</td>
+                        <td>192.0.2.155</td>
+                        <td>console.amazonaws.com</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Detection Logic Explanation</h3>
+        <p>This detection identifies critical AWS configuration changes made from untrusted IP addresses within the last hour. It focuses on high-impact security changes including IAM policy modifications, security group changes, encryption key operations, and logging/monitoring alterations.</p>
+        
+        <p>Key indicators in the logs:</p>
+        <ul>
+            <li>The <code>EventName</code> field shows what type of configuration change occurred</li>
+            <li>The <code>Summary</code> provides a high-level description of the change</li>
+            <li>The <code>Severity</code> indicates the potential security impact of the change</li>
+            <li>The <code>AlertDetails</code> field provides additional context about the security implications</li>
+            <li>The <code>SourceIpAddress</code> indicates the origin of the change request, which is from an untrusted source</li>
+            <li>The <code>UserAgent</code> shows whether changes were made via console, CLI, or other methods</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Modal for AWS CloudTrail Modification Events -->
+<div id="aws-cloudtrail-changes" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('aws-cloudtrail-changes')">&times;</span>
+        <h2>AWS - CloudTrail Logging Modification Events</h2>
+        
+        <div class="log-header">
+            <div>
+                <div class="log-title">Query Results</div>
+                <div class="query-info">Time range: Last 1 hour | Event types: Trail modifications</div>
+            </div>
+            <div class="results-info">3 results</div>
+        </div>
+
+        <div class="log-container">
+            <table class="log-table">
+                <thead>
+                    <tr>
+                        <th>StartTimeUtc</th>
+                        <th>Summary</th>
+                        <th>EventName</th>
+                        <th>Description</th>
+                        <th>CloudTrail</th>
+                        <th>UserIdentityPrincipalid</th>
+                        <th>UserIdentityAccessKeyId</th>
+                        <th>SessionIssuerUserName</th>
+                        <th>UserIdentityAccountId</th>
+                        <th>UserName</th>
+                        <th>SourceIpAddress</th>
+                        <th>Type</th>
+                        <th>AWSRegion</th>
+                        <th>UserAgent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T15:45:32.651Z</td>
+                        <td class="highlight-cell">CloudTrail logging disabled</td>
+                        <td>StopLogging</td>
+                        <td>CloudTrail audit logging has been disabled</td>
+                        <td class="highlight-cell">management-events-trail</td>
+                        <td>AIDA123456789ABCDEFGH</td>
+                        <td>AKIA1EXAMPLE1EXAMPLE</td>
+                        <td></td>
+                        <td>123456789012</td>
+                        <td>Production</td>
+                        <td>203.0.113.42</td>
+                        <td>AWSCloudTrail</td>
+                        <td>us-east-1</td>
+                        <td>aws-cli/2.9.15 Python/3.9.6</td>
+                    </tr>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T15:22:18.789Z</td>
+                        <td class="highlight-cell">CloudTrail permanently deleted</td>
+                        <td>DeleteTrail</td>
+                        <td>CloudTrail was permanently deleted</td>
+                        <td class="highlight-cell">security-audit-trail</td>
+                        <td>AIDA234567890ABCDEFGH</td>
+                        <td>AKIA2EXAMPLE2EXAMPLE</td>
+                        <td>AdminRole</td>
+                        <td>123456789012</td>
+                        <td>Production</td>
+                        <td>198.51.100.23</td>
+                        <td>AWSCloudTrail</td>
+                        <td>us-west-2</td>
+                        <td>console.amazonaws.com</td>
+                    </tr>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T15:08:43.456Z</td>
+                        <td class="highlight-cell">VPC Flow Logs deleted</td>
+                        <td>DeleteFlowLogs</td>
+                        <td>VPC Flow Logs were deleted</td>
+                        <td></td>
+                        <td>AROA345678901ABCDEFGH</td>
+                        <td></td>
+                        <td>NetworkAdminRole</td>
+                        <td>123456789012</td>
+                        <td>Production</td>
+                        <td>192.0.2.155</td>
+                        <td>AWSVPC</td>
+                        <td>us-east-2</td>
+                        <td>console.amazonaws.com</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Detection Logic Explanation</h3>
+        <p>This detection identifies modifications to AWS CloudTrail and other logging services within the last hour. These changes could indicate attempts to disable or reduce visibility into AWS account activity, which is a common technique used by attackers to hide malicious actions.</p>
+        
+        <p>Key indicators in the logs:</p>
+        <ul>
+            <li>The <code>EventName</code> field shows the specific logging modification action taken</li>
+            <li>The <code>CloudTrail</code> field identifies which specific trail was modified (when applicable)</li>
+            <li>The <code>Summary</code> and <code>Description</code> provide context about the potential security impact</li>
+            <li>Actions like <code>StopLogging</code>, <code>DeleteTrail</code>, and <code>DeleteFlowLogs</code> are particularly concerning</li>
+            <li>The <code>SourceIpAddress</code> and <code>UserAgent</code> can help identify unusual access patterns</li>
+            <li>The <code>UserIdentityPrincipalid</code> and <code>SessionIssuerUserName</code> help track who performed the action</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Modal for AWS GuardDuty Alerts -->
+<div id="aws-guardduty-alerts" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('aws-guardduty-alerts')">&times;</span>
+        <h2>AWS - GuardDuty Threat Detection Alerts</h2>
+        
+        <div class="log-header">
+            <div>
+                <div class="log-title">Query Results</div>
+                <div class="query-info">Time range: Last 24 hours | Source: GuardDuty</div>
+            </div>
+            <div class="results-info">3 results</div>
+        </div>
+
+        <div class="log-container">
+            <table class="log-table">
+                <thead>
+                    <tr>
+                        <th>TimeGenerated</th>
+                        <th>Severity</th>
+                        <th>ActivityType</th>
+                        <th>Description</th>
+                        <th>ResourceTypeAffected</th>
+                        <th>AWSAccountId</th>
+                        <th>InstanceId</th>
+                        <th>LocalIpAddress</th>
+                        <th>RemoteIpAddress</th>
+                        <th>UserName</th>
+                        <th>AccessKey</th>
+                        <th>RemoteAWSAccountId</th>
+                        <th>AccountUpn</th>
+                        <th>ServiceDetails</th>
+                        <th>DetectionMechanism</th>
+                        <th>Artifact</th>
+                        <th>ThreatIpMatch</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T15:45:32.651Z</td>
+                        <td class="highlight-cell">High</td>
+                        <td>UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration.OutsideAWS</td>
+                        <td class="highlight-cell">EC2 instance credentials were used from an external IP address</td>
+                        <td>AccessKey</td>
+                        <td>123456789012</td>
+                        <td>i-0abc123def456789</td>
+                        <td>10.0.1.145</td>
+                        <td>203.0.113.42</td>
+                        <td>ec2-instance-role</td>
+                        <td>ASIA1EXAMPLE1EXAMPLE</td>
+                        <td></td>
+                        <td>Production</td>
+                        <td>{"service":"ec2","detectedAt":"2025-03-12T15:45:32.651Z","action":{"actionType":"AWS_API_CALL","awsApiCallAction":{"api":"AssumeRole","serviceName":"sts.amazonaws.com"}}}</td>
+                        <td>GuardDuty</td>
+                        <td>Role/AssumeRole</td>
+                        <td>True</td>
+                    </tr>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T14:22:18.789Z</td>
+                        <td class="highlight-cell">Medium</td>
+                        <td>Execution:EC2/SuspiciousFile</td>
+                        <td class="highlight-cell">EC2 instance is executing suspicious files</td>
+                        <td>Instance</td>
+                        <td>123456789012</td>
+                        <td>i-0def456ghi789012</td>
+                        <td>10.0.2.35</td>
+                        <td>198.51.100.23</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>Production</td>
+                        <td>{"service":"runtime-monitoring","detectedAt":"2025-03-12T14:22:18.789Z","action":{"actionType":"EXECUTION","executionAction":{"executablePath":"/tmp/suspicious-file.sh","processName":"bash"}}}</td>
+                        <td>Runtime-Monitoring</td>
+                        <td>File/Execute</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T12:08:43.456Z</td>
+                        <td class="highlight-cell">Low</td>
+                        <td>Discovery:S3/BucketEnumeration</td>
+                        <td class="highlight-cell">Multiple S3 buckets were accessed in a manner that indicates bucket enumeration attempts</td>
+                        <td>S3Bucket</td>
+                        <td>123456789012</td>
+                        <td></td>
+                        <td></td>
+                        <td>192.0.2.155</td>
+                        <td>developer-john</td>
+                        <td>AKIA2EXAMPLE2EXAMPLE</td>
+                        <td></td>
+                        <td>Production</td>
+                        <td>{"service":"s3","detectedAt":"2025-03-12T12:08:43.456Z","action":{"actionType":"AWS_API_CALL","awsApiCallAction":{"api":"ListBuckets","serviceName":"s3.amazonaws.com"}}}</td>
+                        <td>GuardDuty</td>
+                        <td>S3/ListBuckets</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Detection Logic Explanation</h3>
+        <p>This detection presents AWS GuardDuty threat detection findings from the last 24 hours. GuardDuty uses machine learning, anomaly detection, and integrated threat intelligence to identify potentially unauthorized or malicious activity within your AWS environment.</p>
+        
+        <p>Key indicators in the logs:</p>
+        <ul>
+            <li>The <code>Severity</code> field indicates the priority level of the threat (High, Medium, Low)</li>
+            <li>The <code>ActivityType</code> categorizes the type of threat detected using GuardDuty's classification system</li>
+            <li>The <code>Description</code> provides context about the specific suspicious activity</li>
+            <li>The <code>ResourceTypeAffected</code> shows which AWS resource was targeted</li>
+            <li>The <code>ThreatIpMatch</code> field indicates when an IP address matches known threat intelligence</li>
+            <li>The <code>ServiceDetails</code> field contains detailed information about the specific action that triggered the alert</li>
+            <li>The <code>DetectionMechanism</code> shows how the threat was identified (GuardDuty, Runtime-Monitoring, etc.)</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Modal for AWS Access Denied Errors -->
+<div id="aws-access-denied-errors" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('aws-access-denied-errors')">&times;</span>
+        <h2>AWS - Access Denied Errors from Suspicious IP Addresses</h2>
+        
+        <div class="log-header">
+            <div>
+                <div class="log-title">Query Results</div>
+                <div class="query-info">Error types: AccessDenied, AuthFailure, Blocked | Source: Suspicious IPs</div>
+            </div>
+            <div class="results-info">3 results</div>
+        </div>
+
+        <div class="log-container">
+            <table class="log-table">
+                <thead>
+                    <tr>
+                        <th>TimeGenerated</th>
+                        <th>Summary</th>
+                        <th>Severity</th>
+                        <th>ErrorCode</th>
+                        <th>ErrorMessage</th>
+                        <th>EventName</th>
+                        <th>UserIdentityArn</th>
+                        <th>SessionIssuerUserName</th>
+                        <th>UserIdentityAccountId</th>
+                        <th>UserIdentityPrincipalid</th>
+                        <th>UserAgent</th>
+                        <th>SourceIpAddress</th>
+                        <th>AWSRegion</th>
+                        <th>EventSource</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T16:42:22.651Z</td>
+                        <td>Unauthorized attempt to create IAM user</td>
+                        <td class="highlight-cell">High</td>
+                        <td class="highlight-cell">AccessDenied</td>
+                        <td>User: arn:aws:iam::123456789012:user/developer is not authorized to perform: iam:CreateUser on resource: arn:aws:iam::123456789012:user/backdoor-user</td>
+                        <td>CreateUser</td>
+                        <td>arn:aws:iam::123456789012:user/developer</td>
+                        <td></td>
+                        <td>123456789012</td>
+                        <td>AIDA1EXAMPLE123456789</td>
+                        <td>aws-cli/2.9.15 Python/3.9.6</td>
+                        <td>203.0.113.42</td>
+                        <td>us-east-1</td>
+                        <td>iam.amazonaws.com</td>
+                    </tr>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T15:38:15.789Z</td>
+                        <td>Failed authentication attempt</td>
+                        <td class="highlight-cell">Medium</td>
+                        <td class="highlight-cell">AuthFailure</td>
+                        <td>AWS was not able to validate the provided access credentials</td>
+                        <td>ConsoleLogin</td>
+                        <td></td>
+                        <td></td>
+                        <td>123456789012</td>
+                        <td></td>
+                        <td>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36</td>
+                        <td>185.159.82.54</td>
+                        <td>us-west-2</td>
+                        <td>signin.amazonaws.com</td>
+                    </tr>
+                    <tr>
+                        <td class="log-timestamp">2025-03-12T14:22:08.456Z</td>
+                        <td>S3 bucket access blocked</td>
+                        <td class="highlight-cell">Medium</td>
+                        <td class="highlight-cell">Blocked</td>
+                        <td>Access Blocked by S3 Block Public Access settings</td>
+                        <td>GetObject</td>
+                        <td>arn:aws:iam::123456789012:user/s3-user</td>
+                        <td></td>
+                        <td>123456789012</td>
+                        <td>AIDA2EXAMPLE987654321</td>
+                        <td>aws-sdk-java/1.12.261</td>
+                        <td>93.184.216.34</td>
+                        <td>us-east-2</td>
+                        <td>s3.amazonaws.com</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>Detection Logic Explanation</h3>
+        <p>This detection identifies access denied errors and authentication failures originating from suspicious IP addresses. These events may indicate attempts to perform unauthorized actions or gain access to AWS resources by potentially malicious actors.</p>
+        
+        <p>Key indicators in the logs:</p>
+        <ul>
+            <li>The <code>ErrorCode</code> field shows the specific type of access denial (AccessDenied, AuthFailure, Blocked)</li>
+            <li>The <code>ErrorMessage</code> provides detailed information about why the access was denied</li>
+            <li>The <code>SourceIpAddress</code> indicates the origin of the request, which matches either untrusted or known malicious IPs</li>
+            <li>The <code>EventName</code> shows what action was being attempted when access was denied</li>
+            <li>The <code>UserIdentityArn</code> and <code>UserIdentityPrincipalid</code> help identify which identities are being used in these attempts</li>
+            <li>Multiple failures from the same source or targeting sensitive operations like IAM user creation are particularly concerning</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Modal for EC2 IMDSv1 Query -->
+<div id="aws-imdsv1-test" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('aws-imdsv1-test')">&times;</span>
+        <h2>EC2 Instance Created with IMDSv1 - Detection Query</h2>
+        
+        <div class="query-container">
+            <div class="query-header">
+                <div class="query-title">Microsoft Sentinel KQL Query</div>
+                <button class="copy-btn" onclick="copyToClipboard('imdsv1-query-code')">Copy Query</button>
+            </div>
+            
+            <pre id="imdsv1-query-code" class="code-block"><code>//===================================================================
+// EC2 Instance Created with IMDSv1 Vulnerability Detection
+// This query detects EC2 instances created with IMDSv1 enabled
+//===================================================================
+let summaries = AWS_generateSummary();
+let userEvents = AWS_extendUserIdentity
+| where TimeGenerated > ago(30d)
+| where EventName == "RunInstances" 
+| where ErrorCode == ""
+| extend 
+    IMDSv2 = tostring(parse_json(RequestParameters).metadataOptions.httpTokens)
+// Filter for instances where IMDSv2 is not required
+| where IMDSv2 == "optional"
+| project 
+    TimeGenerated,
+    InstanceId = tostring(parse_json(RequestParameters).instancesSet.items[0].instanceId),
+    UserIdentityArn,
+    SourceIpAddress,
+    IMDSv2,
+    EventName,
+    UserIdentityAccountId,
+    AccountName,
+    UserAgent,
+    AWSRegion;
+//===================================================================
+// Join with summaries and format final output
+//===================================================================
+userEvents 
+| join kind=leftouter (summaries) 
+    on $left.EventName == $right.EventName 
+    and $left.TimeGenerated == $right.TimeGenerated 
+    and $left.UserIdentityArn == $right.UserIdentityArn
+| project
+    TimeGenerated,
+    Summary,
+    InstanceId,
+    IMDSv2,
+    UserIdentityArn,
+    UserIdentityAccountId,
+    AccountName,
+    SourceIpAddress,
+    AWSRegion,
+    UserAgent
+| order by TimeGenerated desc</code></pre>
+        </div>
+        
+        <div class="query-explanation">
+            <h3>Query Explanation</h3>
+            <p>This KQL query detects EC2 instances that were created with IMDSv1 set to optional (rather than requiring more secure IMDSv2). The detection works by:</p>
+            <ul>
+                <li>Filtering AWS CloudTrail for <code>RunInstances</code> events in the last 30 days</li>
+                <li>Examining the <code>metadataOptions.httpTokens</code> field in the request parameters</li>
+                <li>Identifying instances where this value is set to <code>optional</code>, which allows IMDSv1 usage</li>
+                <li>Joining with the summary table to provide additional context</li>
+            </ul>
+            <p>IMDSv1 is vulnerable to SSRF attacks that can lead to credential theft. AWS recommends requiring IMDSv2 for all instances.</p>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript function to copy query to clipboard -->
+<script>
+function copyToClipboard(elementId) {
+    var element = document.getElementById(elementId);
+    var text = element.textContent;
+    
+    navigator.clipboard.writeText(text).then(function() {
+        // Success message
+        var copyBtn = document.querySelector('.copy-btn');
+        var originalText = copyBtn.textContent;
+        copyBtn.textContent = "Copied!";
+        setTimeout(function() {
+            copyBtn.textContent = originalText;
+        }, 2000);
+    }).catch(function(err) {
+        console.error('Unable to copy text: ', err);
+    });
+}
+</script>
 
     <!-- Theme toggle button -->
     <button class="theme-toggle" id="theme-toggle" title="Switch theme">
