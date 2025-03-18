@@ -36,7 +36,7 @@
                 <td><strong>Initial Access (TA0001)</strong><br>T1078.004 - Cloud Accounts</td>
                 <td rowspan="4">AWS EC2</td>
                 <td rowspan="4">
-                    <button class="view-logs-btn" onclick="openQueryModal('aws-imdsv1-kql', 'Amazon Web Services/ATT4CKQL - AWS - EC2 - Instance Created with IMDSv1.kql')">View Query</button>                
+                    <button class="view-logs-btn" onclick="openModal('aws-imdsv1-test')">View Query</button>
                 <td rowspan="4"><a href="https://github.com/RhinoSecurityLabs/pacu/wiki/Module-Details#ec2__metadata_services" target="_blank">Pacu IMDS v1 Attack</a></td>
                 <td rowspan="4">
                     <button class="view-logs-btn" onclick="openModal('imdsv1-logs')">View Sample Logs</button>
@@ -57,8 +57,7 @@
                 <td rowspan="4">Identifies EC2 instances launched with IMDSv1 set to optional, creating a credential theft risk</td>
                 <td><strong>Initial Access (TA0001)</strong><br>T1078.004 - Cloud Accounts</td>
                 <td rowspan="4">AWS EC2</td>
-                <td rowspan="4">
-                    <button class="view-logs-btn" onclick="openQueryModal('aws-imdsv1-kql', 'Amazon Web Services/ATT4CKQL - AWS - EC2 - Instance Created with IMDSv1.kql')">View Query</button>
+                <td rowspan="4"><a href="#aws-imdsv1-query">View Query</a></td>
                 <td rowspan="4"><a href="https://github.com/RhinoSecurityLabs/pacu/wiki/Module-Details#ec2__metadata_services" target="_blank">Pacu IMDS v1 Attack</a></td>
                 <td rowspan="4">
                     <button class="view-logs-btn" onclick="openModal('imdsv1-logs')">View Sample Logs</button>
@@ -79,9 +78,7 @@
                 <td rowspan="2">Identifies unusual EC2 instance deployments that may indicate cryptomining or other malicious activities</td>
                 <td><strong>Defense Evasion (TA0005)</strong><br>T1578.002 - Modify Cloud Compute Infrastructure: Create Cloud Instance</td>
                 <td rowspan="2">AWS EC2</td>
-                <td rowspan="2">
-                    <button class="view-logs-btn" onclick="openQueryModal('ec2-suspicious-deployment-kql', 'Amazon Web Services/ATT4CKQL - AWS - EC2 - Suspicious Deployment Detected.kql')">View Query</button>
-                </td>
+                <td rowspan="2"><a href="#ec2-suspicious-deployment-query">View Query</a></td>
                 <td rowspan="2"><a href="https://stratus-red-team.cloud/attack-techniques/AWS/aws.execution.ec2-launch-unusual-instances/" target="_blank">stratus-red-team: Launch Unusual EC2 instances</a></td>
                 <td rowspan="2">
                     <button class="view-logs-btn" onclick="openModal('ec2-suspicious-deployment-logs')">View Sample Logs</button>
@@ -96,9 +93,7 @@
                 <td>Description of this detection</td>
                 <td><strong>Credential Access (TA0006)</strong><br>T1555.006 - Credentials from Password Stores: Cloud Secrets Management Stores</td>
                 <td>AWS EC2</td>
-                <td>
-                    <button class="view-logs-btn" onclick="openQueryModal('ec2-password-kql', 'Amazon Web Services/ATT4CKQL - AWS - EC2 - Password Data Retrieved.kql')">View Query</button>
-                </td>
+                <td><a href="#ec2-password-logs">View Query</a></td>
                 <td><a href="https://stratus-red-team.cloud/attack-techniques/AWS/aws.credential-access.ec2-get-password-data/" target="_blank">stratus-red-team: Retrieve EC2 Password Data</a></td>
                 <td>
                     <button class="view-logs-btn" onclick="openModal('ec2-password-logs')">View Sample Logs</button>
@@ -110,9 +105,7 @@
                 <td rowspan="4">Identifies EC2 instances launched with IMDSv1 set to optional, creating a credential theft risk</td>
                 <td><strong>Exfiltration (TA0010)</strong><br>T1537.001 - Transfer Data to Cloud Account: Cloud Storage Object</td>
                 <td rowspan="4">AWS EBS</td>
-                <td rowspan="4">
-                    <button class="view-logs-btn" onclick="openQueryModal('snapshot-exfil-kql', 'Amazon Web Services/ATT4CKQL - AWS - EC2 - Snapshot Exfiltration Detected.kql')">View Query</button>
-                </td>
+                <td rowspan="4"><a href="#snapshot-exfil-logs">View Query</a></td>
                 <td rowspan="4"><a href="https://stratus-red-team.cloud/attack-techniques/AWS/" target="_blank">stratus-red-team: Exfiltration</a></td>
                 <td rowspan="4">
                     <button class="view-logs-btn" onclick="openModal('snapshot-exfil-logs')">View Sample Logs</button>
@@ -133,9 +126,7 @@
                 <td rowspan="2">Identifies unusual EC2 instance deployments that may indicate cryptomining or other malicious activities</td>
                 <td><strong>Collection (TA0009)</strong><br>T1530 - Data from Cloud Storage</td>
                 <td rowspan="2">AWS S3</td>
-                <td rowspan="2">
-                    <button class="view-logs-btn" onclick="openQueryModal('s3-modification-kql', 'Amazon Web Services/ATT4CKQL - AWS - S3 - Bucket modification detected.kql')">View Query</button>
-                </td>
+                <td rowspan="2"><a href="#s3-modification-logs">View Query</a></td>
                 <td rowspan="2"><a href="https://stratus-red-team.cloud/attack-techniques/AWS/aws.execution.ec2-launch-unusual-instances/" target="_blank">stratus-red-team: Launch Unusual EC2 instances</a></td>
                 <td rowspan="2">
                     <button class="view-logs-btn" onclick="openModal('s3-modification-logs')">View Sample Logs</button>
@@ -150,9 +141,7 @@
                 <td rowspan="4">Identifies EC2 instances launched with IMDSv1 set to optional, creating a credential theft risk</td>
                 <td><strong>Exfiltration (TA0010)</strong><br>T1619 - Cloud Storage Object Discovery </td>
                 <td rowspan="4">AWS S3</td>
-                <td rowspan="4">
-                    <button class="view-logs-btn" onclick="openQueryModal('s3-untrusted-access-kql', 'Amazon Web Services/ATT4CKQL - AWS - S3 - Buckets accessed from untrusted network.kql')">View Query</button>
-                </td>
+                <td rowspan="4"><a href="#snapshot-exfil-logs">View Query</a></td>
                 <td rowspan="4"><a href="https://www.intigriti.com/researchers/blog/hacking-tools/hacking-misconfigured-aws-s3-buckets-a-complete-guide" target="_blank">intigriti: Hacking misconfigured AWS S3 buckets: A complete guide</a></td>
                 <td rowspan="4">
                     <button class="view-logs-btn" onclick="openModal('snapshot-exfil-logs')">View Sample Logs</button>
@@ -173,9 +162,7 @@
                 <td rowspan="1">Detects when IAM access keys are created and quickly deleted, suggesting possible credential theft or attacker covering tracks</td>
                 <td><strong>Persistence, Privilege Escalation (TA0003, TA0004)</strong><br>T1098.001 - Account Manipulation: Additional Cloud Credentials</td>
                 <td rowspan="1">AWS IAM</td>
-                <td rowspan="1">
-                    <button class="view-logs-btn" onclick="openQueryModal('iam-keys-created-deleted-kql', 'Amazon Web Services/ATT4CKQL - AWS - IAM - Access keys created and deleted within short time frame.kql')">View Query</button>
-                </td>
+                <td rowspan="1"><a href="#iam-keys-created-deleted-query">View Query</a></td>
                 <td rowspan="1"><a href="https://attack.mitre.org/techniques/T1098/001/" target="_blank">Account Manipulation: Additional Cloud Credentials</a></td>
                 <td rowspan="1">
                     <button class="view-logs-btn" onclick="openModal('iam-keys-created-deleted-logs')">View Sample Logs</button>
@@ -1661,11 +1648,11 @@ ADDITIONAL INFO: Open CIDR: 0.0.0.0/0</td>
     </div>
 </div>
 
-<!--MODAL SECTION FOR LOG REFERENCES-->
+
 <!-- Modal for EC2 IMDSv1 Query -->
-<div id="aws-imdsv1-kql" class="modal">
+<div id="aws-imdsv1-test" class="modal">
     <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('aws-imdsv1-kql')">&times;</span>
+        <span class="close-btn" onclick="closeModal('aws-imdsv1-test')">&times;</span>
         <h2>EC2 Instance Created with IMDSv1 - Detection Query</h2>
         
         <div class="query-container">
@@ -1674,7 +1661,7 @@ ADDITIONAL INFO: Open CIDR: 0.0.0.0/0</td>
                 <button class="copy-btn" onclick="copyToClipboard('imdsv1-query-code')">Copy Query</button>
             </div>
             
-            <pre id="imdsv1-query-code" class="code-block"><code>FETCH QUERY IN PROGRESS..</code></pre>
+            <pre id="imdsv1-query-code" class="code-block"><code>Loading query...</code></pre>
         </div>
         
         <div class="query-explanation">
@@ -1691,561 +1678,103 @@ ADDITIONAL INFO: Open CIDR: 0.0.0.0/0</td>
     </div>
 </div>
 
-<!-- Modal for EC2 Suspicious Deployment Query -->
-<div id="ec2-suspicious-deployment-kql" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('ec2-suspicious-deployment-kql')">&times;</span>
-        <h2>EC2 Suspicious Deployment - Detection Query</h2>
-        
-        <div class="query-container">
-            <div class="query-header">
-                <div class="query-title">Microsoft Sentinel KQL Query</div>
-                <button class="copy-btn" onclick="copyToClipboard('suspicious-deployment-query-code')">Copy Query</button>
-            </div>
-            
-            <pre><code id="suspicious-deployment-query-code" class="code-block">Loading query...</code></pre>
-        </div>
-        
-        <div class="query-explanation">
-            <h3>Query Explanation</h3>
-            <p>This query identifies unusual EC2 instance deployments that may indicate cryptomining, data exfiltration, or other malicious activities. It establishes a 90-day baseline of instance type usage and flags deployments of rare instance types.</p>
-            
-            <h4>Detection Logic</h4>
-            <p>This KQL query detects suspicious EC2 instance deployments through multiple steps:</p>
-            <ol>
-                <li>
-                    <strong>Baseline Establishment:</strong>
-                    <ul>
-                        <li>Looks back 90 days to determine the historical usage pattern of each EC2 instance type</li>
-                        <li>Counts the number of times each instance type has been deployed</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Recent Activity Monitoring:</strong>
-                    <ul>
-                        <li>Focuses on EC2 instance creation events (<code>RunInstances</code>) in the last 24 hours</li>
-                        <li>Extracts key information like instance type, instance ID, and creation parameters</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Anomaly Detection:</strong>
-                    <ul>
-                        <li>Compares recent deployments against the 90-day baseline</li>
-                        <li>Specifically targets instance types that have only been used 1-3 times in the last 90 days</li>
-                        <li>Enriches findings with instance metadata (OS version, computer name)</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Comprehensive Context:</strong>
-                    <ul>
-                        <li>Groups related information about the deployment (region, source IPs, account IDs)</li>
-                        <li>Provides summaries of the events and detailed descriptions</li>
-                        <li>Includes identity information about who performed the actions</li>
-                    </ul>
-                </li>
-            </ol>
-            
-            <h4>Security Significance</h4>
-            <ul>
-                <li>Threat actors often deploy high-performance instances (GPU or compute-optimized) for cryptomining</li>
-                <li>Data exfiltration operations may use instance types different from an organization's normal patterns</li>
-                <li>The historical baseline approach reduces false positives while catching truly anomalous behavior</li>
-                <li>Collecting source IPs and identity information helps trace the origin of suspicious deployments</li>
-                <li>Instance naming patterns visible in the computer names can provide additional context about intent</li>
-            </ul>
-            
-            <h4>Response Actions</h4>
-            <p>If suspicious deployments are detected:</p>
-            <ol>
-                <li>Confirm whether the deployment is authorized for legitimate purposes</li>
-                <li>Investigate the source IP addresses and user identities that created the instances</li>
-                <li>Examine the instances' running processes and network connections</li>
-                <li>Consider isolating suspicious instances from sensitive resources</li>
-                <li>Implement stricter controls on high-performance instance type provisioning</li>
-            </ol>
-        </div>
-    </div>
-</div>
-
-<!-- Modal for EC2 Password Data Retrieved Query -->
-<div id="ec2-password-kql" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('ec2-password-kql')">&times;</span>
-        <h2>EC2 Password Data Retrieved - Detection Query</h2>
-        
-        <div class="query-container">
-            <div class="query-header">
-                <div class="query-title">Microsoft Sentinel KQL Query</div>
-                <button class="copy-btn" onclick="copyToClipboard('password-query-code')">Copy Query</button>
-            </div>
-            
-            <pre><code id="password-query-code" class="code-block">Loading query...</code></pre>
-        </div>
-        
-        <div class="query-explanation">
-            <h3>Query Explanation</h3>
-            <p>This KQL query detects attempts to retrieve Windows password data from EC2 instances. While this may be legitimate administrator activity, it can also indicate an attacker attempting to access Windows instances after compromising AWS credentials.</p>
-            
-            <h4>Detection Logic</h4>
-            <p>This detection works by:</p>
-            <ul>
-                <li>Filtering CloudTrail for <code>GetPasswordData</code> API calls in the last hour</li>
-                <li>Collecting metadata about the target instances including OS version and computer name</li>
-                <li>Excluding privileged service accounts to reduce false positives</li>
-                <li>Tracking all source IP addresses making these requests</li>
-                <li>Creating a timeline of password retrieval events for each instance</li>
-                <li>Joining with metadata to provide rich context about the targeted instances</li>
-            </ul>
-            
-            <h4>Security Significance</h4>
-            <ul>
-                <li>Password retrieval is a sensitive operation that should be monitored</li>
-                <li>Attackers who compromise AWS credentials may attempt to retrieve Windows instance passwords</li>
-                <li>Multiple retrieval attempts for the same instance could indicate unauthorized access</li>
-                <li>The source IP addresses can be used to verify if access is coming from expected locations</li>
-                <li>Different user agents (console vs. CLI) show different access methods which may indicate automated tools</li>
-            </ul>
-            
-            <h4>Response Actions</h4>
-            <p>If suspicious activity is detected:</p>
-            <ol>
-                <li>Verify if the password retrieval was authorized</li>
-                <li>Check the source IP addresses against known admin locations</li>
-                <li>Consider rotating EC2 instance keys</li>
-                <li>Review IAM permissions to limit which users can retrieve password data</li>
-            </ol>
-        </div>
-    </div>
-</div>
-
-<!-- Modal for AMI/EBS/RDS Snapshot Exfiltration Query -->
-<div id="snapshot-exfil-kql" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('snapshot-exfil-kql')">&times;</span>
-        <h2>AMI/EBS/RDS Snapshot Exfiltration - Detection Query</h2>
-        
-        <div class="query-container">
-            <div class="query-header">
-                <div class="query-title">Microsoft Sentinel KQL Query</div>
-                <button class="copy-btn" onclick="copyToClipboard('snapshot-exfil-query-code')">Copy Query</button>
-            </div>
-            
-            <pre><code id="snapshot-exfil-query-code" class="code-block">Loading query...</code></pre>
-        </div>
-        
-        <div class="query-explanation">
-            <h3>Query Explanation</h3>
-            <p>This query identifies potential data exfiltration attempts via AWS snapshot sharing. It detects when EBS snapshots, AMIs, or RDS snapshots are shared with unauthorized or unknown AWS accounts, which could indicate an attacker trying to exfiltrate data across account boundaries.</p>
-            
-            <h4>Detection Logic</h4>
-            <p>This KQL query detects suspicious snapshot sharing operations through these techniques:</p>
-            <ol>
-                <li>
-                    <strong>Baseline Establishment:</strong>
-                    <ul>
-                        <li>Creates an allowlist of known/legitimate AWS accounts based on 90 days of historical data</li>
-                        <li>Establishes a pattern of normal cross-account interactions within the environment</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Sensitive Event Monitoring:</strong>
-                    <ul>
-                        <li>Focuses on critical snapshot operations including:</li>
-                        <ul>
-                            <li><code>ModifySnapshotAttribute</code> - Changes to snapshot permissions</li>
-                            <li><code>ModifyDBSnapshotAttribute</code> - Changes to database snapshot permissions</li>
-                            <li><code>SharedSnapshotVolumeCreated</code> - When volumes are created from shared snapshots</li>
-                            <li><code>SharedSnapshotCopyInitiated</code> - Cross-account snapshot copying</li>
-                        </ul>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Anomaly Detection:</strong>
-                    <ul>
-                        <li>Identifies when snapshots are shared with accounts outside the established baseline</li>
-                        <li>Extracts detailed information about which snapshots were affected and which accounts received access</li>
-                        <li>Detects particularly suspicious "Add and Remove" patterns that could indicate temporary access for exfiltration</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Context Enrichment:</strong>
-                    <ul>
-                        <li>Categorizes the operation type (Add, Remove, or Add and Remove)</li>
-                        <li>Joins with event summaries to provide additional context</li>
-                        <li>Collects identity information about who performed the snapshot sharing</li>
-                    </ul>
-                </li>
-            </ol>
-            
-            <h4>Security Significance</h4>
-            <ul>
-                <li>Snapshot sharing is a common technique for data exfiltration in AWS environments</li>
-                <li>The "Add and Remove" pattern is particularly suspicious as it indicates temporary sharing followed by cleanup to avoid detection</li>
-                <li>Monitoring both additions and removals catches attackers attempting to cover their tracks</li>
-                <li>Establishing a baseline of known accounts reduces false positives while catching truly anomalous sharing</li>
-                <li>Cross-account data movement may violate data sovereignty or compliance requirements</li>
-            </ul>
-            
-            <h4>Response Actions</h4>
-            <p>If suspicious snapshot sharing is detected:</p>
-            <ol>
-                <li>Immediately revoke access for any unauthorized accounts</li>
-                <li>Determine whether the snapshot contains sensitive data</li>
-                <li>Investigate the identity that performed the sharing action</li>
-                <li>Check for other potentially compromised resources accessed by the same identity</li>
-                <li>Consider implementing preventative controls like AWS Organizations SCPs to restrict snapshot sharing</li>
-                <li>Review CloudTrail logs for other suspicious activities from the same source</li>
-            </ol>
-        </div>
-    </div>
-</div>
-
-<!-- Modal for S3 Bucket Access from Untrusted Networks Query -->
-<div id="s3-untrusted-access-kql" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('s3-untrusted-access-kql')">&times;</span>
-        <h2>S3 Bucket Access from Untrusted Networks - Detection Query</h2>
-        
-        <div class="query-container">
-            <div class="query-header">
-                <div class="query-title">Microsoft Sentinel KQL Query</div>
-                <button class="copy-btn" onclick="copyToClipboard('s3-untrusted-access-query-code')">Copy Query</button>
-            </div>
-            
-            <pre><code id="s3-untrusted-access-query-code" class="code-block">Loading query...</code></pre>
-        </div>
-        
-        <div class="query-explanation">
-            <h3>Query Explanation</h3>
-            <p>This query identifies S3 bucket operations performed from untrusted IP addresses and known malicious IP addresses. It monitors for potentially unauthorized access to sensitive data, exfiltration attempts, or malicious activity targeting S3 resources.</p>
-            
-            <h4>Detection Logic</h4>
-            <p>This KQL query detects suspicious S3 bucket access through multiple filtering techniques:</p>
-            <ol>
-                <li>
-                    <strong>IP Intelligence Integration:</strong>
-                    <ul>
-                        <li>Incorporates known malicious IPs from a threat intelligence watchlist (<code>badguyIPs</code>)</li>
-                        <li>Filters for non-trusted IP addresses using a custom CIDR filtering function</li>
-                        <li>Specifically looks for S3 operations from these suspicious sources</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Critical S3 Operation Monitoring:</strong>
-                    <ul>
-                        <li>Targets specific high-risk S3 operations including:</li>
-                        <ul>
-                            <li>Bucket-level actions: <code>CreateBucket</code>, <code>DeleteBucket</code>, <code>ListBucket</code></li>
-                            <li>Object-level actions: <code>GetObject</code>, <code>PutObject</code>, <code>DeleteObject</code>, <code>CopyObject</code></li>
-                            <li>Metadata operations: <code>HeadObject</code>, <code>GetBucketPolicy</code>, <code>UploadPart</code>, <code>RestoreObject</code>, <code>GetBucketAcl</code></li>
-                        </ul>
-                        <li>Focuses on IAM user activities for better attribution</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Error-Based Detection:</strong>
-                    <ul>
-                        <li>Flags <code>AccessDenied</code> errors which may indicate permission testing or attempted unauthorized access</li>
-                        <li>Uses visual highlighting (🚨) to draw attention to these high-priority events</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Context Enrichment:</strong>
-                    <ul>
-                        <li>Extracts bucket details and resource ARNs for clear targeting information</li>
-                        <li>Joins with event summaries to provide additional context</li>
-                        <li>Collects comprehensive user identity information for attribution</li>
-                    </ul>
-                </li>
-            </ol>
-            
-            <h4>Security Significance</h4>
-            <ul>
-                <li>S3 buckets often contain sensitive data and are frequent targets for data exfiltration</li>
-                <li>Access from known malicious IPs strongly indicates compromise or targeted attacks</li>
-                <li>Operations from untrusted networks may bypass expected security controls</li>
-                <li>Bucket creation/deletion events could indicate attackers setting up exfiltration points</li>
-                <li>Failed access attempts (<code>AccessDenied</code> errors) may reveal reconnaissance or permission testing</li>
-                <li>The variety of logged operations helps establish the full attack chain</li>
-            </ul>
-            
-            <h4>Response Actions</h4>
-            <p>If suspicious S3 bucket access is detected:</p>
-            <ol>
-                <li>Immediately review the affected buckets for sensitive data exposure</li>
-                <li>Verify whether the access was authorized from the unusual IP address</li>
-                <li>Check for unusual data transfer patterns (volume, timing, destination)</li>
-                <li>Consider temporary IP-based restrictions for affected buckets</li>
-                <li>Review IAM permissions for potentially compromised credentials</li>
-                <li>Enable versioning on critical buckets to aid in recovery from malicious deletions</li>
-                <li>Analyze CloudTrail logs for additional suspicious activities from the same source</li>
-            </ol>
-        </div>
-    </div>
-</div>
-
-<!-- Modal for S3 Bucket Modification Detection Query -->
-<div id="s3-modification-kql" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('s3-modification-kql')">&times;</span>
-        <h2>S3 Bucket has been created/accessed/deleted - Detection Query</h2>
-        
-        <div class="query-container">
-            <div class="query-header">
-                <div class="query-title">Microsoft Sentinel KQL Query</div>
-                <button class="copy-btn" onclick="copyToClipboard('s3-modification-query-code')">Copy Query</button>
-            </div>
-            
-            <pre><code id="s3-modification-query-code" class="code-block">Loading query...</code></pre>
-        </div>
-        
-        <div class="query-explanation">
-            <h3>Query Explanation</h3>
-            <p>This query monitors and detects when S3 buckets are created, accessed, or deleted from untrusted network locations. It focuses specifically on successful bucket and object manipulation operations that could indicate unauthorized data access, exfiltration, or destruction attempts.</p>
-            
-            <h4>Detection Logic</h4>
-            <p>This KQL query detects S3 bucket modifications through several filtering mechanisms:</p>
-            <ol>
-                <li>
-                    <strong>Untrusted Network Filtering:</strong>
-                    <ul>
-                        <li>Leverages a custom function (<code>AWS_filterCloudTrailCIDR</code>) to identify source IP addresses outside trusted network ranges</li>
-                        <li>Focuses specifically on operations originating from these potentially suspicious locations</li>
-                        <li>Filters for activity within the last hour to enable rapid response</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Success-Based Detection:</strong>
-                    <ul>
-                        <li>Specifically targets completed (not failed) bucket operations by filtering out events with error codes</li>
-                        <li>Focuses on high-risk S3 operations including:</li>
-                        <ul>
-                            <li>Bucket lifecycle operations: <code>CreateBucket</code>, <code>DeleteBucket</code></li>
-                            <li>Object manipulation: <code>PutObject</code>, <code>GetObject</code>, <code>DeleteObject</code></li>
-                        </ul>
-                        <li>This approach catches successful unauthorized actions rather than just attempts</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Content Details Extraction:</strong>
-                    <ul>
-                        <li>Extracts specific bucket names and object keys being accessed</li>
-                        <li>Provides critical context about what data may have been exposed or modified</li>
-                        <li>Enables assessment of potential impact based on the sensitivity of accessed objects</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Authentication Context:</strong>
-                    <ul>
-                        <li>Captures whether MFA was used for the session (<code>SessionMfaAuthenticated</code>)</li>
-                        <li>Includes user identity information for attribution</li>
-                        <li>Captures user agent information to identify access methods and tools</li>
-                    </ul>
-                </li>
-            </ol>
-            
-            <h4>Security Significance</h4>
-            <ul>
-                <li>S3 buckets often contain sensitive organizational data, making them prime targets for attackers</li>
-                <li>Object-level operations may indicate targeted data exfiltration or tampering</li>
-                <li>Bucket creation from untrusted networks could indicate attacker establishing exfiltration points</li>
-                <li>Bucket deletion could be part of destructive attacks or cleanup activities</li>
-                <li>Successful operations (vs. failed attempts) indicate the attacker has valid credentials and permissions</li>
-                <li>Operations without MFA from untrusted networks represent higher risk activity</li>
-            </ul>
-            
-            <h4>Response Actions</h4>
-            <p>If suspicious S3 bucket modifications are detected:</p>
-            <ol>
-                <li>Immediately assess the sensitivity of the bucket and objects involved</li>
-                <li>Verify whether the access was authorized from the unusual IP address</li>
-                <li>If unauthorized, implement temporary access restrictions on the affected buckets</li>
-                <li>For data exfiltration concerns (GetObject), analyze the volume and type of data accessed</li>
-                <li>For potential tampering (PutObject), compare with previous versions if versioning is enabled</li>
-                <li>For bucket deletions, assess impact and restore from backups if necessary</li>
-                <li>Review IAM permissions to determine how the user gained access</li>
-                <li>Consider implementing stricter controls such as enforcing MFA for sensitive bucket operations</li>
-            </ol>
-        </div>
-    </div>
-</div>
-
-<!-- Modal for IAM Access Keys Created and Deleted Query -->
-<div id="iam-keys-created-deleted-kql" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('iam-keys-created-deleted-kql')">&times;</span>
-        <h2>IAM - Access keys created and deleted within short time frame</h2>
-        
-        <div class="query-container">
-            <div class="query-header">
-                <div class="query-title">Microsoft Sentinel KQL Query</div>
-                <button class="copy-btn" onclick="copyToClipboard('iam-keys-created-deleted-query-code')">Copy Query</button>
-            </div>
-            
-            <pre><code id="iam-keys-created-deleted-query-code" class="code-block">Loading query...</code></pre>
-        </div>
-        
-        <div class="query-explanation">
-            <h3>Query Explanation</h3>
-            <p>This query detects when IAM access keys are created and then quickly deleted within a short time frame. This pattern is often associated with attackers who create temporary access keys to perform malicious actions, then delete them to cover their tracks.</p>
-            
-            <h4>Detection Logic</h4>
-            <p>This KQL query identifies suspicious access key lifecycle patterns through several techniques:</p>
-            <ol>
-                <li>
-                    <strong>Time-Based Analysis:</strong>
-                    <ul>
-                        <li>Specifically looks for access keys created and deleted within a 10-minute window</li>
-                        <li>Focuses on recent activity (within the last hour) to enable rapid response</li>
-                        <li>Calculates the precise duration between creation and deletion events</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Source Filtering:</strong>
-                    <ul>
-                        <li>Leverages a custom function (<code>AWS_filterCloudTrailCIDR</code>) to identify operations from untrusted networks</li>
-                        <li>This helps reduce false positives from expected administrative activities</li>
-                        <li>Provides important context about the origin of suspicious key lifecycle events</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Anomaly Detection:</strong>
-                    <ul>
-                        <li>Identifies users with multiple access keys, which is against security best practices</li>
-                        <li>Flags secondary keys that are created in addition to a user's primary key</li>
-                        <li>Uses eye-catching visual indicators (🚨) to highlight suspicious keys</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Context Enrichment:</strong>
-                    <ul>
-                        <li>Adds descriptive information about both creation and deletion events</li>
-                        <li>Includes details about the user agent to identify the tool or method used</li>
-                        <li>Provides the AWS region and account context for each operation</li>
-                    </ul>
-                </li>
-            </ol>
-            
-            <h4>Security Significance</h4>
-            <ul>
-                <li>Temporary access key creation and deletion is a common technique used by attackers to avoid detection</li>
-                <li>The short lifespan (under 10 minutes) indicates potential malicious intent rather than legitimate use</li>
-                <li>Activities from untrusted networks increase the likelihood of compromise</li>
-                <li>Secondary access keys may indicate an attacker creating credentials while maintaining existing ones</li>
-                <li>The user agent information may reveal unusual tools or automated processes</li>
-                <li>Rapid creation and deletion from the same source IP suggests deliberate activity rather than accident</li>
-            </ul>
-            
-            <h4>Response Actions</h4>
-            <p>If suspicious access key creation/deletion patterns are detected:</p>
-            <ol>
-                <li>Immediately investigate all AWS activities performed with the suspicious access key during its short lifespan</li>
-                <li>Check CloudTrail logs for other suspicious actions from the same source IP address</li>
-                <li>Examine the IAM user account for signs of compromise or unauthorized access</li>
-                <li>Consider temporarily restricting the user's privileges until the investigation is complete</li>
-                <li>If compromise is confirmed, rotate all credentials for the affected user</li>
-                <li>Review IAM policies to implement stricter controls on access key creation</li>
-                <li>Consider implementing automated monitoring for access key creation events</li>
-            </ol>
-        </div>
-    </div>
-</div>
-
-<!-- Theme toggle button -->
-<button class="theme-toggle" id="theme-toggle" title="Switch theme">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-    </svg>
-</button>
-
-<!--Github KQL grabber-->
+<!-- JavaScript to load and display the KQL query -->
 <script>
-    // Apply the theme from sessionStorage
-    document.addEventListener('DOMContentLoaded', function() {
-        const savedTheme = sessionStorage.getItem('att4ckql-theme');
-        if (savedTheme === 'attacker') {
-            document.body.classList.add('theme-attacker');
-        }
-        
-        // Theme toggle functionality
-        const themeToggle = document.getElementById('theme-toggle');
-        themeToggle.addEventListener('click', function() {
-            if (document.body.classList.contains('theme-attacker')) {
-                document.body.classList.remove('theme-attacker');
-                sessionStorage.setItem('att4ckql-theme', 'defender');
+// Function to load the KQL query from file using XMLHttpRequest
+function loadKQLQuery(modalId, queryFile) {
+    const codeElement = document.querySelector(`#${modalId} pre code`);
+    
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                codeElement.textContent = xhr.responseText;
             } else {
-                document.body.classList.add('theme-attacker');
-                sessionStorage.setItem('att4ckql-theme', 'attacker');
+                codeElement.textContent = `Error loading query: ${xhr.status} ${xhr.statusText}`;
+                console.error('Error loading KQL query:', xhr.statusText);
             }
-        });
+        }
+    };
+    
+    xhr.open('GET', queryFile, true);
+    xhr.send();
+}
+
+// Function to copy query to clipboard
+function copyToClipboard(elementId) {
+    var element = document.getElementById(elementId);
+    var text = element.textContent;
+    
+    navigator.clipboard.writeText(text).then(function() {
+        // Success message
+        var copyBtn = document.querySelector('.copy-btn');
+        var originalText = copyBtn.textContent;
+        copyBtn.textContent = "Copied!";
+        setTimeout(function() {
+            copyBtn.textContent = originalText;
+        }, 2000);
+    }).catch(function(err) {
+        console.error('Unable to copy text: ', err);
     });
+}
 
-    // Function to open regular modals (for sample logs)
-    function openModal(modalId) {
-        document.getElementById(modalId).style.display = "block";
-    }
+// Load KQL query when the modal is opened
+document.querySelectorAll('a[href="#aws-imdsv1-query"]').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        openModal('aws-imdsv1-query');
+        loadKQLQuery('aws-imdsv1-query', 'test.html');
+    });
+});
+</script>
 
-    // Function to open query modal with specific GitHub path
-    function openQueryModal(modalId, githubPath) {
-        document.getElementById(modalId).style.display = "block";
-        fetchKQLQuery(modalId, githubPath);
-    }
+    <!-- Theme toggle button -->
+    <button class="theme-toggle" id="theme-toggle" title="Switch theme">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
 
-    // Function to close modal
-    function closeModal(modalId) {
-        document.getElementById(modalId).style.display = "none";
-    }
-
-    // Close modal when clicking outside of it
-    window.onclick = function(event) {
-        const modals = document.getElementsByClassName('modal');
-        for (let i = 0; i < modals.length; i++) {
-            if (event.target == modals[i]) {
-                modals[i].style.display = "none";
-            }
-        }
-    }
-
-    // Function to fetch KQL query from GitHub with dynamic path
-    async function fetchKQLQuery(modalId, githubPath) {
-        const codeElement = document.querySelector(`#${modalId} pre code`);
-        codeElement.textContent = "Fetching query from GitHub...";
-        
-        const baseUrl = "https://raw.githubusercontent.com/realnamesareboring/ATT4CKQL/refs/heads/main/";
-        const fullUrl = baseUrl + githubPath;
-        
-        try {
-            const response = await fetch(fullUrl);
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+    <script>
+        // Apply the theme from sessionStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = sessionStorage.getItem('att4ckql-theme');
+            if (savedTheme === 'attacker') {
+                document.body.classList.add('theme-attacker');
             }
             
-            const queryContent = await response.text();
-            codeElement.textContent = queryContent;
-        } catch (error) {
-            console.error("Error fetching KQL query:", error);
-            codeElement.textContent = `Error loading query: ${error.message}. Please try again later.`;
-        }
-    }
-
-    // Function to copy query to clipboard
-    function copyToClipboard(elementId) {
-        var element = document.getElementById(elementId);
-        var text = element.textContent;
-        
-        navigator.clipboard.writeText(text).then(function() {
-            // Find the button within the same modal as the code
-            var copyBtn = element.closest('.modal-content').querySelector('.copy-btn');
-            var originalText = copyBtn.textContent;
-            copyBtn.textContent = "Copied!";
-            setTimeout(function() {
-                copyBtn.textContent = originalText;
-            }, 2000);
-        }).catch(function(err) {
-            console.error('Unable to copy text: ', err);
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('theme-toggle');
+            themeToggle.addEventListener('click', function() {
+                if (document.body.classList.contains('theme-attacker')) {
+                    document.body.classList.remove('theme-attacker');
+                    sessionStorage.setItem('att4ckql-theme', 'defender');
+                } else {
+                    document.body.classList.add('theme-attacker');
+                    sessionStorage.setItem('att4ckql-theme', 'attacker');
+                }
+            });
         });
-    }
+
+        // Function to open modal
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+        }
+
+        // Function to close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let i = 0; i < modals.length; i++) {
+                if (event.target == modals[i]) {
+                    modals[i].style.display = "none";
+                }
+            }
+        }
     </script>
 </body>
 </html>
