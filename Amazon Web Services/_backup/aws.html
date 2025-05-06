@@ -300,18 +300,6 @@
                     <button class="view-logs-btn" onclick="openModal('aws-access-denied-errors')">View Sample Logs</button>
                 </td>
             </tr>
-            <!-- Security - TEST EXTERNAL MODAL on 5/6/2025 -->
-            <tr>
-                <td rowspan="1" style="font-weight: bold;">TESTING EXTERNAL MODAL on 5/6/2025</td>
-                <td rowspan="1">Detects unauthorized or suspicious API calls that could indicate compromised credentials or insider threats</td>
-                <td><strong>Execution (TA0002)</strong><br>T1059.009 - Command and Scripting Interpreter: Cloud API</td>
-                <td rowspan="1">AWS CloudTrail</td>
-                <td rowspan="1"><a href="#security-unauthorized-api-query">View Query</a></td>
-                <td rowspan="1"><a href="https://attack.mitre.org/techniques/T1059/009/" target="_blank">Command and Scripting Interpreter: Cloud API</a></td>
-                <td rowspan="1">
-                    <button class="view-logs-btn" onclick="openModal('imdsv1-logstest')">View Sample Logs</button>
-                </td>
-            </tr>            
         </tbody>
         </table>
 
@@ -1571,8 +1559,6 @@ ADDITIONAL INFO: Open CIDR: 0.0.0.0/0</td>
     </div>
 </div>
 
-<div id="imdsv1-logstest" class="modal"></div> <!--test external modal 5/6/2025-->
-
 <!-- Modal for AWS Access Denied Errors -->
 <div id="aws-access-denied-errors" class="modal">
     <div class="modal-content">
@@ -2098,7 +2084,7 @@ ADDITIONAL INFO: Open CIDR: 0.0.0.0/0</td>
             
             <pre><code id="iam-keys-created-deleted-query-code" class="code-block">Loading query...</code></pre>
         </div>
-       
+        
         <div class="query-explanation">
             <h3>Query Explanation</h3>
             <p>This query detects when IAM access keys are created and then quickly deleted within a short time frame. This pattern is often associated with attackers who create temporary access keys to perform malicious actions, then delete them to cover their tracks.</p>
@@ -2242,53 +2228,6 @@ ADDITIONAL INFO: Open CIDR: 0.0.0.0/0</td>
             codeElement.textContent = `Error loading query: ${error.message}. Please try again later.`;
         }
     }
-
-// Added on 5/6/2025
-// Function to dynamically load modals
-async function loadModalContent(modalId, modalType, platform) {
-    const modalElement = document.getElementById(modalId);
-    
-    if (!modalElement) {
-        console.error(`Modal element with ID ${modalId} not found.`);
-        return;
-    }
-    
-    // Get the base modal ID without the suffix
-    const baseModalId = modalId.replace('_logs', '').replace('_explained', '');
-    
-    // Determine the correct path based on modalType
-    let modalPath;
-    if (modalType === 'logs') {
-        modalPath = `/_logs/${platform}/${baseModalId}.html`;
-    } else if (modalType === 'explained') {
-        modalPath = `/_explained/${platform}/${baseModalId}.html`;
-    }
-    
-    try {
-        // Show loading indicator
-        modalElement.innerHTML = '<div class="modal-loading">Loading...</div>';
-        modalElement.style.display = "block";
-        
-        // Fetch the modal content
-        const response = await fetch(modalPath);
-        
-        if (!response.ok) {
-            throw new Error(`Could not load modal content from ${modalPath}`);
-        }
-        
-        const modalContent = await response.text();
-        modalElement.innerHTML = modalContent;
-    } catch (error) {
-        console.error('Error loading modal content:', error);
-        modalElement.innerHTML = `
-            <div class="modal-content">
-                <span class="close-btn" onclick="closeModal('${modalId}')">&times;</span>
-                <h2>Error Loading Content</h2>
-                <p>There was an error loading the content. Please try again later.</p>
-            </div>
-        `;
-    }
-}
 
     // Function to copy query to clipboard
     function copyToClipboard(elementId) {
