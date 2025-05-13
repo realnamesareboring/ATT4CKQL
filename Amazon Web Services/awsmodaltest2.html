@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Detection Rules with Sample Logs</title>
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        /* Modal loading animation */
+        .modal-loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 18px;
+            color: #666;
+            background-color: white;
+            border-radius: 8px;
+            margin: 50px auto;
+            max-width: 800px;
+        }
+        
+        /* Shell-like styling for query container */
+        .query-container {
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .query-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            padding: 10px 15px;
+            border-bottom: 1px solid #444;
+            position: relative;
+            z-index: 10;
+        }
+
+/* Ensure pre tag doesn't cause issues */
+        pre {
+            margin: 0;
+            padding: 0;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        .query-title {
+            color: #f8f8f8;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .query-title::before {
+            content: ">";
+            margin-right: 8px;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .code-block {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            margin: 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            border: none;
+            white-space: pre-wrap;
+            max-width: 100%;
+            position: relative;
+            z-index: 5; /* Ensure the text appears above any overlays */
+        }
+
+        /* Shell window control buttons */
+        .query-title::after {
+            content: "";
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ff5f56;
+            margin-right: 6px;
+            margin-left: 15px;
+            box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f;
+        }
+
+        /* Theme-specific adjustments */
+        .theme-attacker .query-title::before {
+            color: var(--primary-color);
+        }
+        
+        /* Style for copy button */
+        .copy-btn {
+            display: inline-block;
+            padding: 6px 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--primary-gradient-end);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-attacker .copy-btn {
+            background-color: var(--primary-color);
+        }
+
+        .theme-attacker .copy-btn:hover {
+            background-color: var(--primary-gradient-end);
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="nav-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 18l-6-6 6-6"/>
+        </svg>
+        Back to Home
+    </a>
+    
+    <h1>AWS Detection Rules with MITRE ATT&CK Mapping</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Detection Name</th>
+                <th>Description</th>
+                <th>MITRE Tactics & Techniques</th>
+                <th>Data Source</th>
+                <th>Query Link</th>
+                <th>Attack Path Reference</th>
+                <th>Sample Logs</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- EC2 IMDSv1 Vulnerability Detection -->
+            <tr>
+                <td rowspan="4" style="font-weight: bold;">EC2 Instance Created with IMDSv1</td>
+                <td rowspan="4">Identifies EC2 instances launched with IMDSv1 set to optional, creating a credential theft risk</td>
+                <td><strong>Initial Access (TA0001)</strong><br>T1078.004 - Cloud Accounts</td>
+                <td rowspan="4">AWS EC2</td>
+                <td rowspan="4">
+                    <button class="view-logs-btn" onclick="openQueryModal('aws-imdsv1-kql', 'Amazon Web Services/ATT4CKQL - AWS - EC2 - Instance Created with IMDSv1.kql')">View Query</button>
+                </td>
+                <td rowspan="4"><a href="https://github.com/RhinoSecurityLabs/pacu/wiki/Module-Details#ec2__metadata_services" target="_blank">Pacu IMDS v1 Attack</a></td>
+                <td rowspan="4">
+                    <button class="view-logs-btn" onclick="openExternalModal('imdsv1-logs', 'logs')">View Sample Logs</button>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Credential Access (TA0006)</strong><br>T1552.005 - Cloud Instance Metadata API</td>
+            </tr>
+            <tr>
+                <td><strong>Privilege Escalation (TA0004)</strong><br>T1078.004 - Cloud Accounts</td>
+            </tr>
+            <tr>
+                <td><strong>Defense Evasion (TA0005)</strong><br>T1078.004 - Cloud Accounts</td>
+            </tr>
+            
+            <!-- EC2 Suspicious Deployment Section -->
+            <tr>
+                <td rowspan="2" style="font-weight: bold;">EC2 Suspicious Deployment Detected</td>
+                <td rowspan="2">Identifies unusual EC2 instance deployments that may indicate cryptomining or other malicious activities</td>
+                <td><strong>Defense Evasion (TA0005)</strong><br>T1578.002 - Modify Cloud Compute Infrastructure: Create Cloud Instance</td>
+                <td rowspan="2">AWS EC2</td>
+                <td rowspan="2">
+                    <button class="view-logs-btn" onclick="openQueryModal('ec2-suspicious-deployment-kql', 'Amazon Web Services/ATT4CKQL - AWS - EC2 - Suspicious Deployment Detected.kql')">View Query</button>
+                </td>
+                <td rowspan="2"><a href="https://stratus-red-team.cloud/attack-techniques/AWS/aws.execution.ec2-launch-unusual-instances/" target="_blank">stratus-red-team: Launch Unusual EC2 instances</a></td>
+                <td rowspan="2">
+                    <button class="view-logs-btn" onclick="openExternalModal('ec2-suspicious-deployment-logs', 'logs')">View Sample Logs</button>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Execution (TA0002)</strong><br>T1204.003 - User Execution: Malicious Image</td>
+            </tr>
+            
+            <!-- EC2 Password Retrieval -->
+            <tr>
+                <td style="font-weight: bold;">EC2 Password Data Retrieved</td>
+                <td>Description of this detection</td>
+                <td><strong>Credential Access (TA0006)</strong><br>T1555.006 - Credentials from Password Stores: Cloud Secrets Management Stores</td>
+                <td>AWS EC2</td>
+                <td>
+                    <button class="view-logs-btn" onclick="openQueryModal('ec2-password-kql', 'Amazon Web Services/ATT4CKQL - AWS - EC2 - Password Data Retrieved.kql')">View Query</button>
+                </td>
+                <td><a href="https://stratus-red-team.cloud/attack-techniques/AWS/aws.credential-access.ec2-get-password-data/" target="_blank">stratus-red-team: Retrieve EC2 Password Data</a></td>
+                <td>
+                    <button class="view-logs-btn" onclick="openExternalModal('ec2-password-logs', 'logs')">View Sample Logs</button>
+                </td>
+            </tr>
+            
+            <!-- AMI/EBS/RDS Snapshot Exfiltration Detected -->
+            <tr>
+                <td rowspan="4" style="font-weight: bold;">AMI/EBS/RDS Snapshot Exfiltration Detected</td>
+                <td rowspan="4">Identifies EC2 instances launched with IMDSv1 set to optional, creating a credential theft risk</td>
+                <td><strong>Exfiltration (TA0010)</strong><br>T1537.001 - Transfer Data to Cloud Account: Cloud Storage Object</td>
+                <td rowspan="4">AWS EBS</td>
+                <td rowspan="4">
+                    <button class="view-logs-btn" onclick="openQueryModal('snapshot-exfil-kql', 'Amazon Web Services/ATT4CKQL - AWS - EC2 - Snapshot Exfiltration Detected.kql')">View Query</button>
+                </td>
+                <td rowspan="4"><a href="https://stratus-red-team.cloud/attack-techniques/AWS/" target="_blank">stratus-red-team: Exfiltration</a></td>
+                <td rowspan="4">
+                    <button class="view-logs-btn" onclick="openExternalModal('snapshot-exfil-logs', 'logs')">View Sample Logs</button>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Collection (TA0009)</strong><br>T1530 - Data from Cloud Storage</td>
+            </tr>
+            <tr>
+                <td><strong>Defense Evasion (TA0005)</strong><br>T1578.002 - Modify Cloud Compute Infrastructure: Create Snapshot</td>
+            </tr>
+            <tr>
+                <td><strong>Initial Access/Persistence (TA0001/TA0003)</strong><br>T1078.004 - Cloud Accounts</td>
+            </tr>
+            
+            <!-- S3 Bucket Modification Detected -->
+            <tr>
+                <td rowspan="2" style="font-weight: bold;">S3 Bucket has been created/accessed/deleted</td>
+                <td rowspan="2">Identifies unusual EC2 instance deployments that may indicate cryptomining or other malicious activities</td>
+                <td><strong>Collection (TA0009)</strong><br>T1530 - Data from Cloud Storage</td>
+                <td rowspan="2">AWS S3</td>
+                <td rowspan="2">
+                    <button class="view-logs-btn" onclick="openQueryModal('s3-modification-kql', 'Amazon Web Services/ATT4CKQL - AWS - S3 - Bucket modification detected.kql')">View Query</button>
+                </td>
+                <td rowspan="2"><a href="https://stratus-red-team.cloud/attack-techniques/AWS/aws.execution.ec2-launch-unusual-instances/" target="_blank">stratus-red-team: Launch Unusual EC2 instances</a></td>
+                <td rowspan="2">
+                    <button class="view-logs-btn" onclick="openExternalModal('s3-modification-logs', 'logs')">View Sample Logs</button>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Execution (TA0002)</strong><br>T1537 - Transfer Data to Cloud Account</td>
+            </tr>
+            
+            <!-- S3 Bucket accessed from an untrusted network -->
+            <tr>
+                <td rowspan="4" style="font-weight: bold;">S3 Bucket accessed from an untrusted network</td>
+                <td rowspan="4">Identifies EC2 instances launched with IMDSv1 set to optional, creating a credential theft risk</td>
+                <td><strong>Exfiltration (TA0010)</strong><br>T1619 - Cloud Storage Object Discovery </td>
+                <td rowspan="4">AWS S3</td>
+                <td rowspan="4">
+                    <button class="view-logs-btn" onclick="openQueryModal('s3-untrusted-access-kql', 'Amazon Web Services/ATT4CKQL - AWS - S3 - Buckets accessed from untrusted network.kql')">View Query</button>
+                </td>
+                <td rowspan="4"><a href="https://www.intigriti.com/researchers/blog/hacking-tools/hacking-misconfigured-aws-s3-buckets-a-complete-guide" target="_blank">intigriti: Hacking misconfigured AWS S3 buckets: A complete guide</a></td>
+                <td rowspan="4">
+                    <button class="view-logs-btn" onclick="openExternalModal('s3-untrusted-access-logs', 'logs')">View Sample Logs</button>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Collection (TA0009)</strong><br>T1530 - Data from Cloud Storage</td>
+            </tr>
+            <tr>
+                <td><strong>Impact (TA0040)</strong><br>T1485 - Data Destruction</td>
+            </tr>
+            <tr>
+                <td><strong>Exfiltration (TA0010)</strong><br>T1537 - Transfer Data to Cloud Account</td>
+            </tr>
+            
+            <!-- IAM - Access keys created and deleted within short time frame -->
+            <tr>
+                <td rowspan="1" style="font-weight: bold;">IAM - Access keys created and deleted within short time frame</td>
+                <td rowspan="1">Detects when IAM access keys are created and quickly deleted, suggesting possible credential theft or attacker covering tracks</td>
+                <td><strong>Persistence, Privilege Escalation (TA0003, TA0004)</strong><br>T1098.001 - Account Manipulation: Additional Cloud Credentials</td>
+                <td rowspan="1">AWS IAM</td>
+                <td rowspan="1">
+                    <button class="view-logs-btn" onclick="openQueryModal('iam-keys-created-deleted-kql', 'Amazon Web Services/ATT4CKQL - AWS - IAM - Access keys created and deleted within short time frame.kql')">View Query</button>
+                </td>
+                <td rowspan="1"><a href="https://attack.mitre.org/techniques/T1098/001/" target="_blank">Account Manipulation: Additional Cloud Credentials</a></td>
+                <td rowspan="1">
+                    <button class="view-logs-btn" onclick="openExternalModal('iam-keys-created-deleted-logs', 'logs')">View Sample Logs</button>
+                </td>
+            </tr>
+
+            <!-- IAM - Cloud User Account Creation -->
+            <tr>
+                <td rowspan="2" style="font-weight: bold;">IAM - Cloud User Account Creation</td>
+                <td rowspan="2">Detects the creation of new IAM users, which could indicate persistence establishment in the environment</td>
+                <td><strong>Persistence (TA0003)</strong><br>T1136.003 - Create Account: Cloud Account</td>
+                <td rowspan="2">AWS IAM</td>
+                <td rowspan="2">
+                    <button class="view-logs-btn" onclick="openQueryModal('iam-user-creation-kql', 'Amazon Web Services/ATT4CKQL - AWS - IAM - Cloud User Account Creation.kql')">View Query</button>
+                </td>
+                <td rowspan="2"><a href="https://attack.mitre.org/techniques/T1136/003/" target="_blank">Create Account: Cloud Account</a></td>
+                <td rowspan="2">
+                    <button class="view-logs-btn" onclick="openExternalModal('iam-user-creation-logs', 'logs')">View Sample Logs</button>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Discovery (TA0007)</strong><br>T1069.003 - Permission Groups Discovery: Cloud Groups</td>
+            </tr>
+
+            <!-- IAM - Management Console successful login with no MFA -->
+            <tr>
+                <td rowspan="1" style="font-weight: bold;">IAM - Management Console successful login with no MFA</td>
+                <td rowspan="1">Detects when users log in to the AWS Management Console without multi-factor authentication</td>
+                <td><strong>Credential Access, Defense Evasion, Persistence (TA0006, TA0005, TA0003)</strong><br>T1556.006 - Modify Authentication Process: Multi-Factor Authentication</td>
+                <td rowspan="1">AWS IAM</td>
+                <td rowspan="1">
+                    <button class="view-logs-btn" onclick="openQueryModal('iam-login-no-mfa-kql', 'Amazon Web Services/ATT4CKQL - AWS - IAM - Console login without MFA.kql')">View Query</button>
+                </td>
+                <td rowspan="1"><a href="https://attack.mitre.org/techniques/T1556/006/" target="_blank">Modify Authentication Process: Multi-Factor Authentication</a></td>
+                <td rowspan="1">
+                    <button class="view-logs-btn" onclick="openExternalModal('aws-console-login-sessions', 'logs')">View Sample Logs</button>
+                </td>
+            </tr>
+
+            <!-- Network - Connection to malicious IPs and Domains -->
+            <tr>
+                <td rowspan="3" style="font-weight: bold;">Network - Connection to malicious IPs and Domains</td>
+                <td rowspan="3">Identifies AWS resources communicating with known malicious IP addresses or domains</td>
+                <td><strong>Discovery (TA0007)</strong><br>T1526 - Cloud Service Discovery</td>
+                <td rowspan="3">AWS VPC Flow Logs</td>
+                <td rowspan="3">
+                    <button class="view-logs-btn" onclick="openQueryModal('network-malicious-ips-kql', 'Amazon Web Services/ATT4CKQL - AWS - Network - Connection to malicious IPs.kql')">View Query</button>
+                </td>
+                <td rowspan="3"><a href="https://attack.mitre.org/techniques/T1048/" target="_blank">Exfiltration Over Alternative Protocol</a></td>
+                <td rowspan="3">
+                    <button class="view-logs-btn" onclick="openExternalModal('aws-malicious-ip-activity', 'logs')">View Sample Logs</button>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Lateral Movement (TA0008)</strong><br>T1021.007 - Remote Services: Cloud Services</td>
+            </tr>
+            <tr>
+                <td><strong>Exfiltration (TA0010)</strong><br>T1048 - Exfiltration Over Alternative Protocol</td>
+            </tr>
+
+            <!-- Network - Suspicious Changes to AWS Network Resources -->
+            <tr>
+                <td rowspan="3" style="font-weight: bold;">Network - Suspicious Changes to AWS Network Resources</td>
+                <td rowspan="3">Detects unexpected modifications to VPC, security groups, or network ACLs that could indicate network-based attacks</td>
+                <td><strong>Initial Access (TA0001)</strong><br>T1659 - Content Injection</td>
+                <td rowspan="3">AWS CloudTrail</td>
+                <td rowspan="3">
+                    <button class="view-logs-btn" onclick="openQueryModal('network-suspicious-changes-kql', 'Amazon Web Services/ATT4CKQL - AWS - Network - Suspicious Changes.kql')">View Query</button>
+                </td>
+                <td rowspan="3"><a href="https://attack.mitre.org/techniques/T1190/" target="_blank">Exploit Public-Facing Application</a></td>
+                <td rowspan="3">
+                    <button class="view-logs-btn" onclick="openExternalModal('aws-network-security-changes', 'logs')">View Sample Logs</button>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Initial Access (TA0001)</strong><br>T1190 - Exploit Public-Facing Application</td>
+            </tr>
+            <tr>
+                <td><strong>Initial Access (TA0001)</strong><br>T1133 - External Remote Services</td>
+            </tr>
+
+            <!-- Operations - Changes to AWS Configurations -->
+            <tr>
+                <td rowspan="1" style="font-weight: bold;">Operations - Changes to AWS Configurations</td>
+                <td rowspan="1">Identifies potentially high-risk changes to AWS account configurations and security settings</td>
+                <td><strong>Defense Evasion (TA0005)</strong><br>T1578.005 - Modify Cloud Compute Infrastructure: Modify Cloud Compute Configurations</td>
+                <td rowspan="1">AWS CloudTrail</td>
+                <td rowspan="1">
+                    <button class="view-logs-btn" onclick="openQueryModal('operations-config-changes-kql', 'Amazon Web Services/ATT4CKQL - AWS - Operations - Configuration Changes.kql')">View Query</button>
+                </td>
+                <td rowspan="1"><a href="https://attack.mitre.org/techniques/T1578/005/" target="_blank">Modify Cloud Compute Infrastructure: Modify Cloud Compute Configurations</a></td>
+                <td rowspan="1">
+                    <button class="view-logs-btn" onclick="openExternalModal('aws-config-changes', 'logs')">View Sample Logs</button>
+                </td>
+            </tr>
+
+            <!-- Security - CloudTrail tamper detection -->
+            <tr>
+                <td rowspan="1" style="font-weight: bold;">Security - CloudTrail tamper detection</td>
+                <td rowspan="1">Detects attempts to disable, delete, or modify CloudTrail logs to evade detection</td>
+                <td><strong>Defense Evasion (TA0005)</strong><br>T1562.008 - Impair Defenses: Disable or Modify Cloud Logs</td>
+                <td rowspan="1">AWS CloudTrail</td>
+                <td rowspan="1">
+                    <button class="view-logs-btn" onclick="openQueryModal('security-cloudtrail-tamper-kql', 'Amazon Web Services/ATT4CKQL - AWS - Security - CloudTrail Tamper Detection.kql')">View Query</button>
+                </td>
+                <td rowspan="1"><a href="https://attack.mitre.org/techniques/T1562/008/" target="_blank">Impair Defenses: Disable or Modify Cloud Logs</a></td>
+                <td rowspan="1">
+                    <button class="view-logs-btn" onclick="openExternalModal('aws-cloudtrail-changes', 'logs')">View Sample Logs</button>
+                </td>
+            </tr>
+
+            <!-- Security - Enhanced GuardDuty -->
+            <tr>
+                <td rowspan="1" style="font-weight: bold;">Security - Enhanced GuardDuty</td>
+                <td rowspan="1">Augments Amazon GuardDuty findings with additional context and severity adjustments</td>
+                <td><strong>Discovery (TA0007)</strong><br>T1526 - Cloud Service Discovery</td>
+                <td rowspan="1">AWS GuardDuty</td>
+                <td rowspan="1">
+                    <button class="view-logs-btn" onclick="openQueryModal('security-enhanced-guardduty-kql', 'Amazon Web Services/ATT4CKQL - AWS - Security - Enhanced GuardDuty.kql')">View Query</button>
+                </td>
+                <td rowspan="1"><a href="https://attack.mitre.org/techniques/T1526/" target="_blank">Cloud Service Discovery</a></td>
+                <td rowspan="1">
+                    <button class="view-logs-btn" onclick="openExternalModal('aws-guardduty-alerts', 'logs')">View Sample Logs</button>
+                </td>
+            </tr>
+
+            <!-- Security - Unauthorized API Calls -->
+            <tr>
+                <td rowspan="1" style="font-weight: bold;">Security - Unauthorized API Calls</td>
+                <td rowspan="1">Detects unauthorized or suspicious API calls that could indicate compromised credentials or insider threats</td>
+                <td><strong>Execution (TA0002)</strong><br>T1059.009 - Command and Scripting Interpreter: Cloud API</td>
+                <td rowspan="1">AWS CloudTrail</td>
+                <td rowspan="1">
+                    <button class="view-logs-btn" onclick="openQueryModal('security-unauthorized-api-kql', 'Amazon Web Services/ATT4CKQL - AWS - Security - Unauthorized API Calls.kql')">View Query</button>
+                </td>
+                <td rowspan="1"><a href="https://attack.mitre.org/techniques/T1059/009/" target="_blank">Command and Scripting Interpreter: Cloud API</a></td>
+                <td rowspan="1">
+                    <button class="view-logs-btn" onclick="openExternalModal('aws-access-denied-errors', 'logs')">View Sample Logs</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Empty modal containers that will be filled dynamically -->
+    <!-- Sample Logs Modals -->
+    <div id="imdsv1-logs" class="modal"></div>
+    <div id="ec2-suspicious-deployment-logs" class="modal"></div>
+    <div id="ec2-password-logs" class="modal"></div>
+    <div id="snapshot-exfil-logs" class="modal"></div>
+    <div id="s3-modification-logs" class="modal"></div>
+    <div id="s3-untrusted-access-logs" class="modal"></div>
+    <div id="iam-keys-created-deleted-logs" class="modal"></div>
+    <div id="iam-user-creation-logs" class="modal"></div>
+    <div id="aws-console-login-sessions" class="modal"></div>
+    <div id="aws-malicious-ip-activity" class="modal"></div>
+    <div id="aws-network-security-changes" class="modal"></div>
+    <div id="aws-config-changes" class="modal"></div>
+    <div id="aws-cloudtrail-changes" class="modal"></div>
+    <div id="aws-guardduty-alerts" class="modal"></div>
+    <div id="aws-access-denied-errors" class="modal"></div>
+    
+    <!-- Query Modals -->
+    <div id="aws-imdsv1-kql" class="modal"></div>
+    <div id="ec2-suspicious-deployment-kql" class="modal"></div>
+    <div id="ec2-password-kql" class="modal"></div>
+    <div id="snapshot-exfil-kql" class="modal"></div>
+    <div id="s3-modification-kql" class="modal"></div>
+    <div id="s3-untrusted-access-kql" class="modal"></div>
+    <div id="iam-keys-created-deleted-kql" class="modal"></div>
+    <div id="iam-user-creation-kql" class="modal"></div>
+    <div id="iam-login-no-mfa-kql" class="modal"></div>
+    <div id="network-malicious-ips-kql" class="modal"></div>
+    <div id="network-suspicious-changes-kql" class="modal"></div>
+    <div id="operations-config-changes-kql" class="modal"></div>
+    <div id="security-cloudtrail-tamper-kql" class="modal"></div>
+    <div id="security-enhanced-guardduty-kql" class="modal"></div>
+    <div id="security-unauthorized-api-kql" class="modal"></div>
+
+    <!-- Theme toggle button -->
+    <button class="theme-toggle" id="theme-toggle" title="Switch theme">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <script>
+        // Apply the theme from sessionStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = sessionStorage.getItem('att4ckql-theme');
+            if (savedTheme === 'attacker') {
+                document.body.classList.add('theme-attacker');
+            }
+            
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('theme-toggle');
+            themeToggle.addEventListener('click', function() {
+                if (document.body.classList.contains('theme-attacker')) {
+                    document.body.classList.remove('theme-attacker');
+                    sessionStorage.setItem('att4ckql-theme', 'defender');
+                } else {
+                    document.body.classList.add('theme-attacker');
+                    sessionStorage.setItem('att4ckql-theme', 'attacker');
+                }
+            });
+        });
+
+        // Function to load modal content from GitHub raw content URL
+        async function loadExternalModalContent(modalId, modalType) {
+            const modalElement = document.getElementById(modalId);
+            
+            if (!modalElement) {
+                console.error(`Modal element with ID ${modalId} not found.`);
+                return;
+            }
+            
+            // Use GitHub raw content URL
+            const githubRawBaseUrl = "https://raw.githubusercontent.com/realnamesareboring/ATT4CKQL/main/";
+            const modalPath = `${githubRawBaseUrl}Amazon%20Web%20Services/_${modalType}/${modalId}.html`;
+            
+            console.log(`Loading from GitHub: ${modalPath}`);
+            
+            try {
+                // Show loading indicator and display the modal
+                modalElement.innerHTML = '<div class="modal-loading">Loading content...</div>';
+                modalElement.style.display = "block";
+                
+                // Fetch the modal content from GitHub
+                const response = await fetch(modalPath);
+                
+                if (!response.ok) {
+                    console.error(`GitHub fetch failed: ${modalPath}. Status: ${response.status}`);
+                    throw new Error(`Could not load content (Status: ${response.status})`);
+                }
+                
+                const modalContent = await response.text();
+                console.log(`Content loaded successfully`);
+                modalElement.innerHTML = modalContent;
+            } catch (error) {
+                console.error('Error loading content:', error);
+                modalElement.innerHTML = `
+                    <div class="modal-content">
+                        <span class="close-btn" onclick="closeModal('${modalId}')">&times;</span>
+                        <h2>Error Loading Content</h2>
+                        <p>There was an error loading the content: ${error.message}</p>
+                        <p>URL attempted: ${modalPath}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Function to open external modals
+        function openExternalModal(modalId, modalType) {
+            loadExternalModalContent(modalId, modalType);
+        }
+
+        // Function to open query modal with specific GitHub path
+        function openQueryModal(modalId, githubPath) {
+            // First display the modal with loading message
+            const modalElement = document.getElementById(modalId);
+            modalElement.innerHTML = '<div class="modal-loading">Loading query...</div>';
+            modalElement.style.display = "block";
+            
+            // Then fetch the KQL query and display it with proper formatting
+            fetchKQLQuery(modalId, githubPath);
+        }
+
+        // Function to close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let i = 0; i < modals.length; i++) {
+                if (event.target == modals[i]) {
+                    modals[i].style.display = "none";
+                }
+            }
+        }
+
+        // Function to fetch KQL query from GitHub with dynamic path
+        async function fetchKQLQuery(modalId, githubPath) {
+            const modalElement = document.getElementById(modalId);
+            
+            try {
+                const baseUrl = "https://raw.githubusercontent.com/realnamesareboring/ATT4CKQL/main/";
+                const fullUrl = baseUrl + githubPath;
+                
+                console.log(`Fetching KQL query from: ${fullUrl}`);
+                
+                const response = await fetch(fullUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const queryContent = await response.text();
+
+                // // Sanitize the content to prevent display issues
+                // const sanitizedContent = queryContent
+                //     .replace(/</g, "&lt;")
+                //     .replace(/>/g, "&gt;");
+                
+                // Create the modal content with shell-like styling
+                modalElement.innerHTML = `
+                    <div class="modal-content">
+                        <span class="close-btn" onclick="closeModal('${modalId}')">&times;</span>
+                        <h2>${githubPath.split('/').pop().replace('.kql', '')} - Detection Query</h2>
+                        
+                        <div class="query-container">
+                            <div class="query-header">
+                                <div class="query-title">Microsoft Sentinel KQL Query</div>
+                                <button class="copy-btn" onclick="copyToClipboard('${modalId}-code')">Copy Query</button>
+                            </div>
+                            
+                            <pre><code id="${modalId}-code" class="code-block">${queryContent}</code></pre>
+                        </div>
+                        
+                        <div class="query-explanation">
+                            <h3>Query Explanation</h3>
+                            <p>Loading query explanation...</p>
+                            <p>For a detailed explanation of this query, view the documentation in the GitHub repository.</p>
+                        </div>
+                    </div>
+                `;
+                
+
+                
+                // Optionally load the query explanation from an external file
+                try {
+                    const explainPath = `${baseUrl}Amazon%20Web%20Services/_explained/${modalId}.html`;
+                    const explainResponse = await fetch(explainPath);
+                    
+                    if (explainResponse.ok) {
+                        const explainContent = await explainResponse.text();
+                        const explanationDiv = modalElement.querySelector('.query-explanation');
+                        if (explanationDiv) {
+                            explanationDiv.innerHTML = explainContent;
+                        }
+                    }
+                } catch (explainError) {
+                    console.log('Could not load explanation, using default text');
+                }
+                
+            } catch (error) {
+                console.error("Error fetching KQL query:", error);
+                modalElement.innerHTML = `
+                    <div class="modal-content">
+                        <span class="close-btn" onclick="closeModal('${modalId}')">&times;</span>
+                        <h2>Error Loading Query</h2>
+                        <p>There was an error loading the query: ${error.message}</p>
+                        <p>Please check the GitHub repository for the correct file path.</p>
+                    </div>
+                `;
+            }
+        }
+
+                // Store the query content in a variable for copying
+                window[`${modalId}_content`] = queryContent;
+        
+        // Set up the copy button
+        document.getElementById(`${modalId}-copy-btn`).addEventListener('click', function() {
+            navigator.clipboard.writeText(window[`${modalId}_content`])
+                .then(() => {
+                    this.textContent = "Copied!";
+                    setTimeout(() => {
+                        this.textContent = "Copy Query";
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+        });
+        
+        // Display the query in a pre-formatted block with syntax highlighting
+        const displayElement = document.getElementById(`${modalId}-query-display`);
+        
+        // Create a styled display for the query
+        displayElement.innerHTML = `
+            <pre style="margin: 0; padding: 15px; background-color: #1e1e1e; color: #d4d4d4; 
+                       font-family: 'Consolas', 'Monaco', 'Courier New', monospace; 
+                       font-size: 14px; line-height: 1.5; overflow: visible; 
+                       white-space: pre-wrap; word-break: keep-all; tab-size: 4;">${escapeHtml(queryContent)}</pre>
+        `;
+        
+        // Optionally load the query explanation from an external file
+        try {
+            const explainPath = `${baseUrl}Amazon%20Web%20Services/_explained/${modalId}.html`;
+            const explainResponse = await fetch(explainPath);
+            
+            if (explainResponse.ok) {
+                const explainContent = await explainResponse.text();
+                const explanationDiv = modalElement.querySelector('.query-explanation');
+                if (explanationDiv) {
+                    explanationDiv.innerHTML = explainContent;
+                }
+            }
+        } catch (explainError) {
+            console.log('Could not load explanation, using default text');
+        }
+
+    // } catch (error) {
+    //     console.error("Error fetching KQL query:", error);
+    //     modalElement.innerHTML = `
+    //         <div class="modal-content">
+    //             <span class="close-btn" onclick="closeModal('${modalId}')">&times;</span>
+    //             <h2>Error Loading Query</h2>
+    //             <p>There was an error loading the query: ${error.message}</p>
+    //             <p>Please check the GitHub repository for the correct file path.</p>
+    //         </div>
+    //     `;
+    // }
+
+// Helper function to escape HTML special characters
+function escapeHtml(text) {
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+        // Function to copy query to clipboard
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            
+            navigator.clipboard.writeText(text).then(function() {
+                // Find the button within the same modal as the code
+                const copyBtn = element.closest('.modal-content').querySelector('.copy-btn');
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = "Copied!";
+                setTimeout(function() {
+                    copyBtn.textContent = originalText;
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Unable to copy text: ', err);
+            });
+        }
+    </script>
+</body>
+</html>

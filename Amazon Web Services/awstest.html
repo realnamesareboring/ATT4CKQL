@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modal Test Page</title>
+    <style>
+        /* Basic styling */
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            overflow: auto;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 50px auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .view-logs-btn {
+            padding: 8px 15px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .modal-loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 18px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>External Modal Test</h1>
+    
+    <p>This is a simplified test page to debug the external modal loading functionality.</p>
+    
+    <button class="view-logs-btn" onclick="openModal('imdsv1-logstest')">View Test Modal</button>
+    
+    <!-- Modal container - just an empty div that will be filled by JavaScript -->
+    <div id="imdsv1-logstest" class="modal"></div>
+    
+    <script>
+        // Function to dynamically load modal content from GitHub
+        async function loadModalContent(modalId, modalType, platform) {
+            const modalElement = document.getElementById(modalId);
+            
+            if (!modalElement) {
+                console.error(`Modal element with ID ${modalId} not found.`);
+                return;
+            }
+            
+            // Use GitHub raw content URL
+            // Convert the GitHub blob URL to a raw content URL (change blob to raw and remove /blob/)
+            const githubRawBaseUrl = "https://raw.githubusercontent.com/realnamesareboring/ATT4CKQL/main/";
+            const modalPath = `${githubRawBaseUrl}${platform}/_${modalType}/${modalId}.html`;
+            
+            console.log(`Attempting to load modal content from GitHub: ${modalPath}`);
+            
+            try {
+                // Show loading indicator and display the modal
+                modalElement.innerHTML = '<div class="modal-loading">Loading...</div>';
+                modalElement.style.display = "block";
+                
+                // Fetch the modal content from GitHub
+                const response = await fetch(modalPath);
+                
+                if (!response.ok) {
+                    console.error(`Failed to load modal content from GitHub: ${modalPath}. Status: ${response.status}`);
+                    throw new Error(`Could not load content from GitHub (Status: ${response.status})`);
+                }
+                
+                const modalContent = await response.text();
+                console.log(`Successfully loaded content from GitHub`);
+                modalElement.innerHTML = modalContent;
+            } catch (error) {
+                console.error('Error loading modal content:', error);
+                modalElement.innerHTML = `
+                    <div class="modal-content">
+                        <span class="close-btn" onclick="closeModal('${modalId}')">&times;</span>
+                        <h2>Error Loading Content</h2>
+                        <p>There was an error loading the content from GitHub: ${error.message}</p>
+                        <p>URL attempted: ${modalPath}</p>
+                        
+                        <h3>Troubleshooting:</h3>
+                        <ol>
+                            <li>Check if the file exists at the GitHub URL</li>
+                            <li>Verify the repository and branch names are correct</li>
+                            <li>Ensure the file path within the repository is correct</li>
+                            <li>Consider using an embedded modal for testing if GitHub access is problematic</li>
+                        </ol>
+                    </div>
+                `;
+            }
+        }
+        
+        // Function to open modal
+        function openModal(modalId) {
+            console.log(`Opening modal: ${modalId}`);
+            loadModalContent(modalId, 'logs', 'Amazon%20Web%20Services');
+        }
+        
+        // Function to close modal
+        function closeModal(modalId) {
+            console.log(`Closing modal: ${modalId}`);
+            document.getElementById(modalId).style.display = "none";
+        }
+        
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let i = 0; i < modals.length; i++) {
+                if (event.target == modals[i]) {
+                    modals[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -2244,7 +2244,7 @@ ADDITIONAL INFO: Open CIDR: 0.0.0.0/0</td>
     }
 
 // Added on 5/6/2025
-// Function to dynamically load modals
+// Function to dynamically load modals with improved debugging
 async function loadModalContent(modalId, modalType, platform) {
     const modalElement = document.getElementById(modalId);
     
@@ -2253,8 +2253,8 @@ async function loadModalContent(modalId, modalType, platform) {
         return;
     }
     
-    // Get the base modal ID without the suffix
-    const baseModalId = modalId.replace('_logs', '').replace('_explained', '');
+    // No need to remove suffixes since your modal IDs don't use them
+    const baseModalId = modalId;
     
     // Determine the correct path based on modalType
     let modalPath;
@@ -2264,8 +2264,10 @@ async function loadModalContent(modalId, modalType, platform) {
         modalPath = `/_explained/${platform}/${baseModalId}.html`;
     }
     
+    console.log(`Attempting to load modal content from: ${modalPath}`);
+    
     try {
-        // Show loading indicator
+        // Show loading indicator and display the modal
         modalElement.innerHTML = '<div class="modal-loading">Loading...</div>';
         modalElement.style.display = "block";
         
@@ -2273,10 +2275,12 @@ async function loadModalContent(modalId, modalType, platform) {
         const response = await fetch(modalPath);
         
         if (!response.ok) {
+            console.error(`Failed to load modal content from ${modalPath}. Status: ${response.status}`);
             throw new Error(`Could not load modal content from ${modalPath}`);
         }
         
         const modalContent = await response.text();
+        console.log(`Successfully loaded content from ${modalPath}`);
         modalElement.innerHTML = modalContent;
     } catch (error) {
         console.error('Error loading modal content:', error);
@@ -2284,7 +2288,8 @@ async function loadModalContent(modalId, modalType, platform) {
             <div class="modal-content">
                 <span class="close-btn" onclick="closeModal('${modalId}')">&times;</span>
                 <h2>Error Loading Content</h2>
-                <p>There was an error loading the content. Please try again later.</p>
+                <p>There was an error loading the content: ${error.message}</p>
+                <p>Path attempted: ${modalPath}</p>
             </div>
         `;
     }

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Detection Rules with Sample Logs</title>
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        /* Additional styles for modal system */
+        .modal-loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 18px;
+            color: #666;
+            background-color: white;
+            border-radius: 8px;
+            margin: 50px auto;
+            max-width: 800px;
+        }
+        
+        /* Shell-like styling for query container */
+        .query-container {
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .query-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            padding: 10px 15px;
+            border-bottom: 1px solid #444;
+        }
+
+        .query-title {
+            color: #f8f8f8;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .query-title::before {
+            content: ">";
+            margin-right: 8px;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .code-block {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            margin: 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            border: none;
+            white-space: pre-wrap;
+        }
+
+        /* Shell window control buttons */
+        .query-title::after {
+            content: "";
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ff5f56;
+            margin-right: 6px;
+            margin-left: 15px;
+            box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f;
+        }
+
+        /* Theme-specific adjustments */
+        .theme-attacker .query-title::before {
+            color: var(--primary-color);
+        }
+        
+        /* Style for copy button */
+        .copy-btn {
+            display: inline-block;
+            padding: 6px 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--primary-gradient-end);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-attacker .copy-btn {
+            background-color: var(--primary-color);
+        }
+
+        .theme-attacker .copy-btn:hover {
+            background-color: var(--primary-gradient-end);
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="nav-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 18l-6-6 6-6"/>
+        </svg>
+        Back to Home
+    </a>
+    
+    <h1>AWS Detection Rules with MITRE ATT&CK Mapping</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Detection Name</th>
+                <th>Description</th>
+                <th>MITRE Tactics & Techniques</th>
+                <th>Data Source</th>
+                <th>Query Link</th>
+                <th>Attack Path Reference</th>
+                <th>Sample Logs</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- EC2 IMDSv1 Vulnerability Detection -->
+            <tr>
+                <td rowspan="4" style="font-weight: bold;">EC2 Instance Created with IMDSv1</td>
+                <td rowspan="4">Identifies EC2 instances launched with IMDSv1 set to optional, creating a credential theft risk</td>
+                <td><strong>Initial Access (TA0001)</strong><br>T1078.004 - Cloud Accounts</td>
+                <td rowspan="4">AWS EC2</td>
+                <td rowspan="4">
+                    <button class="view-logs-btn" onclick="openQueryModal('aws-imdsv1-kql', 'Amazon Web Services/ATT4CKQL - AWS - EC2 - Instance Created with IMDSv1.kql')">View Query</button>
+                </td>
+                <td rowspan="4"><a href="https://github.com/RhinoSecurityLabs/pacu/wiki/Module-Details#ec2__metadata_services" target="_blank">Pacu IMDS v1 Attack</a></td>
+                <td rowspan="4">
+                    <button class="view-logs-btn" onclick="openExternalModal('imdsv1-logs', 'logs')">View Sample Logs</button>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Credential Access (TA0006)</strong><br>T1552.005 - Cloud Instance Metadata API</td>
+            </tr>
+            <tr>
+                <td><strong>Privilege Escalation (TA0004)</strong><br>T1078.004 - Cloud Accounts</td>
+            </tr>
+            <tr>
+                <td><strong>Defense Evasion (TA0005)</strong><br>T1078.004 - Cloud Accounts</td>
+            </tr>
+            
+            <!-- EC2 Suspicious Deployment Section -->
+            <tr>
+                <td rowspan="2" style="font-weight: bold;">EC2 Suspicious Deployment Detected</td>
+                <td rowspan="2">Identifies unusual EC2 instance deployments that may indicate cryptomining or other malicious activities</td>
+                <td><strong>Defense Evasion (TA0005)</strong><br>T1578.002 - Modify Cloud Compute Infrastructure: Create Cloud Instance</td>
+                <td rowspan="2">AWS EC2</td>
+                <td rowspan="2">
+                    <button class="view-logs-btn" onclick="openQueryModal('ec2-suspicious-deployment-kql', 'Amazon Web Services/ATT4CKQL - AWS - EC2 - Suspicious Deployment Detected.kql')">View Query</button>
+                </td>
+                <td rowspan="2"><a href="https://stratus-red-team.cloud/attack-techniques/AWS/aws.execution.ec2-launch-unusual-instances/" target="_blank">stratus-red-team: Launch Unusual EC2 instances</a></td>
+                <td rowspan="2">
+                    <button class="view-logs-btn" onclick="openExternalModal('ec2-suspicious-deployment-logs', 'logs')">View Sample Logs</button>
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Execution (TA0002)</strong><br>T1204.003 - User Execution: Malicious Image</td>
+            </tr>
+            
+            <!-- Test External Modal -->
+            <tr>
+                <td rowspan="1" style="font-weight: bold;">TESTING EXTERNAL MODAL</td>
+                <td rowspan="1">Test for the external modal functionality using GitHub raw content</td>
+                <td><strong>Execution (TA0002)</strong><br>T1059.009 - Command and Scripting Interpreter: Cloud API</td>
+                <td rowspan="1">AWS CloudTrail</td>
+                <td rowspan="1">
+                    <button class="view-logs-btn" onclick="openQueryModal('test-query-kql', 'Amazon Web Services/ATT4CKQL - Test Query.kql')">View Query</button>
+                </td>
+                <td rowspan="1"><a href="https://attack.mitre.org/techniques/T1059/009/" target="_blank">Command and Scripting Interpreter: Cloud API</a></td>
+                <td rowspan="1">
+                    <button class="view-logs-btn" onclick="openExternalModal('imdsv1-logstest', 'logs')">View Sample Logs</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Empty modal containers that will be filled by JavaScript -->
+    <div id="imdsv1-logs" class="modal"></div>
+    <div id="ec2-suspicious-deployment-logs" class="modal"></div>
+    <div id="imdsv1-logstest" class="modal"></div>
+    <div id="aws-imdsv1-kql" class="modal"></div>
+    <div id="ec2-suspicious-deployment-kql" class="modal"></div>
+    <div id="test-query-kql" class="modal"></div>
+
+    <!-- Theme toggle button -->
+    <button class="theme-toggle" id="theme-toggle" title="Switch theme">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <script>
+        // Apply the theme from sessionStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = sessionStorage.getItem('att4ckql-theme');
+            if (savedTheme === 'attacker') {
+                document.body.classList.add('theme-attacker');
+            }
+            
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('theme-toggle');
+            themeToggle.addEventListener('click', function() {
+                if (document.body.classList.contains('theme-attacker')) {
+                    document.body.classList.remove('theme-attacker');
+                    sessionStorage.setItem('att4ckql-theme', 'defender');
+                } else {
+                    document.body.classList.add('theme-attacker');
+                    sessionStorage.setItem('att4ckql-theme', 'attacker');
+                }
+            });
+        });
+
+        // Function to load modal content from GitHub raw content URL
+        async function loadExternalModalContent(modalId, modalType) {
+            const modalElement = document.getElementById(modalId);
+            
+            if (!modalElement) {
+                console.error(`Modal element with ID ${modalId} not found.`);
+                return;
+            }
+            
+            // Use GitHub raw content URL
+            const githubRawBaseUrl = "https://raw.githubusercontent.com/realnamesareboring/ATT4CKQL/main/";
+            const modalPath = `${githubRawBaseUrl}Amazon%20Web%20Services/_${modalType}/${modalId}.html`;
+            
+            console.log(`Loading from GitHub: ${modalPath}`);
+            
+            try {
+                // Show loading indicator and display the modal
+                modalElement.innerHTML = '<div class="modal-loading">Loading content...</div>';
+                modalElement.style.display = "block";
+                
+                // Fetch the modal content from GitHub
+                const response = await fetch(modalPath);
+                
+                if (!response.ok) {
+                    console.error(`GitHub fetch failed: ${modalPath}. Status: ${response.status}`);
+                    throw new Error(`Could not load content (Status: ${response.status})`);
+                }
+                
+                const modalContent = await response.text();
+                console.log(`Content loaded successfully`);
+                modalElement.innerHTML = modalContent;
+            } catch (error) {
+                console.error('Error loading content:', error);
+                modalElement.innerHTML = `
+                    <div class="modal-content">
+                        <span class="close-btn" onclick="closeModal('${modalId}')">&times;</span>
+                        <h2>Error Loading Content</h2>
+                        <p>There was an error loading the content: ${error.message}</p>
+                        <p>URL attempted: ${modalPath}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Function to open external modals
+        function openExternalModal(modalId, modalType) {
+            loadExternalModalContent(modalId, modalType);
+        }
+
+        // Function to open query modal with specific GitHub path
+        function openQueryModal(modalId, githubPath) {
+            // First display the modal with loading message
+            const modalElement = document.getElementById(modalId);
+            modalElement.innerHTML = '<div class="modal-loading">Loading query...</div>';
+            modalElement.style.display = "block";
+            
+            // Then fetch the KQL query and display it with proper formatting
+            fetchKQLQuery(modalId, githubPath);
+        }
+
+        // Function to close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let i = 0; i < modals.length; i++) {
+                if (event.target == modals[i]) {
+                    modals[i].style.display = "none";
+                }
+            }
+        }
+
+        // Function to fetch KQL query from GitHub with dynamic path
+        async function fetchKQLQuery(modalId, githubPath) {
+            const modalElement = document.getElementById(modalId);
+            
+            try {
+                const baseUrl = "https://raw.githubusercontent.com/realnamesareboring/ATT4CKQL/main/";
+                const fullUrl = baseUrl + githubPath;
+                
+                console.log(`Fetching KQL query from: ${fullUrl}`);
+                
+                const response = await fetch(fullUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const queryContent = await response.text();
+                
+                // Create the modal content with shell-like styling
+                modalElement.innerHTML = `
+                    <div class="modal-content">
+                        <span class="close-btn" onclick="closeModal('${modalId}')">&times;</span>
+                        <h2>${githubPath.split('/').pop().replace('.kql', '')} - Detection Query</h2>
+                        
+                        <div class="query-container">
+                            <div class="query-header">
+                                <div class="query-title">Microsoft Sentinel KQL Query</div>
+                                <button class="copy-btn" onclick="copyToClipboard('${modalId}-code')">Copy Query</button>
+                            </div>
+                            
+                            <pre><code id="${modalId}-code" class="code-block">${queryContent}</code></pre>
+                        </div>
+                        
+                        <div class="query-explanation">
+                            <h3>Query Explanation</h3>
+                            <p>Loading query explanation...</p>
+                            <p>For a detailed explanation of this query, view the documentation in the GitHub repository.</p>
+                        </div>
+                    </div>
+                `;
+                
+                // Optionally load the query explanation from an external file
+                try {
+                    const explainPath = `${baseUrl}Amazon%20Web%20Services/_explained/${modalId}.html`;
+                    const explainResponse = await fetch(explainPath);
+                    
+                    if (explainResponse.ok) {
+                        const explainContent = await explainResponse.text();
+                        const explanationDiv = modalElement.querySelector('.query-explanation');
+                        if (explanationDiv) {
+                            explanationDiv.innerHTML = explainContent;
+                        }
+                    }
+                } catch (explainError) {
+                    console.log('Could not load explanation, using default text');
+                }
+                
+            } catch (error) {
+                console.error("Error fetching KQL query:", error);
+                modalElement.innerHTML = `
+                    <div class="modal-content">
+                        <span class="close-btn" onclick="closeModal('${modalId}')">&times;</span>
+                        <h2>Error Loading Query</h2>
+                        <p>There was an error loading the query: ${error.message}</p>
+                        <p>Please check the GitHub repository for the correct file path.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Function to copy query to clipboard
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            
+            navigator.clipboard.writeText(text).then(function() {
+                // Find the button within the same modal as the code
+                const copyBtn = element.closest('.modal-content').querySelector('.copy-btn');
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = "Copied!";
+                setTimeout(function() {
+                    copyBtn.textContent = originalText;
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Unable to copy text: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
