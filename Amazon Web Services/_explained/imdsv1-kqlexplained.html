@@ -1,0 +1,8 @@
+Query Explanation
+This KQL query detects EC2 instances that were created with IMDSv1 set to optional (rather than requiring more secure IMDSv2). The detection works by:
+
+Filtering AWS CloudTrail for RunInstances events in the last 30 days
+Examining the metadataOptions.httpTokens field in the request parameters
+Identifying instances where this value is set to optional, which allows IMDSv1 usage
+Joining with the summary table to provide additional context
+IMDSv1 is vulnerable to SSRF attacks that can lead to credential theft. AWS recommends requiring IMDSv2 for all instances.
