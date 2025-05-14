@@ -89,8 +89,21 @@ function escapeHtml(unsafe) {
 // Function to fetch explanation content
 async function fetchExplanationContent(modalId) {
     try {
+        // Extract the relevant part of the modalId for the explanation file
+        let explanationId = modalId;
+        
+        // If modalId starts with 'aws-', remove it
+        if (modalId.startsWith('aws-')) {
+            explanationId = modalId.substring(4); // Remove 'aws-' prefix
+        }
+        
+        // If explanationId ends with '-kql', remove it
+        if (explanationId.endsWith('-kql')) {
+            explanationId = explanationId.substring(0, explanationId.length - 4);
+        }
+        
         const baseUrl = "https://raw.githubusercontent.com/realnamesareboring/ATT4CKQL/main/";
-        const explanationPath = `${baseUrl}Amazon%20Web%20Services/_explained/${modalId}-kqlexplained.html`;
+        const explanationPath = `${baseUrl}Amazon%20Web%20Services/_explained/${explanationId}-kqlexplained.html`;
         
         console.log(`Fetching explanation from: ${explanationPath}`);
         
