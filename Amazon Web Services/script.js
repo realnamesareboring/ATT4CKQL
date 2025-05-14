@@ -91,15 +91,18 @@ async function fetchExplanationContent(modalId) {
     try {
         // Extract the relevant part of the modalId for the explanation file
         let explanationId = modalId;
+        console.log("Original modalId:", modalId);
         
         // If modalId starts with 'aws-', remove it
         if (modalId.startsWith('aws-')) {
             explanationId = modalId.substring(4); // Remove 'aws-' prefix
+            console.log("After removing 'aws-' prefix:", explanationId);
         }
         
         // If explanationId ends with '-kql', remove it
         if (explanationId.endsWith('-kql')) {
             explanationId = explanationId.substring(0, explanationId.length - 4);
+            console.log("After removing '-kql' suffix:", explanationId);
         }
         
         const baseUrl = "https://raw.githubusercontent.com/realnamesareboring/ATT4CKQL/main/";
@@ -111,10 +114,31 @@ async function fetchExplanationContent(modalId) {
         
         if (!response.ok) {
             console.error(`Failed to fetch explanation. Status: ${response.status}`);
+            // In case of error, let's try a fallback with just 'imdsv1'
+            if (explanationId !== 'imdsv1') {
+                console.log("Trying fallback to 'imdsv1'...");
+                const fallbackPath = `${baseUrl}Amazon%20Web%20Services/_explained/imdsv1-kqlexplained.html`;
+                console.log(`Fetching from fallback: ${fallbackPath}`);
+                
+                try {
+                    const fallbackResponse = await fetch(fallbackPath);
+                    if (fallbackResponse.ok) {
+                        const fallbackContent = await fallbackResponse.text();
+                        console.log("Fallback successful!");
+                        return fallbackContent;
+                    } else {
+                        console.error("Fallback failed too:", fallbackResponse.status);
+                    }
+                } catch (fallbackError) {
+                    console.error("Error in fallback:", fallbackError);
+                }
+            }
+            
             return "<div class='query-explanation'><h3>Query Explanation</h3><p>Explanation not available.</p></div>";
         }
         
         const explanationContent = await response.text();
+        console.log("Explanation content successfully loaded");
         
         // If the content doesn't already have the query-explanation class, wrap it
         if (!explanationContent.includes('class="query-explanation"')) {
