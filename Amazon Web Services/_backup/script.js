@@ -86,35 +86,6 @@ function escapeHtml(unsafe) {
         .replace(/'/g, "&#039;");
 }
 
-// Function to fetch explanation content
-async function fetchExplanationContent(modalId) {
-    try {
-        const baseUrl = "https://raw.githubusercontent.com/realnamesareboring/ATT4CKQL/main/";
-        const explanationPath = `${baseUrl}Amazon%20Web%20Services/_explained/${modalId}-kqlexplained.html`;
-        
-        console.log(`Fetching explanation from: ${explanationPath}`);
-        
-        const response = await fetch(explanationPath);
-        
-        if (!response.ok) {
-            console.error(`Failed to fetch explanation. Status: ${response.status}`);
-            return "<div class='query-explanation'><h3>Query Explanation</h3><p>Explanation not available.</p></div>";
-        }
-        
-        const explanationContent = await response.text();
-        
-        // If the content doesn't already have the query-explanation class, wrap it
-        if (!explanationContent.includes('class="query-explanation"')) {
-            return `<div class="query-explanation">${explanationContent}</div>`;
-        }
-        
-        return explanationContent;
-    } catch (error) {
-        console.error("Error fetching explanation:", error);
-        return "<div class='query-explanation'><h3>Query Explanation</h3><p>Error loading explanation.</p></div>";
-    }
-}
-
 // Function to fetch KQL query with shell-like display
 async function fetchQueryWithShellDisplay(modalId, githubPath) {
     const modalElement = document.getElementById(modalId);
@@ -137,9 +108,6 @@ async function fetchQueryWithShellDisplay(modalId, githubPath) {
         // Store the query content for copying
         window[`${modalId}_content`] = queryContent;
         
-        // Fetch the explanation content
-        const explanationContent = await fetchExplanationContent(modalId);
-        
         // Create a shell-styled modal with the query content
         modalElement.innerHTML = `
             <div class="modal-content">
@@ -156,7 +124,17 @@ async function fetchQueryWithShellDisplay(modalId, githubPath) {
                     </div>
                 </div>
                 
-                ${explanationContent}
+                <div class="query-explanation">
+                    <h3>Query Explanation</h3>
+                    <p>This KQL query detects EC2 instances that were created with IMDSv1 set to optional (rather than requiring more secure IMDSv2). The detection works by:</p>
+                    <ul>
+                        <li>Filtering AWS CloudTrail for <code>RunInstances</code> events in the last 30 days</li>
+                        <li>Examining the <code>metadataOptions.httpTokens</code> field in the request parameters</li>
+                        <li>Identifying instances where this value is set to <code>optional</code>, which allows IMDSv1 usage</li>
+                        <li>Joining with the summary table to provide additional context</li>
+                    </ul>
+                    <p>IMDSv1 is vulnerable to SSRF attacks that can lead to credential theft. AWS recommends requiring IMDSv2 for all instances.</p>
+                </div>
             </div>
         `;
     } catch (error) {
