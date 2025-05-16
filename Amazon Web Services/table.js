@@ -16,11 +16,11 @@ const detectionRules = [
             { tactic: "Defense Evasion (TA0005)", technique: "T1078.004 - Cloud Accounts" }
         ],
         dataSource: "AWS EC2",
-        queryFile: "Amazon Web Services/ATT4CKQL - AWS - EC2 - Instance Created with IMDSv1.kql",
+        queryFile: "ATT4CKQL - AWS - EC2 - Instance Created with IMDSv1.kql", // Simplified path
         queryModalId: "aws-imdsv1-kql",
         attackPath: "https://github.com/RhinoSecurityLabs/pacu/wiki/Module-Details#ec2__metadata_services",
         attackPathText: "Pacu IMDS v1 Attack",
-        sampleLogId: "imdsv1-logstest" // This one uses the original name
+        sampleLogId: "imdsv1-logstest" 
     },
     
     // EC2 Suspicious Deployment Detection
@@ -32,7 +32,7 @@ const detectionRules = [
             { tactic: "Execution (TA0002)", technique: "T1204.003 - User Execution: Malicious Image" }
         ],
         dataSource: "AWS EC2",
-        queryFile: "Amazon Web Services/ATT4CKQL - AWS - EC2 - Suspicious Deployment Detected.kql",
+        queryFile: "ATT4CKQL - AWS - EC2 - Suspicious Deployment Detected.kql", // Simplified path
         queryModalId: "ec2-suspicious-deployment-kql",
         attackPath: "https://stratus-red-team.cloud/attack-techniques/AWS/aws.execution.ec2-launch-unusual-instances/",
         attackPathText: "stratus-red-team: Launch Unusual EC2 instances",
@@ -47,7 +47,7 @@ const detectionRules = [
             { tactic: "Credential Access (TA0006)", technique: "T1555.006 - Credentials from Password Stores: Cloud Secrets Management Stores" }
         ],
         dataSource: "AWS EC2",
-        queryFile: "Amazon Web Services/ATT4CKQL - AWS - EC2 - Password Data Retrieved.kql",
+        queryFile: "ATT4CKQL - AWS - EC2 - Password Data Retrieved.kql", // Simplified path
         queryModalId: "ec2-password-kql",
         attackPath: "https://stratus-red-team.cloud/attack-techniques/AWS/aws.credential-access.ec2-get-password-data/",
         attackPathText: "stratus-red-team: Retrieve EC2 Password Data",
@@ -65,7 +65,7 @@ const detectionRules = [
             { tactic: "Initial Access/Persistence (TA0001/TA0003)", technique: "T1078.004 - Cloud Accounts" }
         ],
         dataSource: "AWS EBS",
-        queryFile: "Amazon Web Services/ATT4CKQL - AWS - EC2 - Snapshot Exfiltration Detected.kql",
+        queryFile: "ATT4CKQL - AWS - EC2 - Snapshot Exfiltration Detected.kql", // Simplified path
         queryModalId: "snapshot-exfil-kql",
         attackPath: "https://stratus-red-team.cloud/attack-techniques/AWS/",
         attackPathText: "stratus-red-team: Exfiltration",
@@ -81,7 +81,7 @@ const detectionRules = [
             { tactic: "Execution (TA0002)", technique: "T1537 - Transfer Data to Cloud Account" }
         ],
         dataSource: "AWS S3",
-        queryFile: "Amazon Web Services/ATT4CKQL - AWS - S3 - Bucket modification detected.kql",
+        queryFile: "ATT4CKQL - AWS - S3 - Bucket modification detected.kql", // Simplified path
         queryModalId: "s3-modification-kql",
         attackPath: "https://stratus-red-team.cloud/attack-techniques/AWS/aws.execution.ec2-launch-unusual-instances/",
         attackPathText: "stratus-red-team: Launch Unusual EC2 instances",
@@ -99,7 +99,7 @@ const detectionRules = [
             { tactic: "Exfiltration (TA0010)", technique: "T1537 - Transfer Data to Cloud Account" }
         ],
         dataSource: "AWS S3",
-        queryFile: "Amazon Web Services/ATT4CKQL - AWS - S3 - Buckets accessed from untrusted network.kql",
+        queryFile: "ATT4CKQL - AWS - S3 - Buckets accessed from untrusted network.kql", // Simplified path
         queryModalId: "s3-untrusted-access-kql",
         attackPath: "https://www.intigriti.com/researchers/blog/hacking-tools/hacking-misconfigured-aws-s3-buckets-a-complete-guide",
         attackPathText: "intigriti: Hacking misconfigured AWS S3 buckets: A complete guide",
@@ -114,7 +114,7 @@ const detectionRules = [
             { tactic: "Persistence, Privilege Escalation (TA0003, TA0004)", technique: "T1098.001 - Account Manipulation: Additional Cloud Credentials" }
         ],
         dataSource: "AWS IAM",
-        queryFile: "Amazon Web Services/ATT4CKQL - AWS - IAM - Access keys created and deleted within short time frame.kql",
+        queryFile: "ATT4CKQL - AWS - IAM - Access keys created and deleted within short time frame.kql", // Simplified path
         queryModalId: "iam-keys-created-deleted-kql",
         attackPath: "https://attack.mitre.org/techniques/T1098/001/",
         attackPathText: "Account Manipulation: Additional Cloud Credentials",
@@ -130,7 +130,7 @@ const detectionRules = [
             { tactic: "Discovery (TA0007)", technique: "T1069.003 - Permission Groups Discovery: Cloud Groups" }
         ],
         dataSource: "AWS IAM",
-        queryFile: "Amazon Web Services/ATT4CKQL - AWS - IAM - Cloud User Account Creation.kql",
+        queryFile: "ATT4CKQL - AWS - IAM - Cloud User Account Creation.kql", // Simplified path
         queryModalId: "iam-user-creation-kql",
         attackPath: "https://attack.mitre.org/techniques/T1136/003/",
         attackPathText: "Create Account: Cloud Account",
@@ -145,7 +145,7 @@ const detectionRules = [
             { tactic: "Credential Access, Defense Evasion, Persistence (TA0006, TA0005, TA0003)", technique: "T1556.006 - Modify Authentication Process: Multi-Factor Authentication" }
         ],
         dataSource: "AWS IAM",
-        queryFile: "Amazon Web Services/ATT4CKQL - AWS - IAM - Management Console successful login with no MFA.kql",
+        queryFile: "ATT4CKQL - AWS - IAM - Management Console successful login with no MFA.kql", // Simplified path
         queryModalId: "iam-login-no-mfa-kql",
         attackPath: "https://attack.mitre.org/techniques/T1556/006/",
         attackPathText: "Modify Authentication Process: Multi-Factor Authentication",
@@ -162,7 +162,7 @@ const detectionRules = [
             { tactic: "Exfiltration (TA0010)", technique: "T1048 - Exfiltration Over Alternative Protocol" }
         ],
         dataSource: "AWS VPC Flow Logs",
-        queryFile: "Amazon Web Services/ATT4CKQL - AWS - Network - Connection to malicious IPs and Domains.kql",
+        queryFile: "ATT4CKQL - AWS - Network - Connection to malicious IPs and Domains.kql", // Simplified path
         queryModalId: "network-malicious-ips-kql",
         attackPath: "https://attack.mitre.org/techniques/T1048/",
         attackPathText: "Exfiltration Over Alternative Protocol",
@@ -179,7 +179,7 @@ const detectionRules = [
             { tactic: "Initial Access (TA0001)", technique: "T1133 - External Remote Services" }
         ],
         dataSource: "AWS CloudTrail",
-        queryFile: "Amazon Web Services/ATT4CKQL - AWS - Network - Suspicious Changes to AWS Network Resources.kql",
+        queryFile: "ATT4CKQL - AWS - Network - Suspicious Changes to AWS Network Resources.kql", // Simplified path
         queryModalId: "network-suspicious-changes-kql",
         attackPath: "https://attack.mitre.org/techniques/T1190/",
         attackPathText: "Exploit Public-Facing Application",
@@ -194,7 +194,7 @@ const detectionRules = [
             { tactic: "Defense Evasion (TA0005)", technique: "T1578.005 - Modify Cloud Compute Infrastructure: Modify Cloud Compute Configurations" }
         ],
         dataSource: "AWS CloudTrail",
-        queryFile: "Amazon Web Services/ATT4CKQL - AWS - Operations - Changes to AWS Configurations.kql",
+        queryFile: "ATT4CKQL - AWS - Operations - Changes to AWS Configurations.kql", // Simplified path
         queryModalId: "operations-config-changes-kql",
         attackPath: "https://attack.mitre.org/techniques/T1578/005/",
         attackPathText: "Modify Cloud Compute Infrastructure: Modify Cloud Compute Configurations",
@@ -209,7 +209,7 @@ const detectionRules = [
             { tactic: "Defense Evasion (TA0005)", technique: "T1562.008 - Impair Defenses: Disable or Modify Cloud Logs" }
         ],
         dataSource: "AWS CloudTrail",
-        queryFile: "Amazon Web Services/ATT4CKQL - AWS - Security - CloudTrail tamper detection.kql",
+        queryFile: "ATT4CKQL - AWS - Security - CloudTrail tamper detection.kql", // Simplified path
         queryModalId: "security-cloudtrail-tamper-kql",
         attackPath: "https://attack.mitre.org/techniques/T1562/008/",
         attackPathText: "Impair Defenses: Disable or Modify Cloud Logs",
@@ -224,7 +224,7 @@ const detectionRules = [
             { tactic: "Discovery (TA0007)", technique: "T1526 - Cloud Service Discovery" }
         ],
         dataSource: "AWS GuardDuty",
-        queryFile: "Amazon Web Services/ATT4CKQL - AWS - Security - Enhanced GuardDuty.kql",
+        queryFile: "ATT4CKQL - AWS - Security - Enhanced GuardDuty.kql", // Simplified path
         queryModalId: "security-enhanced-guardduty-kql",
         attackPath: "https://attack.mitre.org/techniques/T1526/",
         attackPathText: "Cloud Service Discovery",
@@ -239,7 +239,7 @@ const detectionRules = [
             { tactic: "Execution (TA0002)", technique: "T1059.009 - Command and Scripting Interpreter: Cloud API" }
         ],
         dataSource: "AWS CloudTrail",
-        queryFile: "Amazon Web Services/ATT4CKQL - AWS - Security - Unauthorized API Calls.kql",
+        queryFile: "ATT4CKQL - AWS - Security - Unauthorized API Calls.kql", // Simplified path
         queryModalId: "security-unauthorized-api-kql",
         attackPath: "https://attack.mitre.org/techniques/T1059/009/",
         attackPathText: "Command and Scripting Interpreter: Cloud API",
@@ -351,6 +351,7 @@ function renderDetectionRules() {
         const sampleLogsButton = document.createElement('button');
         sampleLogsButton.className = 'view-logs-btn';
         sampleLogsButton.textContent = 'View Sample Logs';
+        // Use the proper function for loading external content
         sampleLogsButton.setAttribute('onclick', `openExternalModal('${rule.sampleLogId}', 'logs')`);
         sampleLogsCell.appendChild(sampleLogsButton);
         firstRow.appendChild(sampleLogsCell);
@@ -378,9 +379,12 @@ function renderDetectionRules() {
             }
         }
     });
+    
+    console.log('Detection rules table rendered with ' + detectionRules.length + ' rules.');
 }
 
 // Initialize the table when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Initializing detection rules table...');
     renderDetectionRules();
 });
