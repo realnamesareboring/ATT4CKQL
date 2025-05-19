@@ -100,7 +100,6 @@ function escapeHtml(unsafe) {
 // Function to fetch explanation content
 async function fetchExplanationContent(modalId) {
     try {
-        // Extract the relevant part of the modalId for the explanation file
         let explanationId = modalId;
         console.log("Original modalId:", modalId);
         
@@ -125,27 +124,7 @@ async function fetchExplanationContent(modalId) {
         
         if (!response.ok) {
             console.error(`Failed to fetch explanation. Status: ${response.status}`);
-            // In case of error, let's try a fallback with just 'imdsv1'
-            if (explanationId !== 'imdsv1') {
-                console.log("Trying fallback to 'imdsv1'...");
-                const fallbackPath = `${baseUrl}Amazon%20Web%20Services/_explained/imdsv1-kqlexplained.html`;
-                console.log(`Fetching from fallback: ${fallbackPath}`);
-                
-                try {
-                    const fallbackResponse = await fetch(fallbackPath);
-                    if (fallbackResponse.ok) {
-                        const fallbackContent = await fallbackResponse.text();
-                        console.log("Fallback successful!");
-                        return fallbackContent;
-                    } else {
-                        console.error("Fallback failed too:", fallbackResponse.status);
-                    }
-                } catch (fallbackError) {
-                    console.error("Error in fallback:", fallbackError);
-                }
-            }
-            
-            return "<div class='query-explanation'><h3>Query Explanation</h3><p>Explanation not available.</p></div>";
+            return "<div class='query-explanation'><h3>Query Explanation</h3><p>Explanation not available for this query yet. Please check back later or contact the administrator.</p></div>";
         }
         
         const explanationContent = await response.text();
@@ -159,7 +138,7 @@ async function fetchExplanationContent(modalId) {
         return explanationContent;
     } catch (error) {
         console.error("Error fetching explanation:", error);
-        return "<div class='query-explanation'><h3>Query Explanation</h3><p>Error loading explanation.</p></div>";
+        return "<div class='query-explanation'><h3>Query Explanation</h3><p>Error loading explanation. Please try again later.</p></div>";
     }
 }
 
@@ -167,6 +146,7 @@ async function fetchExplanationContent(modalId) {
 async function fetchQueryWithShellDisplay(modalId, githubPath) {
     const modalElement = document.getElementById(modalId);
     const baseUrl = "https://raw.githubusercontent.com/realnamesareboring/ATT4CKQL/main/";
+    const fileName = githubPath.split('/').pop(); // Declare fileName once at the top
     
     try {
         // Properly encode URL components
@@ -179,7 +159,6 @@ async function fetchQueryWithShellDisplay(modalId, githubPath) {
         
         if (!response.ok) {
             // Try an alternative path with different formatting
-            const fileName = githubPath.split('/').pop();
             const altPath = `Amazon Web Services/Queries/${fileName}`;
             const encodedAltPath = encodeURI(altPath).replace(/ /g, '%20');
             const altUrl = baseUrl + encodedAltPath;
@@ -193,13 +172,12 @@ async function fetchQueryWithShellDisplay(modalId, githubPath) {
             }
             
             const queryContent = await altResponse.text();
-            processQueryContent(modalId, queryContent, fileName);
+            await processQueryContent(modalId, queryContent, fileName);
             return;
         }
         
         const queryContent = await response.text();
-        const fileName = githubPath.split('/').pop();
-        processQueryContent(modalId, queryContent, fileName);
+        await processQueryContent(modalId, queryContent, fileName);
         
     } catch (error) {
         console.error("Error fetching KQL query:", error);
@@ -217,18 +195,21 @@ async function fetchQueryWithShellDisplay(modalId, githubPath) {
     }
 }
 
-// Helper function to process and display query content
-function processQueryContent(modalId, queryContent, fileName) {
+// Helper function to process and display query content with explanation
+async function processQueryContent(modalId, queryContent, fileName) {
     const modalElement = document.getElementById(modalId);
     
     // Store the query content for copying
     window[`${modalId}_content`] = queryContent;
     
-    // Create a shell-styled modal with the query content
+    // Fetch the explanation content
+    const explanationContent = await fetchExplanationContent(modalId);
+    
+    // Create a shell-styled modal with the query content and explanation
     modalElement.innerHTML = `
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('${modalId}')">&times;</span>
-            <h2>${fileName.replace('.kql', '')}</h2>
+            <h2>${fileName.replace('.kql', ' - Detection Query')}</h2>
             
             <div class="query-container">
                 <div class="query-header">
@@ -240,10 +221,7 @@ function processQueryContent(modalId, queryContent, fileName) {
                 </div>
             </div>
             
-            <div class="query-explanation">
-                <h3>Query Explanation</h3>
-                <p>For a detailed explanation of this detection query, check the explanation file in the _explained directory.</p>
-            </div>
+            ${explanationContent}
         </div>
     `;
 }
