@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Detection Rules with MITRE ATT&CK Mapping</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="./script.js"></script>
+    <script src="./table.js"></script>
+</head>
+<body>
+    <a href="../index.html" class="nav-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 18l-6-6 6-6"/>
+        </svg>
+        Back to Home
+    </a>
+    
+    <h1>AWS Detection Rules with MITRE ATT&CK Mapping</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Detection Name</th>
+                <th>Description</th>
+                <th>MITRE Tactics & Techniques</th>
+                <th>Data Source</th>
+                <th>Query Link</th>
+                <th>Attack Path Reference</th>
+                <th>Sample Logs</th>
+            </tr>
+        </thead>
+        <tbody id="detection-rules-table-body">
+            <tr>
+                <td colspan="7" class="loading-indicator">Loading detection rules...</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Modal containers for each set of logs and queries -->
+    <!-- EC2 Related Modals -->
+    <div id="imdsv1-logstest" class="modal"></div>
+    <div id="aws-imdsv1-kql" class="modal"></div>
+    <div id="ec2-suspicious-deployment-logs" class="modal"></div>
+    <div id="ec2-suspicious-deployment-kql" class="modal"></div>
+    <div id="ec2-password-data-retrieved-logs" class="modal"></div>
+    <div id="ec2-password-kql" class="modal"></div>
+    <div id="snapshot-exfiltration-logs" class="modal"></div>
+    <div id="snapshot-exfil-kql" class="modal"></div>
+    
+    <!-- S3 Related Modals -->
+    <div id="s3-bucket-modification-log" class="modal"></div>
+    <div id="s3-modification-kql" class="modal"></div>
+    <div id="s3-buckets-untrusted-network-log" class="modal"></div>
+    <div id="s3-untrusted-access-kql" class="modal"></div>
+    
+    <!-- IAM Related Modals -->
+    <div id="iam-access-keys-created-deleted-logs" class="modal"></div>
+    <div id="iam-keys-created-deleted-kql" class="modal"></div>
+    <div id="iam-cloud-user-creation-logs" class="modal"></div>
+    <div id="iam-user-creation-kql" class="modal"></div>
+    <div id="iam-console-login-no-mfa-logs" class="modal"></div>
+    <div id="iam-login-no-mfa-kql" class="modal"></div>
+    
+    <!-- Network Related Modals -->
+    <div id="aws-malicious-ip-connections-logs" class="modal"></div>
+    <div id="network-malicious-ips-kql" class="modal"></div>
+    <div id="aws-network-suspicious-changes-logs" class="modal"></div>
+    <div id="network-suspicious-changes-kql" class="modal"></div>
+    
+    <!-- Other AWS Service Modals -->
+    <div id="aws-config-changes-logs" class="modal"></div>
+    <div id="operations-config-changes-kql" class="modal"></div>
+    <div id="aws-cloudtrail-tamper-logs" class="modal"></div>
+    <div id="security-cloudtrail-tamper-kql" class="modal"></div>
+    <div id="aws-enhanced-guardduty-logs" class="modal"></div>
+    <div id="security-enhanced-guardduty-kql" class="modal"></div>
+    <div id="aws-unauthorized-api-calls-logs" class="modal"></div>
+    <div id="security-unauthorized-api-kql" class="modal"></div>
+
+    <!-- Theme toggle button -->
+    <button class="theme-toggle" id="theme-toggle" title="Switch theme">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <script>
+        // Additional initialization script
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded with ' + detectionRules.length + ' detection rules.');
+            
+            // Log the available modal containers for debugging
+            const modalElements = document.querySelectorAll('.modal');
+            console.log('Found ' + modalElements.length + ' modal containers on the page.');
+            
+            // Check and log the file paths to confirm
+            detectionRules.forEach(rule => {
+                console.log(`Detection rule: ${rule.name}, Sample logs: ${rule.sampleLogId}, Query: ${rule.queryModalId}`);
+            });
+            
+            // If issue persists, add a file path test button
+            const header = document.querySelector('h1');
+            const testButton = document.createElement('button');
+            testButton.textContent = 'Run Path Test';
+            testButton.style.marginLeft = '20px';
+            testButton.style.padding = '6px 12px';
+            testButton.style.background = '#0078d4';
+            testButton.style.color = 'white';
+            testButton.style.border = 'none';
+            testButton.style.borderRadius = '4px';
+            testButton.onclick = async function() {
+                // Try to find one sample log file and one query file as a test
+                const testFiles = [
+                    "imdsv1-logstest.html", 
+                    "_logs/imdsv1-logstest.html",
+                    "Amazon Web Services/_logs/imdsv1-logstest.html",
+                    "ATT4CKQL - AWS - EC2 - Instance Created with IMDSv1.kql",
+                    "Amazon Web Services/ATT4CKQL - AWS - EC2 - Instance Created with IMDSv1.kql"
+                ];
+                
+                const results = document.createElement('div');
+                results.style.margin = '20px 0';
+                results.style.padding = '10px';
+                results.style.background = '#f0f6ff';
+                results.style.border = '1px solid #ddd';
+                results.style.borderRadius = '4px';
+                results.innerHTML = '<h3>File Path Test Results</h3>';
+                
+                for (const file of testFiles) {
+                    try {
+                        const response = await fetch(file);
+                        const result = document.createElement('div');
+                        result.textContent = `${file}: ${response.ok ? '✅ SUCCESS' : '❌ FAILED'} (${response.status})`;
+                        results.appendChild(result);
+                    } catch (error) {
+                        const result = document.createElement('div');
+                        result.textContent = `${file}: ❌ ERROR - ${error.message}`;
+                        results.appendChild(result);
+                    }
+                }
+                
+                // Insert after the table
+                const table = document.querySelector('table');
+                table.parentNode.insertBefore(results, table.nextSibling);
+            };
+            
+            header.appendChild(testButton);
+        });
+    </script>
+</body>
+</html>

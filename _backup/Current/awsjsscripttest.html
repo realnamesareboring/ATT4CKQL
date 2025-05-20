@@ -39,8 +39,8 @@
     <!-- Dynamic modal creation - these divs will be populated by JavaScript -->
     <div id="modal-containers">
         <!-- EC2 Related Modals -->
+        <div id="imdsv1-logstest" class="modal"></div>
         <div id="aws-imdsv1-kql" class="modal"></div>
-        <div id="ec2-imdsv1-logs" class="modal"></div>
         <div id="ec2-suspicious-deployment-logs" class="modal"></div>
         <div id="ec2-suspicious-deployment-kql" class="modal"></div>
         <div id="ec2-password-data-retrieved-logs" class="modal"></div>
@@ -130,6 +130,37 @@
                     showStatus('All modals closed with Escape key');
                 }
             });
+            
+            // Create missing modals dynamically
+            const missingModals = [];
+            
+            detectionRules.forEach(rule => {
+                // Check for query modal
+                if (!document.getElementById(rule.queryModalId)) {
+                    console.warn(`Modal ${rule.queryModalId} is missing. Creating placeholder.`);
+                    missingModals.push(rule.queryModalId);
+                    
+                    const modalDiv = document.createElement('div');
+                    modalDiv.id = rule.queryModalId;
+                    modalDiv.className = 'modal';
+                    document.getElementById('modal-containers').appendChild(modalDiv);
+                }
+                
+                // Check for sample logs modal
+                if (!document.getElementById(rule.sampleLogId)) {
+                    console.warn(`Modal ${rule.sampleLogId} is missing. Creating placeholder.`);
+                    missingModals.push(rule.sampleLogId);
+                    
+                    const modalDiv = document.createElement('div');
+                    modalDiv.id = rule.sampleLogId;
+                    modalDiv.className = 'modal';
+                    document.getElementById('modal-containers').appendChild(modalDiv);
+                }
+            });
+            
+            if (missingModals.length > 0) {
+                console.warn(`Created ${missingModals.length} missing modal containers: ${missingModals.join(', ')}`);
+            }
             
             // Initialize with a status message
             showStatus(`Initialized with ${detectionRules.length} detection rules`);
