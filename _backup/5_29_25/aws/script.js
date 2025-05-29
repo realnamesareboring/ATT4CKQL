@@ -473,4 +473,132 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
+    // Implement better path test
+    document.addEventListener('DOMContentLoaded', function() {
+        // Find any existing Run Path Test button
+        const existingButton = document.querySelector('button[textContent="Run Path Test"]');
+        if (existingButton) {
+            existingButton.remove();
+        }
+        
+        // Function to run the path test
+        function runPathTest() {
+            // Get the first query file from our detection rules (if available)
+            const firstQueryPath = window.detectionRules && window.detectionRules.length > 0 
+                ? detectionRules[0].queryFile 
+                : "ATT4CKQL - AWS - EC2 - Instance Created with IMDSv1.kql";
+            
+            // Get a sample log ID from detection rules (if available)
+            const firstLogId = window.detectionRules && window.detectionRules.length > 0
+                ? detectionRules[0].sampleLogId
+                : "ec2-suspicious-deployment-logs";
+            
+            // Test paths that should actually exist in the repo structure
+            const testFiles = [
+                // Try our javascript files
+                "script.js",
+                "table.js",
+                // Try actual query files
+                `Queries/${firstQueryPath.split('/').pop()}`,
+                `Amazon Web Services/Queries/${firstQueryPath.split('/').pop()}`,
+                // Try log HTML files
+                `_logs/${firstLogId}.html`,
+                `Amazon Web Services/_logs/${firstLogId}.html`
+            ];
+            
+            // Create results display element
+            const results = document.createElement('div');
+            results.style.margin = '20px 0';
+            results.style.padding = '10px';
+            results.style.background = '#f0f6ff';
+            results.style.border = '1px solid #ddd';
+            results.style.borderRadius = '4px';
+            results.innerHTML = '<h3>File Path Test Results</h3><p>Testing actual project paths:</p>';
+            
+            // Test each path and show results
+            Promise.all(testFiles.map(file => {
+                return fetch(file, { method: 'HEAD', cache: 'no-cache' })
+                    .then(response => {
+                        const result = document.createElement('div');
+                        result.style.margin = '5px 0';
+                        result.style.padding = '3px 6px';
+                        result.style.borderRadius = '3px';
+                        
+                        if (response.ok) {
+                            result.style.background = '#e6f7e6';
+                            result.style.color = '#107c10';
+                            result.textContent = `${file}: ✅ SUCCESS (${response.status})`;
+                        } else {
+                            result.style.background = '#fde7e9';
+                            result.style.color = '#d13438';
+                            result.textContent = `${file}: ❌ FAILED (${response.status})`;
+                        }
+                        return result;
+                    })
+                    .catch(error => {
+                        const result = document.createElement('div');
+                        result.style.background = '#fde7e9';
+                        result.style.color = '#d13438';
+                        result.textContent = `${file}: ❌ ERROR - ${error.message}`;
+                        return result;
+                    });
+            })).then(resultElements => {
+                resultElements.forEach(elem => results.appendChild(elem));
+                
+                // Add GitHub repository test
+                fetch("https://raw.githubusercontent.com/realnamesareboring/ATT4CKQL/main/README.md", { 
+                    method: 'HEAD',
+                    cache: 'no-cache'
+                })
+                .then(response => {
+                    const repoTest = document.createElement('div');
+                    repoTest.style.marginTop = '15px';
+                    repoTest.innerHTML = '<h4>GitHub Repository Check</h4>';
+                    
+                    if (response.ok) {
+                        repoTest.innerHTML += '<div style="background:#e6f7e6;color:#107c10;padding:5px;border-radius:3px;">✅ GitHub repository is accessible</div>';
+                    } else {
+                        repoTest.innerHTML += `<div style="background:#fde7e9;color:#d13438;padding:5px;border-radius:3px;">❌ GitHub repository check failed: ${response.status}</div>`;
+                    }
+                    
+                    results.appendChild(repoTest);
+                })
+                .catch(error => {
+                    const repoTest = document.createElement('div');
+                    repoTest.style.marginTop = '15px';
+                    repoTest.innerHTML = '<h4>GitHub Repository Check</h4>';
+                    repoTest.innerHTML += `<div style="background:#fde7e9;color:#d13438;padding:5px;border-radius:3px;">❌ GitHub repository error: ${error.message}</div>`;
+                    results.appendChild(repoTest);
+                })
+                .finally(() => {
+                    // Add the results to the page
+                    const table = document.querySelector('table');
+                    if (table) {
+                        table.parentNode.insertBefore(results, table.nextSibling);
+                    } else {
+                        document.body.appendChild(results);
+                    }
+                });
+            });
+        }
+        
+        // Create path test button (if not already present)
+        if (!document.getElementById('run-path-test')) {
+            const header = document.querySelector('h1');
+            if (header) {
+                const testButton = document.createElement('button');
+                testButton.id = 'run-path-test';
+                testButton.textContent = 'Run Path Test';
+                testButton.style.marginLeft = '20px';
+                testButton.style.padding = '6px 12px';
+                testButton.style.background = '#0078d4';
+                testButton.style.color = 'white';
+                testButton.style.border = 'none';
+                testButton.style.borderRadius = '4px';
+                testButton.onclick = runPathTest;
+                header.appendChild(testButton);
+            }
+        }
+    });
 });

@@ -1,0 +1,523 @@
+/* Theme variables for consistent styling */
+:root {
+    --primary-color: #0078d4;
+    --primary-gradient-start: #0078d4;
+    --primary-gradient-end: #004e8c;
+    --highlight-color: #e6f7e6;
+    --highlight-color-mid: #b3e6b3;
+    --tag-yes-bg: #e6f7e6;
+    --tag-yes-color: #107c10;
+    --tag-no-bg: #fde7e9;
+    --tag-no-color: #d13438;
+    --table-header-bg: #f0f6ff;
+    --table-hover-bg: #f5f9ff;
+    --github-bg: #24292e;
+    --github-hover-bg: #1a1e22;
+}
+
+/* Attacker theme variables */
+.theme-attacker {
+    --primary-color: #d40000;
+    --primary-gradient-start: #d40000;
+    --primary-gradient-end: #8c0000;
+    --highlight-color: #ffe6e6;
+    --highlight-color-mid: #ffb3b3;
+    --tag-yes-bg: #ffe6e6;
+    --tag-yes-color: #7c1010;
+    --tag-no-bg: #e7fdfd;
+    --tag-no-color: #13d4d4;
+    --table-header-bg: #fff0f0;
+    --table-hover-bg: #fff5f5;
+    --github-bg: #2e2424;
+    --github-hover-bg: #221a1a;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+    transition: all 0.5s ease;
+}
+
+body.theme-attacker {
+    background-color: #1c1c1c;
+    color: #f0f0f0;
+}
+
+h1 {
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 0.9em;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+body.theme-attacker table {
+    background-color: #272727;
+}
+
+th {
+    background-color: var(--table-header-bg);
+    color: var(--primary-color);
+    text-align: left;
+    padding: 12px 15px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+body.theme-attacker td {
+    border-bottom: 1px solid #444;
+}
+
+tr:hover {
+    background-color: var(--table-hover-bg);
+}
+
+/* View logs button styling */
+.view-logs-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.view-logs-btn:hover {
+    background-color: var(--primary-gradient-end);
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    overflow: auto;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 50px auto;
+    padding: 20px;
+    width: 90%;
+    max-width: 1000px;
+    border-radius: 8px;
+    position: relative;
+    max-height: 80vh; /* Limit the height to 80% of viewport height */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.modal-loading {
+    text-align: center;
+    padding: 50px;
+    font-size: 18px;
+    color: #666;
+    background-color: white;
+    border-radius: 8px;
+    margin: 50px auto;
+    max-width: 800px;
+}
+
+
+body.theme-attacker .modal-content {
+    background-color: #272727;
+    color: #f0f0f0;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.close-btn:hover {
+    color: #333;
+}
+
+body.theme-attacker .close-btn:hover {
+    color: #f0f0f0;
+}
+
+/* Azure Log Analytics Style */
+.log-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85em;
+    min-width: 800px; /* Set a minimum width */
+}
+
+.log-table th {
+    background-color: #f0f6ff;
+    padding: 8px 10px;
+    text-align: left;
+    position: sticky; /* Make headers sticky */
+    top: 0; /* Stick to top */
+    z-index: 5; /* Above table content */
+    border-bottom: 1px solid #ddd;
+}
+
+.log-table .highlight-cell {
+    background-color: #ffe6e6;
+    font-weight: bold;
+}
+
+.log-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+body.theme-attacker .log-table td {
+    border: 1px solid #444;
+}
+
+.log-table tr:nth-child(even) {
+    background-color: #f8f8f8;
+}
+
+body.theme-attacker .log-table tr:nth-child(even) {
+    background-color: #333;
+}
+
+.log-table tr:hover {
+    background-color: var(--table-hover-bg);
+}
+
+.highlight-cell {
+    background-color: var(--highlight-color);
+    font-weight: 600;
+}
+
+/* Timestamp styling */
+.log-timestamp {
+    color: #666;
+    font-family: monospace;
+}
+
+body.theme-attacker .log-timestamp {
+    color: #aaa;
+}
+
+.action-type {
+    font-weight: 600;
+}
+
+.log-container {
+    margin: 20px 0;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    width: 100%;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+body.theme-attacker .log-container {
+    border: 1px solid #444;
+}
+
+/* Log header styling */
+.log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+body.theme-attacker .log-header {
+    background-color: #333;
+    border-bottom: 1px solid #444;
+}
+
+.log-title {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #0078d4;
+}
+
+body.theme-attacker .log-title {
+    color: #f0f0f0;
+}
+
+.query-info {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+}
+
+body.theme-attacker .query-info {
+    color: #aaa;
+}
+
+.results-info {
+    padding: 4px 8px;
+    background-color: #f0f6ff;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.mitre-tactic {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.mitre-technique {
+    margin-left: 20px;
+    display: block;
+}
+
+.query-container {
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 20px 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+body.theme-attacker .query-container {
+    background-color: #272727;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.query-code {
+    background-color: #f5f5f5;
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    font-family: Consolas, Monaco, 'Andale Mono', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre;
+}
+
+body.theme-attacker .query-code {
+    background-color: #333;
+}
+
+.kql-comment {
+    color: #008000;
+}
+
+body.theme-attacker .kql-comment {
+    color: #6A9955;
+}
+
+.kql-operator {
+    color: #0000ff;
+}
+
+body.theme-attacker .kql-operator {
+    color: #569cd6;
+}
+
+.kql-function {
+    color: #795e26;
+}
+
+body.theme-attacker .kql-function {
+    color: #dcdcaa;
+}
+
+.kql-string {
+    color: #a31515;
+}
+
+body.theme-attacker .kql-string {
+    color: #ce9178;
+}
+
+.azure-tab {
+    background-color: var(--table-header-bg);
+    border-bottom: 3px solid var(--primary-color);
+    padding: 8px 16px;
+    display: inline-block;
+    margin-right: 2px;
+    border-radius: 4px 4px 0 0;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Theme toggle button styles */
+.theme-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 101;
+}
+
+.theme-toggle:hover {
+    transform: rotate(180deg);
+}
+
+/* Navigation link back to home */
+.nav-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    margin-bottom: 20px;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--primary-gradient-end);
+}
+
+.nav-link svg {
+    margin-right: 5px;
+}
+
+/* KQL Query Copy Button style */
+
+.copy-btn {
+    padding: 6px 12px;
+    background-color: #0078d4;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+    background-color: #005a9e;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.theme-attacker .copy-btn {
+    background-color: var(--primary-color);
+}
+
+.theme-attacker .copy-btn:hover {
+    background-color: var(--primary-gradient-end);
+}
+
+/* Shell-like styling for query container */
+.query-container {
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 20px 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.query-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    padding: 10px 15px;
+    border-bottom: 1px solid #444;
+}
+
+.query-title {
+    color: #f8f8f8;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.query-title::before {
+    content: ">";
+    margin-right: 8px;
+    color: #0078d4;
+    font-weight: bold;
+}
+
+.code-block {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    padding: 15px;
+    margin: 0;
+    overflow-x: auto;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre; /* Use pre to preserve formatting */
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Shell window control buttons */
+.query-title::after {
+    content: "";
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #ff5f56;
+    margin-right: 6px;
+    margin-left: 15px;
+    box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f;
+}
+
+/* Theme-specific adjustments */
+.theme-attacker .query-title::before {
+    color: var(--primary-color);
+}
+
+/* Query explanation styling */
+.query-explanation {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.query-explanation h3 {
+    color: #0078d4;
+    margin-top: 0;
+}
+
+.query-explanation ul {
+    padding-left: 20px;
+}
+
+/* Code block wrapper for horizontal scrolling */
+.code-wrapper {
+    overflow-x: auto;
+    max-width: 100%;
+}

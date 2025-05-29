@@ -1,0 +1,313 @@
+:root {
+    --primary-color: #0078d4;
+    --primary-gradient-start: #0078d4;
+    --primary-gradient-end: #004e8c;
+    --highlight-color: #e6f7e6;
+    --highlight-color-mid: #b3e6b3;
+    --tag-yes-bg: #e6f7e6;
+    --tag-yes-color: #107c10;
+    --tag-no-bg: #fde7e9;
+    --tag-no-color: #d13438;
+    --table-header-bg: #f0f6ff;
+    --table-hover-bg: #f5f9ff;
+    --github-bg: #24292e;
+    --github-hover-bg: #1a1e22;
+}
+
+.theme-attacker {
+    --primary-color: #d40000;
+    --primary-gradient-start: #d40000;
+    --primary-gradient-end: #8c0000;
+    --highlight-color: #ffe6e6;
+    --highlight-color-mid: #ffb3b3;
+    --tag-yes-bg: #ffe6e6;
+    --tag-yes-color: #7c1010;
+    --tag-no-bg: #e7fdfd;
+    --tag-no-color: #13d4d4;
+    --table-header-bg: #fff0f0;
+    --table-hover-bg: #fff5f5;
+    --github-bg: #2e2424;
+    --github-hover-bg: #221a1a;
+}
+
+/* Theme chooser overlay */
+.theme-chooser-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(8px);
+}
+
+.theme-chooser-content {
+    background-color: #f8f8f8;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    padding: 40px;
+    max-width: 600px;
+    width: 90%;
+    text-align: center;
+}
+
+.theme-chooser-content h2 {
+    font-size: 2.2em;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.theme-chooser-content p {
+    font-size: 1.1em;
+    margin-bottom: 30px;
+    color: #555;
+}
+
+.theme-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 40px;
+}
+
+.theme-button {
+    padding: 15px 40px;
+    font-size: 1.2em;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 180px;
+}
+
+.defender-button {
+    background-color: #0078d4;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);
+}
+
+.defender-button:hover {
+    background-color: #005a9e;
+    transform: translateY(-2px);
+}
+
+.attacker-button {
+    background-color: #d40000;
+    color: white;
+    box-shadow: 0 4px 12px rgba(212, 0, 0, 0.3);
+}
+
+.attacker-button:hover {
+    background-color: #a30000;
+    transform: translateY(-2px);
+}
+
+/* Main page styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    transition: all 0.5s ease;
+}
+
+body.theme-attacker {
+    background-color: #1c1c1c;
+    color: #f0f0f0;
+}
+
+.loading {
+    font-style: italic;
+    color: #666;
+}
+
+.query-count {
+    transition: background-color 0.5s ease;
+    font-weight: bold;
+}
+
+.updated {
+    background-color: var(--highlight-color);
+    animation: highlight 2s ease-in-out;
+}
+
+@keyframes highlight {
+    0% { background-color: var(--highlight-color); }
+    50% { background-color: var(--highlight-color-mid); }
+    100% { background-color: transparent; }
+}
+
+header {
+    background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+h2 {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 8px;
+    margin-top: 40px;
+}
+
+.theme-attacker h2 {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+
+.section {
+    background-color: white;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.theme-attacker .section {
+    background-color: #272727;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 0.9em;
+}
+
+th {
+    background-color: var(--table-header-bg);
+    color: var(--primary-color);
+    text-align: left;
+    padding: 12px 15px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.theme-attacker td {
+    border-bottom: 1px solid #444;
+}
+
+tr:hover {
+    background-color: var(--table-hover-bg);
+}
+
+.source-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.source-link:hover {
+    text-decoration: underline;
+}
+
+.tag {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    margin-right: 5px;
+    font-weight: 500;
+}
+
+.tag-yes {
+    background-color: var(--tag-yes-bg);
+    color: var(--tag-yes-color);
+}
+
+.tag-no {
+    background-color: var(--tag-no-bg);
+    color: var(--tag-no-color);
+}
+
+.icon {
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+footer {
+    text-align: center;
+    margin-top: 40px;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.theme-attacker footer {
+    color: #999;
+}
+
+.github-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: var(--github-bg);
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 500;
+    margin-top: 20px;
+}
+
+.github-link:hover {
+    background-color: var(--github-hover-bg);
+}
+
+/* Initially hide main content until theme is chosen */
+.main-content {
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+
+.main-content.visible {
+    opacity: 1;
+}
+
+.theme-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 100;
+}
+
+.theme-toggle:hover {
+    transform: rotate(180deg);
+}

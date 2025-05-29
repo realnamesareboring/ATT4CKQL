@@ -1,17 +1,14 @@
 /**
- * table.js - Dynamically populates the AWS detection rules table with Azure styling
+ * table.js - Dynamically populates the AWS detection rules table
  * For use with MITRE ATT&CK mapped AWS detection rules
  */
 
-// Define all detection rules with their metadata (enhanced for Azure styling)
+// Define all detection rules with their metadata
 const detectionRules = [
     // EC2 IMDSv1 Vulnerability Detection
     {
         name: "EC2 Instance Created with IMDSv1",
         description: "Identifies EC2 instances launched with IMDSv1 set to optional, creating a credential theft risk",
-        severity: "high",
-        lastDetected: "2025-05-15T14:23:45.123Z",
-        detectionCount: 3,
         mitreTactics: [
             { tactic: "Initial Access (TA0001)", technique: "T1078.004 - Cloud Accounts" },
             { tactic: "Credential Access (TA0006)", technique: "T1552.005 - Cloud Instance Metadata API" },
@@ -23,16 +20,14 @@ const detectionRules = [
         queryModalId: "aws-imdsv1-kql",
         attackPath: "https://github.com/RhinoSecurityLabs/pacu/wiki/Module-Details#ec2__metadata_services",
         attackPathText: "Pacu IMDS v1 Attack",
-        sampleLogId: "imdsv1-logstest" 
+        // Updated to use a standard HTML ID pattern that matches our other modal IDs
+        sampleLogId: "ec2-imdsv1-logs" 
     },
     
     // EC2 Suspicious Deployment Detection
     {
         name: "EC2 Suspicious Deployment Detected",
         description: "Identifies unusual EC2 instance deployments that may indicate cryptomining or other malicious activities",
-        severity: "medium",
-        lastDetected: "2025-05-15T04:17:32.654Z",
-        detectionCount: 4,
         mitreTactics: [
             { tactic: "Defense Evasion (TA0005)", technique: "T1578.002 - Modify Cloud Compute Infrastructure: Create Cloud Instance" },
             { tactic: "Execution (TA0002)", technique: "T1204.003 - User Execution: Malicious Image" }
@@ -49,9 +44,6 @@ const detectionRules = [
     {
         name: "EC2 Password Data Retrieved",
         description: "Detects when Windows password data is retrieved from EC2 instances, which may indicate credential theft",
-        severity: "medium",
-        lastDetected: "2025-05-15T14:23:45.123Z",
-        detectionCount: 5,
         mitreTactics: [
             { tactic: "Credential Access (TA0006)", technique: "T1555.006 - Credentials from Password Stores: Cloud Secrets Management Stores" }
         ],
@@ -67,9 +59,6 @@ const detectionRules = [
     {
         name: "AMI/EBS/RDS Snapshot Exfiltration Detected",
         description: "Identifies when snapshots are shared with unauthorized AWS accounts, indicating potential data exfiltration",
-        severity: "high",
-        lastDetected: "2025-05-15T10:15:27.331Z",
-        detectionCount: 5,
         mitreTactics: [
             { tactic: "Exfiltration (TA0010)", technique: "T1537.001 - Transfer Data to Cloud Account: Cloud Storage Object" },
             { tactic: "Collection (TA0009)", technique: "T1530 - Data from Cloud Storage" },
@@ -88,9 +77,6 @@ const detectionRules = [
     {
         name: "S3 Bucket has been created/accessed/deleted",
         description: "Identifies S3 bucket operations from untrusted networks that could indicate unauthorized access",
-        severity: "medium",
-        lastDetected: "2025-05-15T14:53:45.123Z",
-        detectionCount: 6,
         mitreTactics: [
             { tactic: "Collection (TA0009)", technique: "T1530 - Data from Cloud Storage" },
             { tactic: "Execution (TA0002)", technique: "T1537 - Transfer Data to Cloud Account" }
@@ -100,16 +86,13 @@ const detectionRules = [
         queryModalId: "s3-modification-kql",
         attackPath: "https://stratus-red-team.cloud/attack-techniques/AWS/aws.execution.ec2-launch-unusual-instances/",
         attackPathText: "stratus-red-team: Launch Unusual EC2 instances",
-        sampleLogId: "s3-bucket-modification-log"
+        sampleLogId: "s3-bucket-modification-logs"
     },
     
     // S3 Bucket Accessed from Untrusted Network
     {
         name: "S3 Bucket accessed from an untrusted network",
         description: "Identifies S3 bucket operations from known malicious IP addresses and untrusted networks",
-        severity: "high",
-        lastDetected: "2025-05-15T14:57:32.123Z",
-        detectionCount: 7,
         mitreTactics: [
             { tactic: "Exfiltration (TA0010)", technique: "T1619 - Cloud Storage Object Discovery" },
             { tactic: "Collection (TA0009)", technique: "T1530 - Data from Cloud Storage" },
@@ -121,16 +104,13 @@ const detectionRules = [
         queryModalId: "s3-untrusted-access-kql",
         attackPath: "https://www.intigriti.com/researchers/blog/hacking-tools/hacking-misconfigured-aws-s3-buckets-a-complete-guide",
         attackPathText: "intigriti: Hacking misconfigured AWS S3 buckets: A complete guide",
-        sampleLogId: "s3-buckets-untrusted-network-log"
+        sampleLogId: "s3-buckets-untrusted-network-logs"
     },
     
     // IAM Access Keys Created and Deleted
     {
         name: "IAM - Access keys created and deleted within short time frame",
         description: "Detects when IAM access keys are created and quickly deleted, suggesting possible credential theft or attacker covering tracks",
-        severity: "high",
-        lastDetected: "2025-05-15T14:45:22.123Z",
-        detectionCount: 5,
         mitreTactics: [
             { tactic: "Persistence, Privilege Escalation (TA0003, TA0004)", technique: "T1098.001 - Account Manipulation: Additional Cloud Credentials" }
         ],
@@ -146,9 +126,6 @@ const detectionRules = [
     {
         name: "IAM - Cloud User Account Creation",
         description: "Detects the creation of new IAM users, which could indicate persistence establishment in the environment",
-        severity: "medium",
-        lastDetected: "2025-05-15T14:55:12.743Z",
-        detectionCount: 6,
         mitreTactics: [
             { tactic: "Persistence (TA0003)", technique: "T1136.003 - Create Account: Cloud Account" },
             { tactic: "Discovery (TA0007)", technique: "T1069.003 - Permission Groups Discovery: Cloud Groups" }
@@ -165,9 +142,6 @@ const detectionRules = [
     {
         name: "IAM - Management Console successful login with no MFA",
         description: "Detects when users log in to the AWS Management Console without multi-factor authentication",
-        severity: "medium",
-        lastDetected: "2025-05-15T14:32:17.652Z",
-        detectionCount: 7,
         mitreTactics: [
             { tactic: "Credential Access, Defense Evasion, Persistence (TA0006, TA0005, TA0003)", technique: "T1556.006 - Modify Authentication Process: Multi-Factor Authentication" }
         ],
@@ -183,9 +157,6 @@ const detectionRules = [
     {
         name: "Network - Connection to malicious IPs and Domains",
         description: "Identifies AWS resources communicating with known malicious IP addresses or domains",
-        severity: "high",
-        lastDetected: "2025-05-15T14:23:17.652Z",
-        detectionCount: 7,
         mitreTactics: [
             { tactic: "Discovery (TA0007)", technique: "T1526 - Cloud Service Discovery" },
             { tactic: "Lateral Movement (TA0008)", technique: "T1021.007 - Remote Services: Cloud Services" },
@@ -203,9 +174,6 @@ const detectionRules = [
     {
         name: "Network - Suspicious Changes to AWS Network Resources",
         description: "Detects unexpected modifications to VPC, security groups, or network ACLs that could indicate network-based attacks",
-        severity: "medium",
-        lastDetected: "2025-05-15T14:45:22.651Z",
-        detectionCount: 8,
         mitreTactics: [
             { tactic: "Initial Access (TA0001)", technique: "T1659 - Content Injection" },
             { tactic: "Initial Access (TA0001)", technique: "T1190 - Exploit Public-Facing Application" },
@@ -223,9 +191,6 @@ const detectionRules = [
     {
         name: "Operations - Changes to AWS Configurations",
         description: "Identifies potentially high-risk changes to AWS account configurations and security settings",
-        severity: "high",
-        lastDetected: "2025-05-15T14:55:22.651Z",
-        detectionCount: 8,
         mitreTactics: [
             { tactic: "Defense Evasion (TA0005)", technique: "T1578.005 - Modify Cloud Compute Infrastructure: Modify Cloud Compute Configurations" }
         ],
@@ -241,9 +206,6 @@ const detectionRules = [
     {
         name: "Security - CloudTrail tamper detection",
         description: "Detects attempts to disable, delete, or modify CloudTrail logs to evade detection",
-        severity: "high",
-        lastDetected: "2025-05-15T14:55:32.651Z",
-        detectionCount: 7,
         mitreTactics: [
             { tactic: "Defense Evasion (TA0005)", technique: "T1562.008 - Impair Defenses: Disable or Modify Cloud Logs" }
         ],
@@ -259,9 +221,6 @@ const detectionRules = [
     {
         name: "Security - Enhanced GuardDuty",
         description: "Augments Amazon GuardDuty findings with additional context and severity adjustments",
-        severity: "medium",
-        lastDetected: "2025-05-15T14:55:32.651Z",
-        detectionCount: 8,
         mitreTactics: [
             { tactic: "Discovery (TA0007)", technique: "T1526 - Cloud Service Discovery" }
         ],
@@ -277,9 +236,6 @@ const detectionRules = [
     {
         name: "Security - Unauthorized API Calls",
         description: "Detects unauthorized or suspicious API calls that could indicate compromised credentials or insider threats",
-        severity: "high",
-        lastDetected: "2025-05-15T14:52:22.651Z",
-        detectionCount: 8,
         mitreTactics: [
             { tactic: "Execution (TA0002)", technique: "T1059.009 - Command and Scripting Interpreter: Cloud API" }
         ],
@@ -301,22 +257,20 @@ function renderMitreTactics(mitreTactics) {
     const fragment = document.createDocumentFragment();
     
     mitreTactics.forEach((item, index) => {
-        const tacticElement = document.createElement('div');
-        tacticElement.className = 'mitre-tactic';
+        const tacticElement = document.createElement('strong');
         tacticElement.textContent = item.tactic;
         
         fragment.appendChild(tacticElement);
+        fragment.appendChild(document.createElement('br'));
         
-        const techniqueElement = document.createElement('div');
-        techniqueElement.className = 'mitre-technique';
+        const techniqueElement = document.createElement('span');
         techniqueElement.textContent = item.technique;
         fragment.appendChild(techniqueElement);
         
-        // Add spacing if not the last item
+        // Add a separator if not the last item
         if (index < mitreTactics.length - 1) {
-            const spacer = document.createElement('div');
-            spacer.style.marginBottom = '8px';
-            fragment.appendChild(spacer);
+            fragment.appendChild(document.createElement('br'));
+            fragment.appendChild(document.createElement('br'));
         }
     });
     
@@ -324,22 +278,27 @@ function renderMitreTactics(mitreTactics) {
 }
 
 /**
- * Format timestamp for Azure-style display
+ * Validates modal IDs exist in DOM before rendering buttons
+ * @param {string} modalId - The modal ID to check
+ * @returns {boolean} - Whether the modal exists
  */
-function formatTimestamp(timestamp) {
-    const date = new Date(timestamp);
-    return date.toLocaleString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        timeZoneName: 'short'
-    });
+function validateModalExists(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal) {
+        console.warn(`Modal with ID '${modalId}' not found in DOM. Creating placeholder.`);
+        // Create a placeholder modal div
+        const placeholderModal = document.createElement('div');
+        placeholderModal.id = modalId;
+        placeholderModal.className = 'modal';
+        placeholderModal.style.display = 'none';
+        document.body.appendChild(placeholderModal);
+        return true;
+    }
+    return true;
 }
 
 /**
- * Renders the detection rules table with Azure styling
+ * Renders the detection rules table
  */
 function renderDetectionRules() {
     const tableBody = document.getElementById('detection-rules-table-body');
@@ -352,93 +311,76 @@ function renderDetectionRules() {
     // Clear any existing content
     tableBody.innerHTML = '';
     
-    detectionRules.forEach(rule => {
+    detectionRules.forEach((rule, ruleIndex) => {
         // Calculate rowspan based on number of MITRE tactics (minimum 1)
         const rowspan = Math.max(1, rule.mitreTactics.length);
         
         // First row with main detection information
         const firstRow = document.createElement('tr');
-        firstRow.className = 'detection-row';
         
-        // Detection Name (with rowspan and enhanced styling)
+        // Detection Name (with rowspan)
         const nameCell = document.createElement('td');
         nameCell.setAttribute('rowspan', rowspan);
-        nameCell.className = 'detection-name-cell';
-        
-        const nameContainer = document.createElement('div');
-        nameContainer.innerHTML = `
-            <div class="detection-title">
-                <span class="severity-indicator severity-${rule.severity}"></span>
-                <strong>${rule.name}</strong>
-            </div>
-            <div class="detection-meta">
-                <span class="detection-timestamp">Last: ${formatTimestamp(rule.lastDetected)}</span>
-                <span class="detection-count">${rule.detectionCount} results</span>
-            </div>
-        `;
-        nameCell.appendChild(nameContainer);
+        nameCell.style.fontWeight = 'bold';
+        nameCell.textContent = rule.name;
         firstRow.appendChild(nameCell);
         
         // Description (with rowspan)
         const descriptionCell = document.createElement('td');
         descriptionCell.setAttribute('rowspan', rowspan);
-        descriptionCell.className = 'detection-description';
         descriptionCell.textContent = rule.description;
         firstRow.appendChild(descriptionCell);
         
         // MITRE Tactics & Techniques (first tactic only in first row)
         const firstTacticCell = document.createElement('td');
-        firstTacticCell.className = 'mitre-tactic-cell';
         if (rule.mitreTactics && rule.mitreTactics.length > 0) {
-            const tacticElement = document.createElement('div');
-            tacticElement.className = 'mitre-tactic';
+            const tacticElement = document.createElement('strong');
             tacticElement.textContent = rule.mitreTactics[0].tactic;
             firstTacticCell.appendChild(tacticElement);
+            firstTacticCell.appendChild(document.createElement('br'));
             
-            const techniqueElement = document.createElement('div');
-            techniqueElement.className = 'mitre-technique';
+            const techniqueElement = document.createElement('span');
             techniqueElement.textContent = rule.mitreTactics[0].technique;
             firstTacticCell.appendChild(techniqueElement);
         }
         firstRow.appendChild(firstTacticCell);
         
-        // Data Source (with rowspan and enhanced styling)
+        // Data Source (with rowspan)
         const dataSourceCell = document.createElement('td');
         dataSourceCell.setAttribute('rowspan', rowspan);
-        dataSourceCell.className = 'data-source-cell';
-        dataSourceCell.innerHTML = `<span class="data-source-tag">${rule.dataSource}</span>`;
+        dataSourceCell.textContent = rule.dataSource;
         firstRow.appendChild(dataSourceCell);
         
-        // Query Link (with rowspan and enhanced button)
+        // Query Link (with rowspan)
         const queryLinkCell = document.createElement('td');
         queryLinkCell.setAttribute('rowspan', rowspan);
-        queryLinkCell.className = 'action-cell';
         const queryButton = document.createElement('button');
-        queryButton.className = 'view-logs-btn query-btn';
-        queryButton.innerHTML = `🔍 View Query`;
+        queryButton.className = 'view-logs-btn';
+        queryButton.textContent = 'View Query';
+        // Ensure modal exists before creating the button
+        validateModalExists(rule.queryModalId);
         queryButton.setAttribute('onclick', `openQueryModal('${rule.queryModalId}', '${rule.queryFile}')`);
         queryLinkCell.appendChild(queryButton);
         firstRow.appendChild(queryLinkCell);
         
-        // Attack Path Reference (with rowspan and enhanced styling)
+        // Attack Path Reference (with rowspan)
         const attackPathCell = document.createElement('td');
         attackPathCell.setAttribute('rowspan', rowspan);
-        attackPathCell.className = 'attack-path-cell';
         const attackPathLink = document.createElement('a');
         attackPathLink.href = rule.attackPath;
         attackPathLink.textContent = rule.attackPathText;
         attackPathLink.target = '_blank';
-        attackPathLink.className = 'attack-path-link';
         attackPathCell.appendChild(attackPathLink);
         firstRow.appendChild(attackPathCell);
         
-        // Sample Logs (with rowspan and enhanced button)
+        // Sample Logs (with rowspan)
         const sampleLogsCell = document.createElement('td');
         sampleLogsCell.setAttribute('rowspan', rowspan);
-        sampleLogsCell.className = 'action-cell';
         const sampleLogsButton = document.createElement('button');
-        sampleLogsButton.className = 'view-logs-btn sample-btn';
-        sampleLogsButton.innerHTML = `📊 Sample Logs`;
+        sampleLogsButton.className = 'view-logs-btn';
+        sampleLogsButton.textContent = 'View Sample Logs';
+        // Ensure modal exists before creating the button
+        validateModalExists(rule.sampleLogId);
         sampleLogsButton.setAttribute('onclick', `openExternalModal('${rule.sampleLogId}', 'logs')`);
         sampleLogsCell.appendChild(sampleLogsButton);
         firstRow.appendChild(sampleLogsCell);
@@ -450,18 +392,14 @@ function renderDetectionRules() {
         if (rule.mitreTactics && rule.mitreTactics.length > 1) {
             for (let i = 1; i < rule.mitreTactics.length; i++) {
                 const additionalRow = document.createElement('tr');
-                additionalRow.className = 'mitre-additional-row';
                 
                 const tacticCell = document.createElement('td');
-                tacticCell.className = 'mitre-tactic-cell';
-                
-                const tacticElement = document.createElement('div');
-                tacticElement.className = 'mitre-tactic';
+                const tacticElement = document.createElement('strong');
                 tacticElement.textContent = rule.mitreTactics[i].tactic;
                 tacticCell.appendChild(tacticElement);
+                tacticCell.appendChild(document.createElement('br'));
                 
-                const techniqueElement = document.createElement('div');
-                techniqueElement.className = 'mitre-technique';
+                const techniqueElement = document.createElement('span');
                 techniqueElement.textContent = rule.mitreTactics[i].technique;
                 tacticCell.appendChild(techniqueElement);
                 
@@ -471,28 +409,26 @@ function renderDetectionRules() {
         }
     });
     
-    // Update results count
-    updateResultsCount(detectionRules.length);
-    
-    console.log(`Detection rules table rendered with ${detectionRules.length} rules in Azure style.`);
-}
-
-/**
- * Update results count display
- */
-function updateResultsCount(count) {
-    const resultCountElement = document.getElementById('results-count');
-    if (resultCountElement) {
-        resultCountElement.textContent = `${count} result${count !== 1 ? 's' : ''}`;
-    }
+    console.log('Detection rules table rendered with ' + detectionRules.length + ' rules.');
 }
 
 // Initialize the table when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Initializing Azure-style detection rules table...');
+    console.log('Initializing detection rules table...');
     
-    // Add a small delay to ensure all styles are loaded
+    // Check for each modal needed and create it if missing
+    detectionRules.forEach(rule => {
+        validateModalExists(rule.queryModalId);
+        validateModalExists(rule.sampleLogId);
+    });
+    
+    // Add a small delay to ensure all DOM elements are ready
     setTimeout(() => {
         renderDetectionRules();
-    }, 100);
+        console.log('Table rendering completed.');
+        
+        // Log the available modal containers for debugging
+        const modalElements = document.querySelectorAll('.modal');
+        console.log('Found ' + modalElements.length + ' modal containers on the page.');
+    }, 300);
 });
