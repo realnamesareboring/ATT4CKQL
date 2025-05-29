@@ -1,24 +1,4 @@
-/* Azure Log Analytics Theme Variables */
 :root {
-    /* Azure Primary Colors */
-    --azure-primary: #0078d4;
-    --azure-primary-dark: #106ebe;
-    --azure-secondary: #005a9e;
-    --azure-bg: #faf9f8;
-    --azure-surface: #ffffff;
-    --azure-border: #edebe9;
-    --azure-border-light: #f3f2f1;
-    --azure-text: #323130;
-    --azure-text-secondary: #605e5c;
-    --azure-text-light: #8a8886;
-    --azure-hover: #f3f2f1;
-    --azure-selected: #deecf9;
-    --azure-error: #d13438;
-    --azure-warning: #ff8c00;
-    --azure-success: #107c10;
-    --azure-info: #0078d4;
-    
-    /* Legacy variables for compatibility */
     --primary-color: #0078d4;
     --primary-gradient-start: #0078d4;
     --primary-gradient-end: #004e8c;
@@ -28,13 +8,12 @@
     --tag-yes-color: #107c10;
     --tag-no-bg: #fde7e9;
     --tag-no-color: #d13438;
-    --table-header-bg: #f8f9fa;
-    --table-hover-bg: #f3f2f1;
+    --table-header-bg: #f0f6ff;
+    --table-hover-bg: #f5f9ff;
     --github-bg: #24292e;
     --github-hover-bg: #1a1e22;
 }
 
-/* Attacker theme variables */
 .theme-attacker {
     --primary-color: #d40000;
     --primary-gradient-start: #d40000;
@@ -49,14 +28,6 @@
     --table-hover-bg: #fff5f5;
     --github-bg: #2e2424;
     --github-hover-bg: #221a1a;
-    --azure-primary: #d40000;
-    --azure-primary-dark: #8c0000;
-    --azure-bg: #1a1a1a;
-    --azure-surface: #2d2d2d;
-    --azure-border: #444444;
-    --azure-text: #f0f0f0;
-    --azure-text-secondary: #cccccc;
-    --azure-hover: #404040;
 }
 
 /* Theme chooser overlay */
@@ -137,20 +108,18 @@
 
 /* Main page styles */
 body {
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    color: var(--azure-text);
+    color: #333;
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
-    background-color: var(--azure-bg);
     transition: all 0.5s ease;
-    font-size: 14px;
 }
 
 body.theme-attacker {
-    background-color: var(--azure-bg);
-    color: var(--azure-text);
+    background-color: #1c1c1c;
+    color: #f0f0f0;
 }
 
 .loading {
@@ -189,15 +158,15 @@ h1 {
 }
 
 h2 {
-    color: var(--azure-primary);
-    border-bottom: 2px solid var(--azure-primary);
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
     padding-bottom: 8px;
     margin-top: 40px;
 }
 
 .theme-attacker h2 {
-    color: var(--azure-primary);
-    border-bottom: 2px solid var(--azure-primary);
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
 }
 
 .subtitle {
@@ -207,108 +176,55 @@ h2 {
 }
 
 .section {
-    background-color: var(--azure-surface);
+    background-color: white;
     border-radius: 8px;
     padding: 25px;
     margin-bottom: 30px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid var(--azure-border);
 }
 
 .theme-attacker .section {
-    background-color: var(--azure-surface);
+    background-color: #272727;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Table Container - Azure Style */
-.table-container {
-    background: var(--azure-surface);
-    border: 1px solid var(--azure-border);
-    border-radius: 6px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    margin: 20px 0;
-}
-
-.table-header {
-    background: #f8f9fa;
-    border-bottom: 1px solid var(--azure-border);
-    padding: 16px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.table-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--azure-text);
-}
-
-.results-count {
-    font-size: 13px;
-    color: var(--azure-text-secondary);
-    background: var(--azure-selected);
-    padding: 4px 12px;
-    border-radius: 12px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 0;
+    margin: 20px 0;
     font-size: 0.9em;
-    background: var(--azure-surface);
 }
 
 th {
     background-color: var(--table-header-bg);
-    color: var(--azure-text);
+    color: var(--primary-color);
     text-align: left;
     padding: 12px 15px;
     font-weight: 600;
-    border-bottom: 1px solid var(--azure-border);
-    border-right: 1px solid var(--azure-border-light);
-}
-
-th:last-child {
-    border-right: none;
-}
-
-th:hover {
-    background: #f3f2f1;
-    cursor: pointer;
+    border-bottom: 2px solid var(--primary-color);
 }
 
 td {
     padding: 10px 15px;
-    border-bottom: 1px solid var(--azure-border-light);
-    border-right: 1px solid var(--azure-border-light);
-}
-
-td:last-child {
-    border-right: none;
+    border-bottom: 1px solid #ddd;
 }
 
 .theme-attacker td {
-    border-bottom: 1px solid var(--azure-border);
+    border-bottom: 1px solid #444;
 }
 
 tr:hover {
     background-color: var(--table-hover-bg);
-    transition: all 0.2s ease;
 }
 
 .source-link {
-    color: var(--azure-primary);
+    color: var(--primary-color);
     text-decoration: none;
     font-weight: 500;
-    transition: color 0.3s ease;
 }
 
 .source-link:hover {
     text-decoration: underline;
-    color: var(--azure-primary-dark);
 }
 
 .tag {
@@ -338,12 +254,12 @@ tr:hover {
 footer {
     text-align: center;
     margin-top: 40px;
-    color: var(--azure-text-secondary);
+    color: #666;
     font-size: 0.9em;
 }
 
 .theme-attacker footer {
-    color: var(--azure-text-secondary);
+    color: #999;
 }
 
 .github-link {
@@ -356,7 +272,6 @@ footer {
     border-radius: 4px;
     font-weight: 500;
     margin-top: 20px;
-    transition: background-color 0.3s ease;
 }
 
 .github-link:hover {
@@ -395,124 +310,4 @@ footer {
 
 .theme-toggle:hover {
     transform: rotate(180deg);
-}
-
-/* Enhanced interactive effects */
-tr:hover .source-link {
-    color: var(--azure-primary-dark);
-    font-weight: 600;
-}
-
-.query-count.updated {
-    background-color: var(--azure-selected);
-    color: var(--azure-primary);
-    font-weight: 600;
-    border-radius: 4px;
-    padding: 2px 6px;
-}
-
-/* Best practices section enhancements */
-.section h3 {
-    color: var(--azure-primary);
-    margin-top: 24px;
-    margin-bottom: 12px;
-    font-size: 1.1em;
-}
-
-.section ul {
-    padding-left: 20px;
-}
-
-.section li {
-    margin: 8px 0;
-    line-height: 1.5;
-}
-
-.section strong {
-    color: var(--azure-text);
-    font-weight: 600;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-    body {
-        padding: 12px;
-    }
-    
-    header {
-        padding: 20px;
-    }
-    
-    h1 {
-        font-size: 2em;
-    }
-    
-    .theme-buttons {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .theme-button {
-        min-width: auto;
-        width: 100%;
-    }
-    
-    .section {
-        padding: 20px;
-    }
-    
-    table {
-        font-size: 0.8em;
-    }
-    
-    th, td {
-        padding: 8px 10px;
-    }
-    
-    .table-header {
-        flex-direction: column;
-        gap: 8px;
-        align-items: flex-start;
-    }
-}
-
-/* Additional animations and transitions */
-.section {
-    animation: fadeInUp 0.6s ease-out;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Table row hover enhancement */
-tr {
-    transition: all 0.2s ease;
-}
-
-tr:hover {
-    transform: translateX(2px);
-    box-shadow: 0 2px 4px rgba(0, 120, 212, 0.1);
-}
-
-/* Loading states */
-.loading {
-    display: inline-block;
-    animation: pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.5;
-    }
 }
