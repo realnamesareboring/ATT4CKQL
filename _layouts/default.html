@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ site.title }}</title>
+    <!-- CONSOLIDATED CSS -->
+    <link rel="stylesheet" href="{{ '/assets/css/att4ckql.css' | relative_url }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Cyberpunk Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    {% if page.show_theme_chooser %}
+    <div class="theme-chooser-overlay" id="theme-chooser">
+        <div class="theme-chooser-content">
+            <h2>Which side do you belong?</h2>
+            <p>Choose your perspective in the cyber realm</p>
+            <div class="theme-buttons">
+               <button class="theme-button defender-button" onclick="showMain('defender')">
+                   🛡️ Defender
+                   <br><small>Azure Security</small>
+               </button>
+               <button class="theme-button attacker-button" onclick="showMain('attacker')">
+                   ⚔️ Attacker
+                   <br><small>Red Team</small>
+               </button>
+               <button class="theme-button cyberpunk-button" onclick="showMain('cyberpunk')">
+                   🌈 Cyberpunk
+                   <br><small>Neon Matrix</small>
+               </button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- MAIN CONTENT WITH GLITCH BANNER -->
+    <div class="main-content" id="main-content" {% if page.show_theme_chooser %}style="opacity: 0;"{% endif %}>
+        
+        <!-- ⚡ FIXED GLITCH BANNER ⚡ -->
+        {% if page.header %}
+        <header>
+            <h1 class="glitch">{{ page.header.title }}</h1>
+            <p class="subtitle">{{ page.header.subtitle }}</p>
+        </header>
+        {% endif %}
+        
+        <!-- Your existing content -->
+        {{ content }}
+    </div>
+    
+    <!-- CORE FUNCTIONALITY -->
+    <script src="{{ '/assets/js/att4ckql-core.js' | relative_url }}"></script>
+    
+    <!-- Enhanced Theme Toggle Button -->
+    <button class="theme-toggle" id="theme-toggle" title="Cycle through themes">🛡️</button>
+</body>
+</html>

@@ -1,0 +1,3357 @@
+/*!
+ * ATT4CKQL Consolidated Stylesheet v2.1 - CORRECTED
+ * Enhanced KQL Queries for Microsoft Sentinel
+ * FIXED: Text formatting, spacing, and alignment issues
+ * Created: 2025
+ */
+
+/* ========================================
+   ROOT VARIABLES & CONFIGURATION
+   ======================================== */
+   :root {
+    /* Azure Theme (Defender) - Primary Colors */
+    --azure-primary: #0078d4;
+    --azure-primary-dark: #106ebe;
+    --azure-secondary: #005a9e;
+    --azure-bg: #faf9f8;
+    --azure-surface: #ffffff;
+    --azure-border: #edebe9;
+    --azure-border-light: #f3f2f1;
+    --azure-text: #323130;
+    --azure-text-secondary: #605e5c;
+    --azure-text-light: #8a8886;
+    --azure-hover: #f3f2f1;
+    --azure-selected: #deecf9;
+    --azure-error: #d13438;
+    --azure-warning: #ff8c00;
+    --azure-success: #107c10;
+    --azure-info: #0078d4;
+    
+    /* Legacy variables for compatibility */
+    --primary-color: var(--azure-primary);
+    --primary-gradient-start: var(--azure-primary);
+    --primary-gradient-end: #004e8c;
+    --highlight-color: #e6f7e6;
+    --highlight-color-mid: #b3e6b3;
+    --tag-yes-bg: #e6f7e6;
+    --tag-yes-color: var(--azure-success);
+    --tag-no-bg: #fde7e9;
+    --tag-no-color: var(--azure-error);
+    --table-header-bg: #f8f9fa;
+    --table-hover-bg: #f3f2f1;
+    --github-bg: #24292e;
+    --github-hover-bg: #1a1e22;
+    
+    /* Layout Variables */
+    --border-radius: 8px;
+    --border-radius-small: 4px;
+    --border-radius-large: 12px;
+    --transition: all 0.3s ease;
+    --transition-fast: all 0.2s ease;
+    --shadow-light: 0 2px 8px rgba(0,0,0,0.05);
+    --shadow-medium: 0 4px 12px rgba(0,0,0,0.1);
+    --shadow-heavy: 0 8px 24px rgba(0,0,0,0.15);
+    
+    /* Typography */
+    --font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
+    --font-mono: 'Cascadia Code', 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+}
+
+/* ========================================
+   THEME SWITCHING SYSTEM
+   ======================================== */
+body.theme-attacker,
+.theme-attacker {
+    /* Override all variables for attacker theme */
+    --primary-color: #d40000;
+    --primary-gradient-start: #d40000;
+    --primary-gradient-end: #8c0000;
+    --highlight-color: #ffe6e6;
+    --highlight-color-mid: #ffb3b3;
+    --tag-yes-bg: #ffe6e6;
+    --tag-yes-color: #7c1010;
+    --tag-no-bg: #e7fdfd;
+    --tag-no-color: #13d4d4;
+    --table-header-bg: #fff0f0;
+    --table-hover-bg: #fff5f5;
+    --github-bg: #2e2424;
+    --github-hover-bg: #221a1a;
+    
+    /* Azure variable overrides */
+    --azure-primary: #d40000;
+    --azure-primary-dark: #8c0000;
+    --azure-secondary: #a30000;
+    --azure-bg: #1a1a1a;
+    --azure-surface: #2d2d2d;
+    --azure-border: #444444;
+    --azure-border-light: #555555;
+    --azure-text: #f0f0f0;
+    --azure-text-secondary: #cccccc;
+    --azure-text-light: #999999;
+    --azure-hover: #404040;
+    --azure-selected: rgba(212, 0, 0, 0.1);
+    
+    /* Apply theme colors to body */
+    background-color: var(--azure-bg) !important;
+    color: var(--azure-text) !important;
+}
+
+/* ========================================
+   BASE STYLES & RESET - FIXED
+   ======================================== */
+* {
+    box-sizing: border-box;
+    /* REMOVED aggressive reset that broke text formatting */
+}
+
+body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
+    line-height: 1.6;
+    color: var(--azure-text);
+    background-color: var(--azure-bg);
+    transition: all 0.5s ease;
+    font-size: 14px;
+    max-width: 1200px; /* FIXED: Restored to working 1200px */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ========================================
+   PROPER TEXT ELEMENT SPACING - RESTORED
+   ======================================== */
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: 0.5em;
+    line-height: 1.3;
+    color: var(--azure-text);
+}
+
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 0.67em;
+}
+
+h2 {
+    font-size: 2em;
+    margin-bottom: 0.83em;
+}
+
+h3 {
+    font-size: 1.5em;
+    margin-bottom: 1em;
+}
+
+p {
+    margin-bottom: 1em;
+    line-height: 1.6;
+}
+
+ul, ol {
+    margin-bottom: 1em;
+    padding-left: 1.5em;
+}
+
+li {
+    margin-bottom: 0.25em;
+    line-height: 1.5;
+}
+
+blockquote {
+    margin: 1em 2em;
+    padding-left: 1em;
+    border-left: 4px solid var(--azure-primary);
+    color: var(--azure-text-secondary);
+}
+
+pre {
+    margin: 1em 0;
+}
+
+/* ========================================
+   THEME CHOOSER SYSTEM
+   ======================================== */
+.theme-chooser-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.theme-chooser-content {
+    background-color: #f8f8f8;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    padding: 40px;
+    max-width: 600px;
+    width: 90%;
+    text-align: center;
+}
+
+.theme-chooser-content h2 {
+    font-size: 2.2em;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.theme-chooser-content p {
+    font-size: 1.1em;
+    margin-bottom: 30px;
+    color: #555;
+}
+
+.theme-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 40px;
+    gap: 20px;
+}
+
+.theme-button {
+    padding: 15px 40px;
+    font-size: 1.2em;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 180px;
+    flex: 1;
+}
+
+.defender-button {
+    background-color: #0078d4;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);
+}
+
+.defender-button:hover {
+    background-color: #005a9e;
+    transform: translateY(-2px);
+}
+
+.attacker-button {
+    background-color: #d40000;
+    color: white;
+    box-shadow: 0 4px 12px rgba(212, 0, 0, 0.3);
+}
+
+.attacker-button:hover {
+    background-color: #a30000;
+    transform: translateY(-2px);
+}
+
+/* ========================================
+   LAYOUT COMPONENTS
+   ======================================== */
+.main-content {
+    max-width: 1200px; /* FIXED: Consistent with body */
+    margin: 0 auto;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+
+.main-content.visible {
+    opacity: 1;
+}
+
+.container {
+    max-width: 1200px; /* FIXED: Consistent sizing */
+    margin: 0 auto;
+}
+
+header {
+    background: linear-gradient(135deg, #0078d4 0%, #004e8c 100%);
+    color: white;
+    text-align: center;
+    padding: 30px 20px;
+    margin-bottom: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    margin: 0 0 10px 0;
+    font-size: 2.5em;
+    font-weight: 300;
+}
+
+header p {
+    margin: 0;
+    font-size: 1.1em;
+    opacity: 0.9;
+}
+
+/* ========================================
+   SECTION STYLING - FIXED
+   ======================================== */
+.section {
+    background-color: var(--azure-surface);
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--azure-border);
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.section h2 {
+    color: var(--azure-primary);
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.section h3 {
+    color: var(--azure-primary);
+    margin-top: 24px;
+    margin-bottom: 12px;
+    font-size: 1.1em;
+}
+
+.section ol {
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
+
+.section ol li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.section ul {
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
+
+.section ul li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.section strong {
+    color: var(--azure-text);
+    font-weight: 600;
+}
+
+/* ========================================
+   VIEWPORT POSITION FIX
+   REPLACE THE THEME TOGGLE SECTION IN YOUR v1.4 CYBERPUNK CSS PATCH
+   
+   FIXES:
+   - Forces button to be positioned relative to viewport, not content container
+   - Ensures button stays outside content area on all themes
+   ======================================== */
+
+/* ========================================
+   THEME TOGGLE BUTTON - FORCE VIEWPORT POSITIONING
+   ======================================== */
+
+/* FORCE BUTTON TO BE POSITIONED RELATIVE TO VIEWPORT, NOT CONTAINERS */
+.theme-toggle {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 20px !important;
+    cursor: pointer !important;
+    border: none !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.3s ease !important;
+    z-index: 999999 !important; /* VERY high z-index */
+    
+    /* CRITICAL: FORCE VIEWPORT POSITIONING */
+    margin: 0 !important;
+    transform: none !important;
+    left: auto !important; /* Ensure left doesn't interfere */
+    bottom: auto !important; /* Ensure bottom doesn't interfere */
+}
+
+/* DEFENDER THEME BUTTON */
+body:not(.theme-attacker):not(.theme-cyberpunk) .theme-toggle {
+    background-color: #0078d4 !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+body:not(.theme-attacker):not(.theme-cyberpunk) .theme-toggle:hover {
+    background-color: #005a9e !important;
+    transform: scale(1.1) !important;
+}
+
+/* ATTACKER THEME BUTTON */
+body.theme-attacker .theme-toggle {
+    background-color: #d40000 !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+body.theme-attacker .theme-toggle:hover {
+    background-color: #a30000 !important;
+    transform: scale(1.1) !important;
+}
+
+/* CYBERPUNK THEME BUTTON - FORCE SAME POSITIONING AS OTHERS */
+body.theme-cyberpunk .theme-toggle {
+    background: linear-gradient(45deg, #00ffff, #ff00ff) !important;
+    border: 2px solid #ffff00 !important;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5) !important;
+    color: white !important;
+    
+    /* CRITICAL: SAME POSITIONING AS OTHER THEMES */
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    margin: 0 !important;
+    transform: none !important;
+    left: auto !important;
+    bottom: auto !important;
+}
+
+body.theme-cyberpunk .theme-toggle:hover {
+    transform: rotate(180deg) scale(1.1) !important;
+    box-shadow: 0 0 30px rgba(255, 0, 255, 0.7) !important;
+}
+
+/* PREVENT CYBERPUNK CONTAINERS FROM AFFECTING BUTTON POSITIONING */
+body.theme-cyberpunk .main-content,
+body.theme-cyberpunk .section,
+body.theme-cyberpunk .container {
+    /* Ensure these don't create new positioning contexts */
+    position: relative !important; /* Not absolute or fixed */
+    transform: none !important; /* No transforms that create stacking contexts */
+}
+
+/* ENSURE BUTTON IS ALWAYS ATTACHED TO BODY/VIEWPORT */
+body.theme-cyberpunk {
+    /* Remove any transforms that might affect positioning context */
+    transform: none !important;
+    perspective: none !important;
+}
+
+/* MOBILE RESPONSIVE - SAME FOR ALL THEMES */
+@media (max-width: 768px) {
+    .theme-toggle {
+        top: 15px !important;
+        right: 15px !important;
+        width: 45px !important;
+        height: 45px !important;
+        font-size: 18px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .theme-toggle {
+        top: 10px !important;
+        right: 10px !important;
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 16px !important;
+    }
+}
+
+/* ========================================
+   INSTALLATION:
+   
+   REPLACE the entire theme toggle section in your v1.4 CSS patch
+   with this version.
+   
+   RESULT: 
+   ✅ Button positioned relative to browser viewport, not content
+   ✅ Same position across all themes
+   ✅ Button appears outside content containers
+   ======================================== */
+/* ========================================
+   TABLE STYLING - FIXED
+   ======================================== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1em;
+    background: var(--azure-surface);
+}
+
+th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--azure-border);
+    vertical-align: top;
+}
+
+th {
+    background-color: var(--azure-bg);
+    font-weight: 600;
+    color: var(--azure-text);
+    font-size: 14px;
+}
+
+tr:hover {
+    background-color: var(--azure-hover);
+    transform: translateX(2px);
+    transition: all 0.2s ease;
+}
+
+.table-container {
+    background: var(--azure-surface);
+    border: 1px solid var(--azure-border);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin: 20px 0;
+}
+
+.table-header {
+    background: var(--azure-bg);
+    border-bottom: 1px solid var(--azure-border);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-title {
+    font-weight: 600;
+    color: var(--azure-text);
+    font-size: 16px;
+}
+
+/* ========================================
+   DETECTION RULES TABLE - FIXED
+   ======================================== */
+.detection-rules-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--azure-surface);
+}
+
+.detection-rules-table th,
+.detection-rules-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--azure-border-light);
+    vertical-align: top;
+}
+
+.detection-rules-table th {
+    background: var(--azure-bg);
+    font-weight: 600;
+    color: var(--azure-text);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detection-name-cell {
+    min-width: 250px;
+    max-width: 300px;
+    padding: 16px;
+}
+
+.detection-title {
+    font-weight: 600;
+    color: var(--azure-text);
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+
+.detection-description {
+    color: var(--azure-text-secondary);
+    font-size: 13px;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.mitre-tactic-cell {
+    min-width: 200px;
+    max-width: 250px;
+    padding: 12px;
+}
+
+.mitre-tactic {
+    background: var(--azure-selected);
+    color: var(--azure-primary);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: inline-block;
+}
+
+.mitre-technique {
+    font-size: 12px;
+    color: var(--azure-text-secondary);
+    line-height: 1.3;
+    margin-top: 2px;
+}
+
+.action-cell {
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px;
+    white-space: nowrap;
+}
+
+/* ========================================
+   BUTTON STYLING - FIXED
+   ======================================== */
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: var(--azure-primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--azure-primary-dark);
+    transform: translateY(-1px);
+}
+
+.view-query-btn, .view-logs-btn, .sample-btn {
+    padding: 6px 10px;
+    margin: 2px;
+    border: none;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.view-query-btn {
+    background: var(--azure-primary);
+    color: white;
+}
+
+.view-query-btn:hover {
+    background: var(--azure-primary-dark);
+    transform: translateY(-1px);
+}
+
+.view-logs-btn {
+    background: var(--azure-selected);
+    color: var(--azure-primary);
+    border: 1px solid var(--azure-primary);
+}
+
+.view-logs-btn:hover {
+    background: var(--azure-primary);
+    color: white;
+}
+
+.sample-btn {
+    background: #f8f9fa;
+    color: var(--azure-text);
+    border: 1px solid var(--azure-border);
+}
+
+.sample-btn:hover {
+    background: var(--azure-hover);
+}
+
+/* ========================================
+   TAG STYLING
+   ======================================== */
+.tag {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tag-yes {
+    background: var(--tag-yes-bg);
+    color: var(--tag-yes-color);
+}
+
+.tag-no {
+    background: var(--tag-no-bg);
+    color: var(--tag-no-color);
+}
+
+/* ========================================
+   MODAL SYSTEM - FIXED
+   ======================================== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    position: relative;
+    background-color: var(--azure-surface);
+    margin: 5% auto;
+    padding: 0;
+    border: 1px solid var(--azure-border);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    max-width: 800px;
+    width: 90%;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+body.theme-attacker .modal-content {
+    background-color: var(--azure-surface);
+    color: var(--azure-text);
+}
+
+.modal-header {
+    background: var(--azure-surface);
+    border-bottom: 1px solid var(--azure-border);
+    padding: 16px 60px 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    position: relative;
+    gap: 16px;
+}
+
+.modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--azure-text);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.close-btn {
+    position: absolute;
+    top: 16px;
+    right: 24px;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--azure-border);
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--azure-text-light);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.close-btn:hover {
+    background: var(--azure-error);
+    color: white;
+    transform: rotate(90deg) scale(1.1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+body.theme-attacker .close-btn {
+    background: rgba(45, 45, 45, 0.9);
+    border-color: var(--azure-border);
+    color: var(--azure-text-light);
+}
+
+body.theme-attacker .close-btn:hover {
+    background: var(--azure-error);
+    color: white;
+}
+
+.modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex: 1;
+    min-height: 0;
+    max-height: calc(95vh - 100px);
+}
+
+.modal-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.modal-actions .copy-btn,
+.modal-actions .explain-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    min-width: fit-content;
+}
+
+.modal-actions .copy-btn {
+    background-color: var(--azure-primary);
+    color: white;
+}
+
+.modal-actions .copy-btn:hover {
+    background-color: var(--azure-primary-dark);
+    transform: translateY(-1px);
+}
+
+.modal-actions .explain-btn {
+    background-color: var(--azure-selected);
+    color: var(--azure-primary);
+    border: 1px solid var(--azure-primary);
+}
+
+.modal-actions .explain-btn:hover {
+    background-color: var(--azure-primary);
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* ========================================
+   QUERY STYLING & CODE DISPLAY
+   ======================================== */
+.query-container {
+    background-color: #1e1e1e;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 20px 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+body.theme-attacker .query-container {
+    background-color: #0d1117;
+}
+
+.shell-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #2d2d30 0%, #1e1e1e 100%);
+    padding: 8px 16px;
+    border-bottom: 1px solid #444;
+}
+
+.shell-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.shell-control {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.shell-control.close {
+    background-color: #ff5f57;
+}
+
+.shell-control.minimize {
+    background-color: #ffbd2e;
+}
+
+.shell-control.maximize {
+    background-color: #28ca42;
+}
+
+.shell-title {
+    color: #e1e1e1;
+    font-weight: 500;
+    font-size: 13px;
+    text-align: center;
+    flex: 1;
+    margin: 0 20px;
+}
+
+.shell-content {
+    background-color: #1e1e1e;
+    padding: 16px;
+    overflow-x: auto;
+    min-height: 200px;
+}
+
+body.theme-attacker .shell-content {
+    background-color: #0d1117;
+}
+
+.kql-query {
+    margin: 0;
+    color: #d4d4d4;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    background: transparent;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    display: block;
+}
+
+.kql-query code {
+    background: transparent;
+    color: #d4d4d4;
+    padding: 0;
+    font-family: inherit;
+    display: block;
+}
+
+body.theme-attacker .kql-query,
+body.theme-attacker .kql-query code {
+    color: #c9d1d9;
+}
+
+.query-code {
+    background-color: #f5f5f5;
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre;
+}
+
+body.theme-attacker .query-code {
+    background-color: #333;
+}
+
+/* KQL Syntax Highlighting */
+.kql-comment {
+    color: #008000;
+}
+
+body.theme-attacker .kql-comment {
+    color: #6A9955;
+}
+
+.kql-operator {
+    color: #0000ff;
+}
+
+body.theme-attacker .kql-operator {
+    color: #569cd6;
+}
+
+.kql-function {
+    color: #795e26;
+}
+
+body.theme-attacker .kql-function {
+    color: #dcdcaa;
+}
+
+.kql-string {
+    color: #a31515;
+}
+
+body.theme-attacker .kql-string {
+    color: #ce9178;
+}
+
+/* ========================================
+   LOG DISPLAY STYLING - FIXED
+   ======================================== */
+.log-container {
+    margin: 20px 0;
+    overflow: hidden;
+    width: 100%;
+    background-color: var(--azure-surface);
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--azure-border);
+}
+
+.log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    background: var(--azure-surface);
+    border-bottom: 1px solid var(--azure-border);
+    padding: 16px 24px;
+}
+
+.log-title {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--azure-text);
+}
+
+.query-info {
+    font-size: 13px;
+    color: var(--azure-text-secondary);
+    margin-top: 4px;
+}
+
+.results-info {
+    padding: 6px 12px;
+    background-color: var(--azure-selected);
+    border-radius: 16px;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--azure-primary);
+    border: 1px solid rgba(0, 120, 212, 0.2);
+}
+
+.log-timestamp {
+    color: var(--azure-text-secondary);
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 12px;
+    background: #f8f9fa;
+    padding: 2px 6px;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+
+body.theme-attacker .log-timestamp {
+    background: #444;
+}
+
+.action-type {
+    font-weight: 600;
+}
+
+/* Azure Log Analytics Style */
+.log-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    min-width: 800px;
+}
+
+.log-table th {
+    background-color: #f8f9fa;
+    padding: 8px 12px;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    border-bottom: 1px solid var(--azure-border);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.log-table .highlight-cell {
+    background-color: #fef2f2;
+    color: var(--azure-error);
+    font-weight: 600;
+}
+
+.log-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--azure-border-light);
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+body.theme-attacker .log-table td {
+    border: 1px solid var(--azure-border);
+}
+
+.log-table tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+body.theme-attacker .log-table tr:nth-child(even) {
+    background-color: #363636;
+}
+
+.log-table tr:hover {
+    background-color: var(--azure-hover);
+}
+
+.highlight-cell {
+    background-color: #fef2f2;
+    color: var(--azure-error);
+    font-weight: 600;
+}
+
+/* Table wrapper for horizontal scrolling */
+.table-wrapper {
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: auto;
+    border: 1px solid var(--azure-border);
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* ========================================
+   EXPLANATION STYLING - FIXED
+   ======================================== */
+.explanation {
+    background: var(--azure-surface);
+    padding: 16px;
+    border-radius: 6px;
+    border-left: 4px solid var(--azure-primary);
+    margin-bottom: 20px;
+}
+
+.explanation h3 {
+    color: var(--azure-primary);
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
+.explanation h4 {
+    color: var(--azure-text);
+    font-size: 14px;
+    font-weight: 600;
+    margin: 16px 0 8px 0;
+}
+
+.explanation p,
+.explanation li {
+    color: var(--azure-text-secondary);
+    line-height: 1.6;
+    margin: 8px 0;
+}
+
+.explanation ul {
+    color: var(--azure-text-secondary);
+    padding-left: 20px;
+    margin-bottom: 1em;
+}
+
+.explanation li {
+    margin: 4px 0;
+    line-height: 1.4;
+}
+
+.explanation code {
+    background: rgba(0, 120, 212, 0.1);
+    color: var(--azure-primary);
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+body.theme-attacker .explanation code {
+    background: rgba(212, 0, 0, 0.1);
+    color: var(--azure-primary);
+}
+
+/* ========================================
+   GITHUB LINK STYLING
+   ======================================== */
+.github-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 20px;
+    background: var(--github-bg);
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    margin-top: 20px;
+}
+
+.github-link:hover {
+    background: var(--github-hover-bg);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: white;
+    text-decoration: none;
+}
+
+/* ========================================
+   LOADING & ANIMATION STATES
+   ======================================== */
+.loading {
+    font-style: italic;
+    color: var(--azure-text-light);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.query-count {
+    transition: background-color 0.5s ease;
+    font-weight: bold;
+}
+
+.updated {
+    background-color: var(--highlight-color);
+    animation: highlight 2s ease-in-out;
+}
+
+.loading-indicator {
+    text-align: center;
+    padding: 40px;
+    color: var(--azure-text-light);
+    font-style: italic;
+}
+
+.modal-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: var(--azure-text-light);
+    font-style: italic;
+}
+
+/* ========================================
+   SCROLLBAR STYLING
+   ======================================== */
+.modal-body::-webkit-scrollbar {
+    width: 12px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 6px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 6px;
+    border: 2px solid #f1f1f1;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* ========================================
+   TEXT SELECTION & ACCESSIBILITY
+   ======================================== */
+.shell-content *,
+.kql-query *,
+.modal-content * {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+.shell-content::selection,
+.kql-query::selection {
+    background-color: rgba(0, 120, 212, 0.3);
+    color: inherit;
+}
+
+/* Force content to respect modal boundaries */
+.modal-content * {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.modal-content .explanation,
+.modal-content .query-container,
+.modal-content .log-container {
+    margin-bottom: 20px;
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--azure-border);
+    color: var(--azure-text-secondary);
+    font-size: 0.9em;
+}
+
+/* ========================================
+   INTERACTIVE ENHANCEMENTS
+   ======================================== */
+tr:hover .source-link {
+    color: var(--azure-primary-dark);
+    font-weight: 600;
+}
+
+.query-count.updated {
+    background-color: var(--azure-selected);
+    color: var(--azure-primary);
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 2px 6px;
+}
+
+#results-count {
+    color: var(--azure-text-secondary);
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.source-link {
+    color: var(--azure-primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.source-link:hover {
+    color: var(--azure-primary-dark);
+    text-decoration: underline;
+}
+
+/* ========================================
+   ANIMATIONS & KEYFRAMES
+   ======================================== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes highlight {
+    0% { background-color: var(--highlight-color); }
+    50% { background-color: var(--highlight-color-mid); }
+    100% { background-color: transparent; }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN - FIXED
+   ======================================== */
+@media (max-width: 768px) {
+    body {
+        padding: 12px;
+        font-size: 13px;
+    }
+    
+    header {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    h1 {
+        font-size: 2em;
+    }
+    
+    .theme-buttons {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .theme-button {
+        min-width: auto;
+        width: 100%;
+        margin: 0;
+    }
+    
+    .section {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    table {
+        font-size: 11px;
+    }
+    
+    th, td {
+        padding: 8px 10px;
+    }
+    
+    .detection-name-cell {
+        min-width: 200px;
+        padding: 12px !important;
+    }
+    
+    .detection-title strong {
+        font-size: 13px;
+    }
+    
+    .modal-content {
+        width: 98%;
+        margin: 1% auto;
+        max-height: 95vh;
+    }
+    
+    .modal-header {
+        padding: 12px 50px 12px 16px !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+    }
+    
+    .modal-title {
+        font-size: 14px !important;
+        width: 100% !important;
+    }
+    
+    .modal-actions {
+        width: 100% !important;
+        justify-content: flex-start !important;
+        gap: 6px !important;
+    }
+    
+    .close-btn {
+        top: 12px !important;
+        right: 16px !important;
+    }
+    
+    .modal-actions .copy-btn,
+    .modal-actions .explain-btn {
+        padding: 5px 10px !important;
+        font-size: 11px !important;
+        flex: 1 !important;
+        justify-content: center !important;
+        max-width: 120px !important;
+    }
+    
+    .log-header {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+    
+    .log-table {
+        font-size: 11px;
+    }
+    
+    .log-table th,
+    .log-table td {
+        padding: 6px 8px;
+    }
+    
+    .query-header {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+    
+    .table-header {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+    
+    .shell-title {
+        font-size: 12px !important;
+        margin: 0 10px !important;
+    }
+    
+    .kql-query {
+        font-size: 12px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .theme-chooser-content {
+        width: 95%;
+        padding: 30px 20px;
+    }
+    
+    .theme-chooser-content h2 {
+        font-size: 1.8em;
+    }
+    
+    .modal-title {
+        font-size: 13px !important;
+        line-height: 1.3 !important;
+    }
+    
+    .modal-actions .copy-btn,
+    .modal-actions .explain-btn {
+        font-size: 10px !important;
+        padding: 4px 8px !important;
+    }
+    
+    .shell-title {
+        display: none; /* Hide on very small screens */
+    }
+    
+    .table-container {
+        margin: 10px 0;
+    }
+    
+    .section {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.d-none { display: none !important; }
+.d-block { display: block !important; }
+.d-flex { display: flex !important; }
+.d-inline-flex { display: inline-flex !important; }
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+@media print {
+    .theme-toggle,
+    .theme-chooser-overlay,
+    .modal {
+        display: none !important;
+    }
+    
+    body {
+        background: white !important;
+        color: black !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 15mm !important;
+    }
+    
+    .section {
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        break-inside: avoid;
+    }
+    
+    .modal-content {
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+    }
+    
+    .theme-button {
+        display: none !important;
+    }
+    
+    header {
+        background: #f0f0f0 !important;
+        color: black !important;
+    }
+}
+
+/* ========================================
+   LEGACY COMPATIBILITY & CONTENT SPACING FIX
+   ======================================== */
+/* Ensure proper content spacing in all containers */
+div.section > *, 
+div.modal-body > *,
+div.explanation > * {
+    margin-bottom: 1em;
+}
+
+div.section > *:last-child,
+div.modal-body > *:last-child,
+div.explanation > *:last-child {
+    margin-bottom: 0;
+}
+
+/* Ensure backward compatibility with existing HTML classes */
+.azure-primary { color: var(--azure-primary) !important; }
+.azure-bg { background-color: var(--azure-bg) !important; }
+.azure-text { color: var(--azure-text) !important; }
+.azure-border { border-color: var(--azure-border) !important; }
+.azure-surface { background-color: var(--azure-surface) !important; }
+
+/* End of ATT4CKQL Consolidated CSS - CORRECTED v2.1 */
+/* MINIMAL MODAL TEXT FIX - Add to end of corrected CSS */
+.modal-body p {
+    margin-bottom: 1em;
+}
+
+.modal-body ul, .modal-body ol {
+    margin-bottom: 1em;
+    padding-left: 1.5em;
+}
+
+.modal-body li {
+    margin-bottom: 0.25em;
+}
+
+/* ========================================
+   REFINED PLATFORM TABLE FIX - PROPER FONT WEIGHTS
+   Matches the original working format from Image 2
+   ======================================== */
+
+/* ========================================
+   PLATFORM PAGE TABLE - CORRECT STYLING
+   ======================================== */
+
+/* Main platform page table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--azure-surface);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin: 20px 0;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', sans-serif;
+}
+
+/* Table headers - match original */
+table th {
+    background: var(--table-header-bg);
+    border-bottom: 1px solid var(--azure-border);
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--azure-text);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Table cells - lighter styling */
+table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--azure-border-light);
+    vertical-align: top;
+    color: var(--azure-text);
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* Table rows */
+table tr:hover {
+    background-color: var(--azure-hover);
+    transform: translateX(2px);
+    transition: all 0.2s ease;
+}
+
+/* Detection name cell - CRITICAL: Light font weight like Image 2 */
+.detection-name-cell {
+    min-width: 250px;
+    max-width: 300px;
+    padding: 16px;
+}
+
+.detection-title {
+    font-weight: 400; /* CHANGED: Light weight instead of 600 */
+    color: var(--azure-text);
+    margin-bottom: 6px;
+    line-height: 1.3;
+    font-size: 14px;
+}
+
+.detection-title strong {
+    font-weight: 500; /* CHANGED: Medium weight instead of bold */
+    color: var(--azure-text);
+}
+
+/* Detection meta info - smaller and lighter */
+.detection-meta {
+    font-size: 12px;
+    color: var(--azure-text-secondary);
+    margin-top: 4px;
+}
+
+.detection-timestamp {
+    color: var(--azure-text-secondary);
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 11px;
+    font-weight: normal;
+}
+
+.detection-count {
+    color: var(--azure-primary);
+    font-weight: 500; /* CHANGED: Medium weight */
+    margin-left: 8px;
+}
+
+/* Description cell - normal text weight */
+.description-cell {
+    max-width: 300px;
+    line-height: 1.4;
+    color: var(--azure-text-secondary);
+    font-size: 13px;
+    font-weight: normal; /* CHANGED: Ensure normal weight */
+}
+
+/* MITRE tactics cell */
+.mitre-tactic-cell {
+    min-width: 200px;
+    max-width: 250px;
+    padding: 12px;
+}
+
+.mitre-tactic {
+    background: var(--azure-selected);
+    color: var(--azure-primary);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.mitre-technique {
+    font-size: 12px;
+    color: var(--azure-text-secondary);
+    line-height: 1.3;
+    margin-top: 2px;
+    font-weight: normal;
+}
+
+/* Data source cell */
+.data-source-cell {
+    font-weight: 500; /* CHANGED: Medium weight */
+    color: var(--azure-text);
+    white-space: nowrap;
+    font-size: 13px;
+}
+
+/* Action cells */
+.action-cell {
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px;
+    white-space: nowrap;
+}
+
+/* Button styling - match original look from Image 2 */
+.view-query-btn, .view-logs-btn, .sample-btn {
+    padding: 8px 16px; /* CHANGED: Bigger padding like original */
+    margin: 2px;
+    border: none;
+    border-radius: 4px; /* CHANGED: Slightly larger radius */
+    font-size: 12px; /* CHANGED: Slightly larger font */
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-block;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.view-query-btn {
+    background: var(--azure-primary);
+    color: white;
+    box-shadow: 0 1px 3px rgba(0, 120, 212, 0.3);
+}
+
+.view-query-btn:hover {
+    background: var(--azure-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 120, 212, 0.4);
+}
+
+.view-logs-btn, .sample-btn {
+    background: var(--azure-surface);
+    color: var(--azure-primary);
+    border: 1px solid var(--azure-primary);
+    box-shadow: 0 1px 3px rgba(0, 120, 212, 0.2);
+}
+
+.view-logs-btn:hover, .sample-btn:hover {
+    background: var(--azure-primary);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 120, 212, 0.3);
+}
+
+/* Attack path links */
+.attack-path-link {
+    color: var(--azure-primary);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.attack-path-link:hover {
+    text-decoration: underline;
+    color: var(--azure-primary-dark);
+}
+
+/* Severity indicators */
+.severity-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.severity-high {
+    background-color: var(--azure-error);
+}
+
+.severity-medium {
+    background-color: var(--azure-warning);
+}
+
+.severity-low {
+    background-color: var(--azure-success);
+}
+
+/* Loading and no-data states */
+.loading-indicator, .no-data {
+    text-align: center;
+    padding: 40px;
+    color: var(--azure-text-light);
+    font-style: italic;
+    font-weight: normal;
+}
+
+/* Navigation link styling */
+.nav-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: var(--azure-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+    color: var(--azure-primary-dark);
+}
+
+/* Page title */
+h1 {
+    color: var(--azure-primary);
+    margin-bottom: 1em;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* Results count */
+#results-count {
+    color: var(--azure-text-secondary);
+    font-size: 14px;
+    margin-bottom: 16px;
+    font-weight: normal;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN FOR PLATFORM TABLES
+   ======================================== */
+
+@media (max-width: 768px) {
+    table th, table td {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+    
+    .detection-name-cell {
+        min-width: 200px;
+        padding: 12px;
+    }
+    
+    .detection-title {
+        font-size: 13px;
+    }
+    
+    .mitre-tactic-cell {
+        min-width: 150px;
+    }
+    
+    .view-query-btn, .view-logs-btn, .sample-btn {
+        font-size: 11px;
+        padding: 6px 12px;
+    }
+}
+
+/* ========================================
+   THEME SUPPORT FOR PLATFORM TABLES
+   ======================================== */
+
+body.theme-attacker table {
+    background: var(--azure-surface);
+}
+
+body.theme-attacker table th {
+    background: var(--table-header-bg);
+    color: var(--azure-text);
+}
+
+body.theme-attacker table td {
+    color: var(--azure-text);
+    border-color: var(--azure-border);
+}
+
+body.theme-attacker .detection-title,
+body.theme-attacker .detection-title strong {
+    color: var(--azure-text);
+}
+
+body.theme-attacker .mitre-tactic {
+    background: var(--azure-selected);
+    color: var(--azure-primary);
+}
+
+body.theme-attacker .view-query-btn {
+    background: var(--azure-primary);
+}
+
+body.theme-attacker .view-logs-btn, 
+body.theme-attacker .sample-btn {
+    background: var(--azure-surface);
+    color: var(--azure-primary);
+    border-color: var(--azure-primary);
+}
+
+/* ========================================
+   MODAL BLUE HEADER & SIZE FIX
+   Restores the blue header styling from Image 2
+   ======================================== */
+
+/* ========================================
+   MODAL SIZE & LAYOUT FIXES
+   ======================================== */
+
+/* Make modals wider to accommodate longer titles */
+.modal-content {
+    position: relative;
+    background-color: var(--azure-surface);
+    margin: 3% auto; /* CHANGED: Less top margin for better positioning */
+    padding: 0;
+    border: 1px solid var(--azure-border);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    max-width: 1000px; /* CHANGED: Wider from 800px to 1000px */
+    width: 95%; /* CHANGED: Wider percentage */
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ========================================
+   BLUE HEADER STYLING - RESTORED
+   ======================================== */
+
+/* Modal header with blue background like Image 2 */
+.modal-header {
+    background: linear-gradient(135deg, var(--azure-primary), var(--azure-primary-dark)) !important;
+    border-bottom: none !important; /* Remove border for clean look */
+    padding: 16px 60px 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    position: relative;
+    gap: 16px;
+    border-radius: 8px 8px 0 0; /* Rounded top corners */
+}
+
+/* Modal title - white text on blue background */
+.modal-title {
+    font-size: 16px !important; /* CHANGED: Slightly smaller for longer titles */
+    font-weight: 600;
+    color: white !important; /* CHANGED: White text on blue background */
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Subtle text shadow */
+}
+
+/* Modal actions - buttons on blue header */
+.modal-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.modal-actions .copy-btn,
+.modal-actions .explain-btn {
+    padding: 8px 16px; /* CHANGED: Better padding */
+    border: none;
+    border-radius: 4px;
+    font-size: 13px; /* CHANGED: Slightly larger text */
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    min-width: fit-content;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Copy Query button - white background on blue header */
+.modal-actions .copy-btn {
+    background-color: white !important;
+    color: var(--azure-primary) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.modal-actions .copy-btn:hover {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    color: var(--azure-primary-dark) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Explain button - outlined style on blue header */
+.modal-actions .explain-btn {
+    background-color: transparent !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.7) !important;
+}
+
+.modal-actions .explain-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    border-color: white !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Close button - white on blue header */
+.close-btn {
+    position: absolute !important;
+    top: 12px !important; /* CHANGED: Better positioning */
+    right: 16px !important;
+    z-index: 10 !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    font-size: 20px !important;
+    cursor: pointer !important;
+    color: white !important;
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: var(--azure-error) !important;
+    transform: rotate(90deg) scale(1.1) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* ========================================
+   THEME SUPPORT FOR BLUE HEADERS
+   ======================================== */
+
+/* Attacker theme - red header instead of blue */
+body.theme-attacker .modal-header {
+    background: linear-gradient(135deg, var(--azure-primary), var(--azure-primary-dark)) !important;
+}
+
+body.theme-attacker .modal-title {
+    color: white !important;
+}
+
+body.theme-attacker .modal-actions .copy-btn {
+    background-color: white !important;
+    color: var(--azure-primary) !important;
+}
+
+body.theme-attacker .modal-actions .explain-btn {
+    background-color: transparent !important;
+    color: white !important;
+    border-color: rgba(255, 255, 255, 0.7) !important;
+}
+
+body.theme-attacker .close-btn {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+}
+
+body.theme-attacker .close-btn:hover {
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: var(--azure-error) !important;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN FOR WIDER MODALS
+   ======================================== */
+
+@media (max-width: 1024px) {
+    .modal-content {
+        max-width: 95%;
+        margin: 2% auto;
+    }
+    
+    .modal-title {
+        font-size: 15px !important;
+    }
+    
+    .modal-actions .copy-btn,
+    .modal-actions .explain-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .modal-content {
+        max-width: 98%;
+        margin: 1% auto;
+    }
+    
+    .modal-header {
+        padding: 12px 50px 12px 16px !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+    }
+    
+    .modal-title {
+        font-size: 14px !important;
+        width: 100% !important;
+        white-space: normal !important; /* Allow wrapping on mobile */
+        line-height: 1.3 !important;
+    }
+    
+    .modal-actions {
+        width: 100% !important;
+        justify-content: flex-start !important;
+        gap: 6px !important;
+    }
+    
+    .close-btn {
+        top: 8px !important;
+        right: 12px !important;
+    }
+}
+
+/* ========================================
+   MODAL CONTENT HEADERS FIX ONLY
+   Makes headers inside modals blue (like "Query Explanation")
+   Touches ONLY headers, leaves everything else alone
+   ======================================== */
+
+/* Headers inside modal body - make them blue */
+.modal-body h1,
+.modal-body h2,
+.modal-body h3 {
+    color: var(--azure-primary) !important;
+    font-weight: 600 !important;
+    margin-bottom: 1em !important;
+}
+
+/* Specific fix for explanation headers */
+.modal-body .explanation h3,
+.modal-body .explanation h4 {
+    color: var(--azure-primary) !important;
+}
+
+/* Query explanation headers specifically */
+.modal-content h1,
+.modal-content h2,
+.modal-content h3 {
+    color: var(--azure-primary) !important;
+}
+
+/* Detection Logic Explanation header */
+.modal-body > h1:first-child,
+.modal-body > h2:first-child,
+.modal-body > h3:first-child {
+    color: var(--azure-primary) !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    margin-bottom: 20px !important;
+}
+
+/* Theme support for headers */
+body.theme-attacker .modal-body h1,
+body.theme-attacker .modal-body h2,
+body.theme-attacker .modal-body h3,
+body.theme-attacker .modal-content h1,
+body.theme-attacker .modal-content h2,
+body.theme-attacker .modal-content h3 {
+    color: var(--azure-primary) !important;
+}
+
+/* ========================================
+   THEME CONTRAST FIXES
+   Fix: 1) Attacker theme table headers visibility
+        2) Defender theme close button visibility
+   ======================================== */
+
+/* ========================================
+   FIX 1: ATTACKER THEME TABLE HEADERS
+   Make headers visible with proper contrast
+   ======================================== */
+
+/* Attacker theme table headers - FORCE visibility */
+body.theme-attacker table th {
+    background: #2d2d2d !important; /* Dark but visible background */
+    color: #f0f0f0 !important; /* Light text for contrast */
+    border-bottom: 1px solid #444444 !important;
+    font-weight: 600 !important;
+}
+
+/* Ensure attacker theme table cells are also visible */
+body.theme-attacker table td {
+    color: var(--azure-text) !important;
+    border-color: #444444 !important;
+}
+
+/* Attacker theme table background */
+body.theme-attacker table {
+    background: var(--azure-surface) !important;
+    border: 1px solid #444444 !important;
+}
+
+/* Attacker theme table hover effect */
+body.theme-attacker table tr:hover {
+    background-color: #404040 !important;
+}
+
+/* ========================================
+   FIX 2: DEFENDER THEME CLOSE BUTTON
+   Make close button properly visible
+   ======================================== */
+
+/* Default close button for Defender theme */
+.close-btn {
+    position: absolute !important;
+    top: 12px !important;
+    right: 16px !important;
+    z-index: 20 !important; /* Higher z-index */
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid rgba(0, 120, 212, 0.3) !important;
+    font-size: 20px !important;
+    cursor: pointer !important;
+    color: var(--azure-text) !important;
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+    font-weight: normal !important;
+}
+
+.close-btn:hover {
+    background: var(--azure-error) !important;
+    color: white !important;
+    border-color: var(--azure-error) !important;
+    transform: rotate(90deg) scale(1.1) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Enhanced visibility for Defender theme close button */
+body:not(.theme-attacker) .close-btn {
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #666666 !important;
+    border: 2px solid rgba(0, 120, 212, 0.2) !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2) !important;
+}
+
+body:not(.theme-attacker) .close-btn:hover {
+    background: var(--azure-error) !important;
+    color: white !important;
+    border-color: var(--azure-error) !important;
+}
+
+/* ========================================
+   FIX 3: ATTACKER THEME CLOSE BUTTON
+   Keep working attacker theme close button
+   ======================================== */
+
+/* Attacker theme close button - maintain current working style */
+body.theme-attacker .close-btn {
+    background: rgba(45, 45, 45, 0.9) !important;
+    color: #f0f0f0 !important;
+    border: 1px solid #666666 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.theme-attacker .close-btn:hover {
+    background: var(--azure-error) !important;
+    color: white !important;
+    border-color: var(--azure-error) !important;
+}
+
+/* ========================================
+   FIX 4: TABLE HEADER TEXT ENHANCEMENT
+   Ensure all text is readable in both themes
+   ======================================== */
+
+/* Force text visibility in headers for both themes */
+table th {
+    text-shadow: none !important;
+    font-size: 13px !important;
+    letter-spacing: 0.5px !important;
+}
+
+/* Defender theme - ensure dark text on light background */
+body:not(.theme-attacker) table th {
+    background: #f8f9fa !important;
+    color: #323130 !important;
+    border-bottom: 1px solid #edebe9 !important;
+}
+
+/* Attacker theme - ensure light text on dark background */
+body.theme-attacker table th {
+    background: #2d2d2d !important;
+    color: #f0f0f0 !important;
+    border-bottom: 1px solid #555555 !important;
+}
+
+/* ========================================
+   FIX 5: MODAL LAYERING
+   Ensure close button appears above all content
+   ======================================== */
+
+/* Ensure modal header doesn't cover close button */
+.modal-header {
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+/* Ensure close button is always on top */
+.modal-content .close-btn {
+    z-index: 25 !important;
+    position: absolute !important;
+}
+
+/* ========================================
+   FIX 6: RESPONSIVE FIXES
+   Maintain fixes on mobile
+   ======================================== */
+
+@media (max-width: 768px) {
+    body.theme-attacker table th {
+        background: #2d2d2d !important;
+        color: #f0f0f0 !important;
+        font-size: 12px !important;
+    }
+    
+    .close-btn {
+        top: 8px !important;
+        right: 12px !important;
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 18px !important;
+    }
+}
+
+/* ========================================
+   SAMPLE LOGS MODAL - ATTACKER THEME TEXT FIX
+   Fix invisible table data in Sample Logs modal
+   ONLY touches Sample Logs modal table text color
+   ======================================== */
+
+/* ========================================
+   ATTACKER THEME SAMPLE LOGS TABLE FIX
+   Make table data visible with proper contrast
+   ======================================== */
+
+/* Sample Logs modal table data - FORCE visibility in attacker theme */
+body.theme-attacker .modal-content .log-table td {
+    color: #f0f0f0 !important; /* Light text for dark background */
+    background-color: transparent !important;
+}
+
+/* Sample Logs modal table headers - ensure visibility */
+body.theme-attacker .modal-content .log-table th {
+    color: #f0f0f0 !important; /* Light text for dark background */
+    background-color: #2d2d2d !important; /* Dark but visible background */
+    border-bottom: 1px solid #555555 !important;
+}
+
+/* Sample Logs modal table rows - alternating background for better readability */
+body.theme-attacker .modal-content .log-table tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+body.theme-attacker .modal-content .log-table tr:nth-child(odd) {
+    background-color: transparent !important;
+}
+
+/* Sample Logs modal table hover effect */
+body.theme-attacker .modal-content .log-table tr:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Specific fix for highlighted cells (like "optional" in IMDSV1 column) */
+body.theme-attacker .modal-content .log-table .highlight-cell {
+    background-color: rgba(212, 0, 0, 0.2) !important; /* Red highlight with transparency */
+    color: #ffffff !important; /* White text for maximum contrast */
+    font-weight: 600 !important;
+}
+
+/* Table wrapper in Sample Logs modal - ensure proper background */
+body.theme-attacker .modal-content .table-wrapper {
+    background-color: #1a1a1a !important;
+    border: 1px solid #444444 !important;
+}
+
+/* Ensure all text inside Sample Logs modal tables is visible */
+body.theme-attacker .modal-content .log-table * {
+    color: #f0f0f0 !important;
+}
+
+/* Don't affect other modal tables - only log-table class */
+body.theme-attacker .modal-content table:not(.log-table) td {
+    color: var(--azure-text) !important;
+}
+
+/* ========================================
+   CYBERPUNK THEME INTEGRATION PATCH v1.4 - COMPLETE WITH SUBTLE FLOATING KQL
+   ADD THIS TO THE END OF YOUR EXISTING att4ckql.css FILE
+   
+   This patch includes ALL fixes:
+   ✅ Theme chooser layout (3 buttons)
+   ✅ Text readability improvements  
+   ✅ WORKING drift animations with SUBTLE styling
+   ✅ Enhanced cyberpunk styling
+   
+   INSTALLATION: Find this comment in your CSS file and replace 
+   everything from here to the end with this updated version.
+   ======================================== */
+
+/* ========================================
+   CYBERPUNK THEME VARIABLES - UPDATED
+   ======================================== */
+
+   body.theme-cyberpunk,
+   .theme-cyberpunk {
+       /* Cyberpunk-specific neon colors */
+       --neon-blue: #00ffff;
+       --neon-pink: #ff00ff;
+       --neon-yellow: #ffff00;
+       --neon-green: #00ff00;
+       --dark-purple: #1e0933;
+       --bg-color: #0a0a12;
+       --text-color: #e0f2ff;
+       
+       /* FIXED: Better contrast colors for readability */
+       --cyberpunk-text-primary: #ffffff;
+       --cyberpunk-text-secondary: #b3d9ff;
+       --cyberpunk-text-muted: #8fb3d9;
+       --cyberpunk-bg-primary: #0f0f1a;
+       --cyberpunk-bg-secondary: #1a1a2e;
+       
+       /* Override existing Azure variables for cyberpunk compatibility */
+       --azure-primary: #00ffff;
+       --azure-primary-dark: #ff00ff;
+       --azure-secondary: #ffff00;
+       --azure-bg: #0a0a12;
+       --azure-surface: #1a1a2e;
+       --azure-border: #00ffff;
+       --azure-border-light: rgba(0, 255, 255, 0.3);
+       --azure-text: #ffffff;
+       --azure-text-secondary: #b3d9ff;
+       --azure-text-light: #8fb3d9;
+       --azure-hover: rgba(0, 255, 255, 0.1);
+       --azure-selected: rgba(0, 255, 255, 0.2);
+       --azure-error: #ff00ff;
+       --azure-warning: #ffff00;
+       --azure-success: #00ff00;
+       --azure-info: #00ffff;
+       
+       /* Override legacy variables for compatibility */
+       --primary-color: #00ffff;
+       --primary-gradient-start: #00ffff;
+       --primary-gradient-end: #ff00ff;
+       --highlight-color: rgba(0, 255, 255, 0.2);
+       --highlight-color-mid: rgba(0, 255, 255, 0.4);
+       --tag-yes-bg: rgba(0, 255, 0, 0.2);
+       --tag-yes-color: #00ff00;
+       --tag-no-bg: rgba(255, 0, 255, 0.2);
+       --tag-no-color: #ff00ff;
+       --table-header-bg: rgba(0, 255, 255, 0.1);
+       --table-hover-bg: rgba(0, 255, 255, 0.05);
+       --github-bg: #1a0d2e;
+       --github-hover-bg: #2d1b3d;
+       
+       /* Apply theme colors to body */
+       background-color: var(--bg-color) !important;
+       color: var(--cyberpunk-text-primary) !important;
+   }
+   
+   /* ========================================
+      CYBERPUNK BODY & BASE STYLING
+      ======================================== */
+   
+   /* Cyberpunk body enhancements */
+   body.theme-cyberpunk {
+       font-family: 'Share Tech Mono', monospace !important;
+       background-image: 
+           radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.03) 0%, transparent 50%),
+           radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.03) 0%, transparent 50%),
+           radial-gradient(circle at 40% 80%, rgba(255, 255, 0, 0.03) 0%, transparent 50%) !important;
+       overflow-x: hidden; /* Prevent horizontal scroll from floating elements */
+       /* Enable hardware acceleration for smooth animations */
+       transform: translateZ(0);
+       backface-visibility: hidden;
+       perspective: 1000px;
+   }
+   
+   /* Remove pseudo-elements for cyberpunk to prevent overlay conflicts */
+   body.theme-cyberpunk::before,
+   body.theme-cyberpunk::after {
+       display: none !important;
+   }
+   
+   /* ========================================
+      THEME CHOOSER LAYOUT FIXES
+      ======================================== */
+   
+   /* Updated theme chooser content for better 3-button layout */
+   .theme-chooser-content {
+       max-width: 800px !important; /* Wider to accommodate 3 buttons */
+       width: 95% !important;
+   }
+   
+   /* Updated theme buttons layout */
+   .theme-buttons {
+       display: flex !important;
+       justify-content: center !important;
+       align-items: center !important;
+       gap: 20px !important;
+       flex-wrap: wrap !important;
+       margin-top: 40px !important;
+   }
+   
+   /* Enhanced theme button sizing for 3 buttons */
+   .theme-button {
+       flex: 1 1 200px !important; /* Flexible sizing */
+       max-width: 220px !important;
+       min-width: 180px !important;
+       padding: 15px 20px !important;
+       font-size: 1.1em !important;
+       text-align: center !important;
+   }
+   
+   /* Cyberpunk button styling with better visibility */
+   .cyberpunk-button {
+       background: linear-gradient(45deg, #0a0a12, #1e0933) !important;
+       color: #00ffff !important;
+       border: 2px solid #00ffff !important;
+       font-family: 'Share Tech Mono', monospace !important;
+       text-transform: uppercase !important;
+       letter-spacing: 1px !important;
+       box-shadow: 0 0 20px rgba(0, 255, 255, 0.3) !important;
+       border-radius: 8px !important;
+   }
+   
+   .cyberpunk-button:hover {
+       background: linear-gradient(45deg, #1e0933, #0a0a12) !important;
+       color: #ff00ff !important;
+       border-color: #ff00ff !important;
+       box-shadow: 0 0 30px rgba(255, 0, 255, 0.5) !important;
+       transform: translateY(-2px) scale(1.02) !important;
+   }
+   
+   /* Mobile responsive for theme chooser */
+   @media (max-width: 768px) {
+       .theme-buttons {
+           flex-direction: column !important;
+           gap: 15px !important;
+       }
+       
+       .theme-button {
+           flex: none !important;
+           width: 100% !important;
+           max-width: none !important;
+           min-width: auto !important;
+       }
+   }
+   
+   /* ========================================
+      CYBERPUNK TYPOGRAPHY ENHANCEMENTS
+      ======================================== */
+   
+   /* Cyberpunk H1 styling */
+   .theme-cyberpunk h1 {
+       font-family: 'Orbitron', monospace !important;
+       font-weight: 900 !important;
+       background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink), var(--neon-yellow)) !important;
+       -webkit-background-clip: text !important;
+       background-clip: text !important;
+       color: transparent !important;
+       text-shadow: 0 0 20px rgba(0, 255, 255, 0.5) !important;
+       letter-spacing: 3px !important;
+   }
+   
+   /* Cyberpunk H2/H3 styling */
+   .theme-cyberpunk h2,
+   .theme-cyberpunk h3 {
+       color: var(--neon-yellow) !important;
+       text-shadow: 0 0 5px rgba(255, 255, 0, 0.5) !important;
+       font-family: 'Orbitron', monospace !important;
+   }
+   
+   /* Cyberpunk subtitle enhancement */
+   .theme-cyberpunk .subtitle {
+       color: var(--neon-pink) !important;
+       font-family: 'Share Tech Mono', monospace !important;
+       text-shadow: 0 0 10px rgba(255, 0, 255, 0.7) !important;
+       letter-spacing: 1px !important;
+       font-size: 0.9em !important;
+   }
+   
+   /* Cyberpunk strong text */
+   .theme-cyberpunk strong {
+       color: var(--neon-blue) !important;
+       text-shadow: 0 0 3px rgba(0, 255, 255, 0.5) !important;
+   }
+   
+   /* ========================================
+      CYBERPUNK HEADER ENHANCEMENTS
+      ======================================== */
+   
+   .theme-cyberpunk header {
+       background: linear-gradient(135deg, 
+           rgba(0, 255, 255, 0.2) 0%, 
+           rgba(255, 0, 255, 0.2) 50%,
+           rgba(255, 255, 0, 0.2) 100%) !important;
+       border: 1px solid var(--neon-blue) !important;
+       box-shadow: 0 0 30px rgba(0, 255, 255, 0.3) !important;
+   }
+   
+   /* ========================================
+      CYBERPUNK SECTION ENHANCEMENTS
+      ======================================== */
+   
+   .theme-cyberpunk .section {
+       background: linear-gradient(135deg, 
+           rgba(14, 14, 22, 0.9) 0%, 
+           rgba(30, 9, 51, 0.8) 100%) !important;
+       border: 1px solid var(--neon-blue) !important;
+       box-shadow: 0 0 20px rgba(0, 255, 255, 0.2) !important;
+   }
+   
+   /* ========================================
+      CYBERPUNK TABLE ENHANCEMENTS
+      ======================================== */
+   
+   .theme-cyberpunk table {
+       background: rgba(10, 10, 18, 0.9) !important;
+       border: 1px solid var(--neon-blue) !important;
+       box-shadow: 0 0 20px rgba(0, 255, 255, 0.3) !important;
+   }
+   
+   .theme-cyberpunk table th {
+       background: linear-gradient(135deg, 
+           rgba(0, 255, 255, 0.2) 0%, 
+           rgba(255, 0, 255, 0.2) 100%) !important;
+       color: var(--neon-blue) !important;
+       text-shadow: 0 0 10px var(--neon-blue) !important;
+       font-family: 'Orbitron', monospace !important;
+       text-transform: uppercase !important;
+       letter-spacing: 1px !important;
+       border-bottom: 2px solid var(--neon-blue) !important;
+   }
+   
+   .theme-cyberpunk table td,
+   .theme-cyberpunk .log-table td,
+   .theme-cyberpunk .log-table th {
+       color: var(--cyberpunk-text-primary) !important;
+       background: var(--cyberpunk-bg-secondary) !important;
+       text-shadow: none !important; /* Remove text shadow for clarity */
+       border-bottom: 1px solid rgba(0, 255, 255, 0.3) !important;
+       transition: all 0.3s ease !important;
+   }
+   
+   /* Enhanced table row contrast for readability */
+   .theme-cyberpunk table tr:nth-child(even) td {
+       background: var(--cyberpunk-bg-primary) !important;
+       color: var(--cyberpunk-text-primary) !important;
+   }
+   
+   .theme-cyberpunk table tr:nth-child(odd) td {
+       background: var(--cyberpunk-bg-secondary) !important;
+       color: var(--cyberpunk-text-primary) !important;
+   }
+   
+   .theme-cyberpunk table tr:hover {
+       background: rgba(0, 255, 255, 0.15) !important;
+   }
+   
+   .theme-cyberpunk table tr:hover td {
+       background: rgba(0, 255, 255, 0.15) !important;
+       color: #ffffff !important;
+       text-shadow: 0 0 3px rgba(255, 255, 255, 0.5) !important;
+       box-shadow: 0 0 15px rgba(0, 255, 255, 0.2) !important;
+   }
+   
+   /* Specific fixes for log data readability */
+   .theme-cyberpunk .log-table .log-data,
+   .theme-cyberpunk .query-results td,
+   .theme-cyberpunk .sample-logs td {
+       color: #ffffff !important;
+       background: #1a1a2e !important;
+       border: 1px solid rgba(0, 255, 255, 0.3) !important;
+   }
+   
+   /* Optional/private IP styling - better contrast */
+   .theme-cyberpunk td:contains("optional"),
+   .theme-cyberpunk .optional-field {
+       color: var(--neon-pink) !important;
+       background: rgba(255, 0, 255, 0.1) !important;
+       font-weight: bold !important;
+   }
+   
+   /* ========================================
+      CYBERPUNK BUTTON ENHANCEMENTS
+      ======================================== */
+   
+   .theme-cyberpunk .view-logs-btn,
+   .theme-cyberpunk .view-query-btn,
+   .theme-cyberpunk .sample-btn {
+       background: transparent !important;
+       color: var(--neon-pink) !important;
+       border: 1px solid var(--neon-pink) !important;
+       font-family: 'Share Tech Mono', monospace !important;
+       text-transform: uppercase !important;
+       letter-spacing: 1px !important;
+       transition: all 0.3s ease !important;
+   }
+   
+   .theme-cyberpunk .view-logs-btn:hover,
+   .theme-cyberpunk .view-query-btn:hover,
+   .theme-cyberpunk .sample-btn:hover {
+       color: var(--neon-blue) !important;
+       border-color: var(--neon-blue) !important;
+       box-shadow: 0 0 15px rgba(0, 255, 255, 0.5) !important;
+       text-shadow: 0 0 5px var(--neon-blue) !important;
+   }
+   
+   /* ========================================
+      CYBERPUNK TAG ENHANCEMENTS
+      ======================================== */
+   
+   .theme-cyberpunk .tag-yes {
+       background: rgba(0, 255, 0, 0.2) !important;
+       color: var(--neon-green) !important;
+       border: 1px solid var(--neon-green) !important;
+       box-shadow: 0 0 5px rgba(0, 255, 0, 0.5) !important;
+   }
+   
+   .theme-cyberpunk .tag-no {
+       background: rgba(255, 0, 255, 0.2) !important;
+       color: var(--neon-pink) !important;
+       border: 1px solid var(--neon-pink) !important;
+       box-shadow: 0 0 5px rgba(255, 0, 255, 0.5) !important;
+   }
+   
+   /* ========================================
+      CYBERPUNK LINK ENHANCEMENTS
+      ======================================== */
+   
+   .theme-cyberpunk .source-link {
+       color: var(--neon-blue) !important;
+       text-decoration: none !important;
+       text-shadow: 0 0 5px rgba(0, 255, 255, 0.5) !important;
+       transition: all 0.3s ease !important;
+   }
+   
+   .theme-cyberpunk .source-link:hover {
+       color: var(--neon-pink) !important;
+       text-shadow: 0 0 10px rgba(255, 0, 255, 0.8) !important;
+   }
+   
+   .theme-cyberpunk .github-link {
+       background: linear-gradient(45deg, var(--dark-purple), rgba(0, 255, 255, 0.1)) !important;
+       border: 1px solid var(--neon-blue) !important;
+       color: var(--neon-blue) !important;
+       box-shadow: 0 0 10px rgba(0, 255, 255, 0.3) !important;
+   }
+   
+   .theme-cyberpunk .github-link:hover {
+       background: linear-gradient(45deg, rgba(0, 255, 255, 0.1), var(--dark-purple)) !important;
+       color: var(--neon-pink) !important;
+       border-color: var(--neon-pink) !important;
+       box-shadow: 0 0 15px rgba(255, 0, 255, 0.5) !important;
+   }
+   
+   /* ========================================
+      CYBERPUNK MODAL ENHANCEMENTS
+      ======================================== */
+   
+   .theme-cyberpunk .modal-content {
+       background: linear-gradient(135deg, 
+           rgba(10, 10, 18, 0.95) 0%, 
+           rgba(30, 9, 51, 0.95) 100%) !important;
+       border: 2px solid var(--neon-blue) !important;
+       box-shadow: 0 0 50px rgba(0, 255, 255, 0.5) !important;
+       color: var(--cyberpunk-text-primary) !important;
+   }
+   
+   .theme-cyberpunk .modal-header {
+       background: linear-gradient(135deg, var(--neon-blue), var(--neon-pink)) !important;
+   }
+   
+   .theme-cyberpunk .modal-title {
+       color: white !important;
+       font-family: 'Orbitron', monospace !important;
+       text-shadow: 0 0 10px rgba(255, 255, 255, 0.5) !important;
+   }
+   
+   .theme-cyberpunk .modal-body,
+   .theme-cyberpunk .modal-content,
+   .theme-cyberpunk .log-container,
+   .theme-cyberpunk .query-container {
+       color: var(--cyberpunk-text-primary) !important;
+   }
+   
+   .theme-cyberpunk .close-btn {
+       color: var(--neon-pink) !important;
+       font-size: 24px !important;
+       text-shadow: 0 0 10px var(--neon-pink) !important;
+       background: rgba(255, 0, 255, 0.2) !important;
+       border: 1px solid var(--neon-pink) !important;
+   }
+   
+   .theme-cyberpunk .close-btn:hover {
+       color: var(--neon-yellow) !important;
+       text-shadow: 0 0 15px var(--neon-yellow) !important;
+       background: rgba(255, 255, 0, 0.2) !important;
+       border-color: var(--neon-yellow) !important;
+       transform: scale(1.1) !important;
+   }
+   
+   /* Cyberpunk modal action buttons */
+   .theme-cyberpunk .modal-actions .copy-btn {
+       background-color: rgba(255, 255, 255, 0.9) !important;
+       color: var(--neon-blue) !important;
+       border: 1px solid rgba(0, 255, 255, 0.3) !important;
+       font-family: 'Share Tech Mono', monospace !important;
+   }
+   
+   .theme-cyberpunk .modal-actions .copy-btn:hover {
+       background-color: rgba(0, 255, 255, 0.2) !important;
+       color: white !important;
+       border-color: var(--neon-blue) !important;
+       box-shadow: 0 0 10px rgba(0, 255, 255, 0.5) !important;
+   }
+   
+   .theme-cyberpunk .modal-actions .explain-btn {
+       background-color: transparent !important;
+       color: white !important;
+       border: 1px solid rgba(255, 255, 255, 0.7) !important;
+       font-family: 'Share Tech Mono', monospace !important;
+   }
+   
+   .theme-cyberpunk .modal-actions .explain-btn:hover {
+       background-color: rgba(255, 0, 255, 0.2) !important;
+       color: var(--neon-pink) !important;
+       border-color: var(--neon-pink) !important;
+       box-shadow: 0 0 10px rgba(255, 0, 255, 0.5) !important;
+   }
+   
+   /* ========================================
+      CYBERPUNK QUERY/SHELL ENHANCEMENTS
+      ======================================== */
+   
+   .theme-cyberpunk .query-container {
+       background-color: #0d1117 !important;
+       border: 1px solid var(--neon-blue) !important;
+       box-shadow: 0 0 20px rgba(0, 255, 255, 0.3) !important;
+   }
+   
+   .theme-cyberpunk .shell-header {
+       background: linear-gradient(135deg, #1a0d2e 0%, #2d1b3d 100%) !important;
+       border-bottom: 1px solid var(--neon-blue) !important;
+   }
+   
+   .theme-cyberpunk .shell-title {
+       color: var(--neon-green) !important;
+       font-family: 'Share Tech Mono', monospace !important;
+       text-shadow: 0 0 5px rgba(0, 255, 0, 0.5) !important;
+   }
+   
+   .theme-cyberpunk .kql-query,
+   .theme-cyberpunk .kql-query code {
+       color: var(--neon-green) !important;
+       text-shadow: 0 0 3px rgba(0, 255, 0, 0.3) !important;
+       font-family: 'Share Tech Mono', monospace !important;
+   }
+   
+   /* ========================================
+      CYBERPUNK THEME TOGGLE ENHANCEMENTS
+      ======================================== */
+   
+   .theme-cyberpunk .theme-toggle {
+       background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink)) !important;
+       border: 2px solid var(--neon-yellow) !important;
+       box-shadow: 0 0 20px rgba(0, 255, 255, 0.5) !important;
+       color: white !important;
+   }
+   
+   .theme-cyberpunk .theme-toggle:hover {
+       transform: rotate(180deg) scale(1.1) !important;
+   }
+   
+   /* ========================================
+      CYBERPUNK FOOTER ENHANCEMENTS
+      ======================================== */
+   
+   .theme-cyberpunk footer {
+       color: rgba(224, 242, 255, 0.7) !important;
+       text-shadow: 0 0 5px rgba(0, 255, 255, 0.3) !important;
+       border-top: 1px solid rgba(0, 255, 255, 0.3) !important;
+   }
+   
+/* ========================================
+   INVISIBLE FLOATING CONTAINERS FIX
+   REPLACE THE FLOATING KQL SECTION IN YOUR v1.4 CYBERPUNK CSS PATCH
+   
+   CHANGES:
+   - Removes all visible containers/backgrounds
+   - Shows only floating text with glow
+   - Clean, invisible containers
+   ======================================== */
+
+/* ========================================
+   INVISIBLE FLOATING KQL - TEXT ONLY, NO CONTAINERS
+   ======================================== */
+
+/* INVISIBLE FLOATING KQL - PURE TEXT ONLY */
+.floating-kql {
+    /* POSITIONING */
+    position: fixed !important;
+    display: block !important;
+    visibility: visible !important;
+    
+    /* STYLING */
+    font-family: 'Share Tech Mono', monospace !important;
+    font-size: 12px !important;
+    font-weight: normal !important;
+    
+    /* SUBTLE LIGHT PURPLE COLOR */
+    color: #b19cd9 !important; /* Readable but subtle light purple */
+    
+    /* INVISIBLE CONTAINER */
+    background: transparent !important; /* NO BACKGROUND */
+    border: none !important; /* NO BORDERS */
+    box-shadow: none !important; /* NO BOX SHADOW */
+    padding: 0 !important; /* NO PADDING */
+    border-radius: 0 !important; /* NO BORDER RADIUS */
+    
+    /* ENHANCED TEXT GLOW - MORE VISIBLE WITHOUT CONTAINER */
+    text-shadow: 
+        0 0 4px #b19cd9,
+        0 0 8px #b19cd9,
+        0 0 12px #b19cd9 !important; /* Enhanced glow for visibility */
+    
+    /* SIZING */
+    max-width: 350px !important;
+    
+    /* TEXT HANDLING */
+    white-space: nowrap !important;
+    overflow: visible !important; /* Allow text to be fully visible */
+    text-overflow: clip !important; /* Don't cut off text */
+    
+    /* LAYERING */
+    z-index: 9999 !important;
+    pointer-events: none !important;
+    
+    /* ALLOW SMOOTH TRANSITIONS */
+    will-change: left, top, opacity !important;
+    transform: translateZ(0) !important;
+}
+
+/* REMOVE ALL COLOR VARIANTS - SINGLE PURPLE COLOR FOR ALL */
+.floating-kql.neon-pink,
+.floating-kql.neon-yellow,
+.floating-kql.neon-green {
+    /* Override all variants with same invisible container + purple text */
+    color: #b19cd9 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    
+    /* Enhanced glow for all variants */
+    text-shadow: 
+        0 0 4px #b19cd9,
+        0 0 8px #b19cd9,
+        0 0 12px #b19cd9 !important;
+}
+
+/* ENSURE CYBERPUNK THEME COMPATIBILITY */
+.theme-cyberpunk .floating-kql {
+    display: block !important;
+    visibility: visible !important;
+    background: transparent !important;
+}
+
+/* RESPONSIVE - KEEP INVISIBLE ON ALL SIZES */
+@media (max-width: 768px) {
+    .floating-kql {
+        font-size: 10px !important;
+        max-width: 250px !important;
+        
+        /* Keep enhanced glow on mobile */
+        text-shadow: 
+            0 0 3px #b19cd9,
+            0 0 6px #b19cd9,
+            0 0 9px #b19cd9 !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .floating-kql {
+        font-size: 9px !important;
+        max-width: 200px !important;
+        
+        /* Slightly reduced glow for very small screens */
+        text-shadow: 
+            0 0 2px #b19cd9,
+            0 0 4px #b19cd9,
+            0 0 6px #b19cd9 !important;
+    }
+}
+
+/* ========================================
+   EXACT BACKUP CSS GLITCH EFFECT
+   Add this to your att4ckql.css
+   ======================================== */
+
+/* CYBERPUNK H1 BASE STYLING */
+.theme-cyberpunk h1 {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink), var(--neon-yellow));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    letter-spacing: 3px;
+    position: relative;
+    z-index: 2;
+}
+
+/* THE GLITCH EFFECT - REQUIRES .glitch CLASS */
+.theme-cyberpunk .glitch {
+    animation: glitch 2s infinite;
+}
+
+@keyframes glitch {
+    0% { 
+        text-shadow: 0 0 5px var(--neon-blue);
+        transform: translateX(0);
+    }
+    5% { 
+        text-shadow: -3px 0 5px var(--neon-pink), 3px 0 5px var(--neon-blue);
+        transform: translateX(-2px);
+    }
+    10% { 
+        text-shadow: 3px 0 5px var(--neon-yellow), -3px 0 5px var(--neon-pink);
+        transform: translateX(2px);
+    }
+    15% { 
+        text-shadow: 0 0 5px var(--neon-green);
+        transform: translateX(0);
+    }
+    20% { 
+        text-shadow: -2px 0 5px var(--neon-blue), 2px 0 5px var(--neon-yellow);
+        transform: translateX(1px);
+    }
+    25% { 
+        text-shadow: 0 0 5px var(--neon-pink);
+        transform: translateX(0);
+    }
+    30% { 
+        text-shadow: 2px 0 5px var(--neon-green), -2px 0 5px var(--neon-blue);
+        transform: translateX(-1px);
+    }
+    35% { 
+        text-shadow: 0 0 5px var(--neon-yellow);
+        transform: translateX(0);
+    }
+    85% { 
+        text-shadow: 0 0 5px var(--neon-blue);
+        transform: translateX(0);
+    }
+    90% { 
+        text-shadow: -1px 0 5px var(--neon-pink), 1px 0 5px var(--neon-blue);
+        transform: translateX(-1px);
+    }
+    95% { 
+        text-shadow: 1px 0 5px var(--neon-yellow), -1px 0 5px var(--neon-green);
+        transform: translateX(1px);
+    }
+    100% { 
+        text-shadow: 0 0 5px var(--neon-blue);
+        transform: translateX(0);
+    }
+}
+
+/* ENSURE CYBERPUNK VARIABLES EXIST */
+.theme-cyberpunk {
+    --neon-blue: #00ffff;
+    --neon-pink: #ff00ff;
+    --neon-yellow: #ffff00;
+    --neon-green: #00ff00;
+}
+/* ========================================
+   ULTIMATE CYBERPUNK GLITCH + TYPING EFFECT
+   APPEND THIS TO THE END OF /assets/css/att4ckql.css
+   ======================================== */
+
+/* ===== LEFT-ALIGNED CYBERPUNK HEADER LAYOUT ===== */
+.theme-cyberpunk header {
+    text-align: left !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    background: linear-gradient(135deg, 
+        rgba(0, 255, 255, 0.2) 0%, 
+        rgba(255, 0, 255, 0.2) 50%,
+        rgba(255, 255, 0, 0.2) 100%) !important;
+    border: 1px solid var(--neon-blue) !important;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.3) !important;
+    border-radius: 10px !important;
+    padding: 30px !important;
+}
+
+/* Left-aligned title */
+.theme-cyberpunk h1 {
+    margin-bottom: 15px !important;
+    align-self: flex-start !important;
+    font-family: 'Orbitron', monospace !important;
+    font-weight: 900 !important;
+    background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink), var(--neon-yellow)) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.5) !important;
+    letter-spacing: 3px !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+/* Left-aligned subtitle with typing setup */
+.theme-cyberpunk .subtitle {
+    align-self: flex-start !important;
+    max-width: 100% !important;
+    color: var(--neon-pink) !important;
+    font-family: 'Share Tech Mono', monospace !important;
+    text-shadow: 0 0 10px rgba(255, 0, 255, 0.7) !important;
+    letter-spacing: 1px !important;
+    font-size: 1.1em !important;
+    margin-top: 5px !important;
+}
+
+/* ===== TERMINAL TYPING EFFECT ===== */
+.theme-cyberpunk .terminal-typing {
+    overflow: hidden !important;
+    border-right: .15em solid var(--neon-blue) !important;
+    white-space: nowrap !important;
+    margin: 0 !important;
+    letter-spacing: .10em !important;
+    animation: typing 4s steps(50, end), blink-caret .75s step-end infinite !important;
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: var(--neon-blue); }
+}
+
+/* ===== RGB SEPARATION GLITCH EFFECT ===== */
+.theme-cyberpunk .glitch {
+    position: relative !important;
+}
+
+/* Glitch pseudo-elements for RGB separation */
+.theme-cyberpunk .glitch::before,
+.theme-cyberpunk .glitch::after {
+    content: attr(data-text) !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: none !important;
+    background-clip: unset !important;
+    font-family: inherit !important;
+    font-weight: inherit !important;
+    font-size: inherit !important;
+    letter-spacing: inherit !important;
+}
+
+/* Pink glitch layer */
+.theme-cyberpunk .glitch::before {
+    animation: glitch-before 2s infinite !important;
+    color: #ff00ff !important;
+    z-index: -1 !important;
+}
+
+/* Cyan glitch layer */
+.theme-cyberpunk .glitch::after {
+    animation: glitch-after 2s infinite !important;
+    color: #00ffff !important;
+    z-index: -2 !important;
+}
+
+/* Pink layer RGB separation animation */
+@keyframes glitch-before {
+    0%, 15%, 25%, 35%, 85%, 100% { 
+        transform: translateX(0);
+        opacity: 0;
+    }
+    5% { 
+        transform: translateX(-3px);
+        opacity: 0.8;
+    }
+    10% { 
+        transform: translateX(3px);
+        opacity: 0.8;
+    }
+    20% { 
+        transform: translateX(-2px);
+        opacity: 0.6;
+    }
+    30% { 
+        transform: translateX(2px);
+        opacity: 0.6;
+    }
+    90% { 
+        transform: translateX(-1px);
+        opacity: 0.5;
+    }
+    95% { 
+        transform: translateX(1px);
+        opacity: 0.5;
+    }
+}
+
+/* Cyan layer RGB separation animation */
+@keyframes glitch-after {
+    0%, 15%, 25%, 35%, 85%, 100% { 
+        transform: translateX(0);
+        opacity: 0;
+    }
+    5% { 
+        transform: translateX(3px);
+        opacity: 0.8;
+    }
+    10% { 
+        transform: translateX(-3px);
+        opacity: 0.8;
+    }
+    20% { 
+        transform: translateX(2px);
+        opacity: 0.6;
+    }
+    30% { 
+        transform: translateX(-2px);
+        opacity: 0.6;
+    }
+    90% { 
+        transform: translateX(1px);
+        opacity: 0.5;
+    }
+    95% { 
+        transform: translateX(-1px);
+        opacity: 0.5;
+    }
+}
+
+/* ===== SUBTITLE GLITCH EFFECT (DIFFERENT COLORS) ===== */
+.theme-cyberpunk .subtitle.glitch::before {
+    color: #ffff00 !important; /* Yellow ghost for subtitle */
+}
+
+.theme-cyberpunk .subtitle.glitch::after {
+    color: #00ff00 !important; /* Green ghost for subtitle */
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .theme-cyberpunk header {
+        padding: 20px !important;
+    }
+    
+    .theme-cyberpunk h1 {
+        font-size: 2em !important;
+        letter-spacing: 2px !important;
+    }
+    
+    .theme-cyberpunk .subtitle {
+        font-size: 1em !important;
+        letter-spacing: 0.5px !important;
+    }
+}
+
+/* ========================================
+   END ULTIMATE CYBERPUNK CSS
+   ======================================== */
